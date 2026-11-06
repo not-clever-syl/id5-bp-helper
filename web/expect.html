@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>阵容期望分 · IVL 2026 秋</title>
+<link rel="stylesheet" href="char.css">
+<style>
+:root{
+  --bg:#12141a;--panel:#191c24;--panel2:#21252f;--border:#2c313d;
+  --text:#dfe5f0;--dim:#8a93a6;--accent:#6b8cff;
+  --ok:#6dc4a0;--err:#e0837b;--warn:#d8b25f;
+  --low:#d4645c;--mid:#d8b25f;--high:#6dc4a0;
+}
+*{box-sizing:border-box}
+/* 铺满屏幕宽度；只允许纵向滚动，任何情况下都不横向溢出 */
+body{margin:0;background:var(--bg);color:var(--text);overflow-x:hidden;
+  font:13px/1.6 -apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
+header{padding:10px 20px;border-bottom:1px solid var(--border);
+  background:var(--panel);position:sticky;top:0;z-index:20;
+  display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+header h1{margin:0;font-size:15px;font-weight:600}
+/* 「← 首页」统一固定在页首最左，作为所有页面的唯一回退入口 */
+a.home{color:var(--dim);text-decoration:none;font-size:12.5px;
+  padding:4px 10px;border-radius:6px;border:1px solid var(--border);flex:none}
+a.home:hover{color:var(--text);border-color:var(--accent)}
+main{width:100%;margin:0 auto;padding:12px 18px 24px}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:10px;
+  padding:12px 16px;margin-bottom:12px;min-width:0}
+.card h2{margin:0 0 10px;font-size:13.5px;font-weight:600;
+  display:flex;align-items:center;gap:10px}
+button{background:var(--panel2);color:var(--text);border:1px solid var(--border);
+  border-radius:6px;padding:5px 12px;font-size:12.5px;cursor:pointer}
+button:hover{border-color:var(--accent)}
+button.primary{background:#2a3f6e;border-color:var(--accent);color:#cfe0ff}
+button:disabled{opacity:.45;cursor:not-allowed}
+select{background:var(--panel2);color:var(--text);border:1px solid var(--border);
+  border-radius:6px;padding:5px 10px;font-size:12.5px;max-width:100%}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}
+@media(max-width:900px){.two{grid-template-columns:minmax(0,1fr)}}
+/* 角色池：随宽度自动增减列，卡片内不出现横向溢出 */
+.pool{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+  gap:3px}
+/* 角色池：按职能分组，每个分组内部按名称排列 */
+.grp{margin-bottom:10px}
+.grp h3{margin:0 0 5px;font-size:12px;font-weight:600;color:var(--dim);
+  display:flex;align-items:center;gap:8px}
+.grp h3 .n{font:10.5px Consolas,monospace;color:#5b6373}
+.grp.solid h3{color:#9db2ff}
+.grp.support h3{color:#c98b4b}
+.grp.decode h3{color:#7ec8e3}
+.grp.kite h3{color:#b39ddb}
+.grp .pool{grid-template-columns:repeat(auto-fill,minmax(126px,1fr))}
+.pickbox{display:flex;align-items:center;gap:6px;padding:3px 7px;border-radius:6px;
+  border:1px solid transparent;cursor:pointer;font-size:12px;user-select:none;
+  min-width:0;overflow:hidden}
+.pickbox .char-chip{min-width:0;overflow:hidden}
+.pickbox .char-name{overflow:hidden;text-overflow:ellipsis}
+.pickbox:hover{border-color:var(--border)}
+.pickbox.on{border-color:rgba(109,196,160,.5);background:rgba(109,196,160,.12)}
+.pickbox .ord{margin-left:auto;font-size:11px;font-weight:700;color:var(--ok)}
+.slotrow{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.slot{min-width:104px;height:64px;border:1px dashed var(--border);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;
+  gap:2px;font-size:11px;color:#5b6373;background:var(--panel2)}
+.slot.filled{border-style:solid;color:var(--text);background:rgba(109,196,160,.08);
+  border-color:rgba(109,196,160,.4);cursor:pointer}
+.slot .char-chip{flex-direction:column;gap:2px}
+.struct{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.tag{font-size:11px;padding:1px 8px;border-radius:10px}
+.tag.bad{background:rgba(212,100,92,.16);color:var(--low)}
+.tag.ok{background:rgba(109,196,160,.16);color:var(--high)}
+.tag.info{background:rgba(138,147,166,.16);color:#a9b2c3}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:12.5px}
+th,td{padding:5px 8px;border-bottom:1px solid var(--border);text-align:left}
+thead th{color:var(--dim);font-size:11.5px;font-weight:600;position:sticky;top:0;
+  background:var(--panel);z-index:2}
+.num{text-align:right;font:12.5px Consolas,monospace}
+.bar{position:relative;height:6px;border-radius:3px;background:var(--panel2);
+  overflow:hidden;min-width:70px}
+.bar i{position:absolute;left:0;top:0;bottom:0;border-radius:3px}
+tr.top td{background:rgba(212,100,92,.07)}
+tr.top .hname::after{content:" 最危险";font-size:10px;color:var(--low);margin-left:4px}
+#notice{font-size:12px;color:var(--warn);margin-top:8px;min-height:18px}
+.sumrow{display:flex;gap:22px;flex-wrap:wrap;margin-top:6px;font-size:12.5px}
+.sumrow div b{font-family:Consolas,monospace}
+.wrap{max-height:560px;overflow:auto}
+</style>
+</head>
+<body>
+<header>
+  <a href="index.html" class="home">← 首页</a>
+  <h1>阵容期望分</h1>
+</header>
+
+<main>
+
+<section class="card">
+  <h2>① 选择阵容与监管选手</h2>
+  <div class="two">
+    <div>
+      <div style="margin-bottom:8px;font-size:12px;color:var(--dim)">
+        从全部求生角色里选 4 人（不区分队伍，也不受角色池限制）
+      </div>
+      <div id="pool"></div>
+      <div class="slotrow" id="slots"></div>
+      <div class="struct" id="struct"></div>
+      <div style="margin-top:10px">
+        <button class="primary" id="btnSearch">重新搜索</button>
+        <button id="btnClear">清空</button>
+        <span id="notice"></span>
+      </div>
+    </div>
+    <div>
+      <div style="margin-bottom:8px">
+        <select id="playerPick" style="min-width:200px"></select>
+        <span style="color:var(--dim);font-size:12px">← 对手监管选手</span>
+      </div>
+      <div id="playerInfo" style="font-size:12.5px;color:var(--dim);line-height:1.9"></div>
+    </div>
+  </div>
+</section>
+
+<section class="card" id="resultCard" style="display:none">
+  <h2>② 期望得分 <span id="dataBadge" class="tag info"></span></h2>
+  <div class="sumrow" id="summary"></div>
+  <div id="playerBox" style="margin-top:14px"></div>
+  <div style="margin-top:14px">
+    <div style="font-size:12px;color:var(--dim);margin-bottom:6px">
+      逐监管：这套阵容面对每个监管角色的得分（局均逃脱，2.00 为居中值；越低说明该监管越克制这套阵容）
+    </div>
+    <div class="wrap"><table id="tbl"></table></div>
+  </div>
+</section>
+
+</main>
+
+<script src="char.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+let POOL = [];          // 当前队伍角色池
+let LINEUP = [];        // 已选 4 人
+let PL = null;          // 监管选手列表
+let ROLES = {};         // 角色职能分类（solid / hard / mid / soft / pos）
+
+/** 分数统一显示两位小数 */
+function f2(v) {
+  if (v == null || !isFinite(v)) return '—';
+  return Number(v).toFixed(2);
+}
+
+/** 名称字典序：忽略大小写比较，大小写只在小写后仍相同时才用来分先后 */
+function byName(a, b) {
+  const x = a.toLowerCase(), y = b.toLowerCase();
+  if (x !== y) return x < y ? -1 : 1;
+  return a < b ? -1 : (a > b ? 1 : 0);
+}
+
+async function api(url, opts) {
+  const r = await fetch(url, opts);
+  const t = await r.text();
+  let j = null;
+  try { j = JSON.parse(t); } catch (_) {}
+  if (!r.ok) throw new Error((j && j.error) || ('HTTP ' + r.status));
+  return j;
+}
+
+async function boot() {
+  const [roster, expect] = await Promise.all([
+    api('/api/roster'), api('/api/expect/meta').catch(() => null),
+  ]);
+  // 选手数据：从 web_bp.json 里取（export_web_data.py 导出的 players）
+  let D = null;
+  try {
+    const r = await fetch('../data/web_bp.json');
+    D = await r.json();
+  } catch (e) {}
+  PL = (D && D.players) ? D.players : {};
+  ROLES = (D && D.roles) ? D.roles : {};
+
+  // 角色池 = 全部求生角色（不区分队伍、不受各队角色池限制）
+  POOL = (roster.all_survivors || []).slice().sort(byName);
+
+  // 监管选手按名称字典序排（忽略大小写）
+  const names = [...Object.keys(PL)].sort(byName);
+  $('#playerPick').innerHTML = names
+    .map(p => `<option value="${p}">${p}</option>`).join('');
+  $('#playerPick').onchange = showPlayer;
+
+  window._roster = roster;
+  renderAll();
+  showPlayer();
+  $('#btnSearch').onclick = search;
+  $('#btnClear').onclick = () => { LINEUP = []; renderAll(); };
+}
+
+function showPlayer() {
+  const p = $('#playerPick').value;
+  const v = PL[p];
+  if (!v) { $('#playerInfo').textContent = '没有选手数据'; return; }
+  const total = Object.values(v.raw_count || {}).reduce((a, b) => a + b, 0);
+  const top = (v.threats || []).slice(0, 4)
+    .map(t => `${Char.chip(t.char, {size: 22})} ${(t.p_use * 100).toFixed(1)}%`)
+    .join('　');
+  $('#playerInfo').innerHTML =
+    `<div>半局 <b>${total}</b>　主用角色：</div><div style="margin-top:4px">${top}</div>`;
+}
+
+/** 角色职能分类：一个角色可能同时属于多类，按下面的顺序归到第一类 */
+const CATS = [
+  {key: 'solid', name: '救人位', cls: 'solid',
+   test: r => r.solid},
+  {key: 'hard', name: '辅助位 · 硬辅', cls: 'support',
+   test: r => r.hard},
+  {key: 'mid', name: '辅助位 · 中辅', cls: 'support',
+   test: r => r.mid},
+  {key: 'soft', name: '辅助位 · 软辅', cls: 'support',
+   test: r => r.soft},
+  {key: 'decode', name: '破译位', cls: 'decode',
+   test: r => (r.pos || []).includes('破译型')},
+  {key: 'kite', name: '牵制位', cls: 'kite',
+   test: r => !r.solid && (r.pos || []).includes('牵制型')},
+];
+
+/** 按职能分组，顺序即优先级：救人位 → 辅助位 → 破译位 → 牵制位 → 其他 */
+function groupPool() {
+  const buckets = CATS.map(c => ({...c, chars: []}));
+  const other = {key: 'other', name: '其他', cls: 'other', chars: []};
+  for (const c of POOL) {
+    const r = ROLES[c] || {};
+    const hit = buckets.find(b => b.test(r));
+    (hit || other).chars.push(c);
+  }
+  return [...buckets, other].filter(b => b.chars.length);
+}
+
+function renderAll() {
+  $('#pool').innerHTML = groupPool().map(g => `
+    <div class="grp ${g.cls}">
+      <h3>${g.name}<span class="n">${g.chars.length}</span></h3>
+      <div class="pool">${g.chars.map(c => {
+        const i = LINEUP.indexOf(c);
+        return `<div class="pickbox${i >= 0 ? ' on' : ''}" data-c="${c}"
+          title="${Char.esc(c)}">
+          ${Char.chip(c, {size: 28})}${i >= 0 ? `<span class="ord">${i + 1}</span>` : ''}</div>`;
+      }).join('')}</div>
+    </div>`).join('');
+  document.querySelectorAll('.pickbox').forEach(el => {
+    el.onclick = () => toggle(el.dataset.c);
+  });
+
+  $('#slots').innerHTML = [0, 1, 2, 3].map(i => {
+    const c = LINEUP[i];
+    return c
+      ? `<div class="slot filled" data-i="${i}">${Char.chip(c, {size: 38})}</div>`
+      : `<div class="slot">第 ${i + 1} 人</div>`;
+  }).join('');
+  document.querySelectorAll('.slot.filled').forEach(el => {
+    el.onclick = () => { LINEUP.splice(+el.dataset.i, 1); renderAll(); };
+  });
+
+  renderStruct();
+  $('#btnSearch').disabled = LINEUP.length !== 4;
+  $('#notice').textContent = LINEUP.length === 4
+    ? '' : `还需选择 ${4 - LINEUP.length} 名角色`;
+}
+
+function toggle(c) {
+  const i = LINEUP.indexOf(c);
+  if (i >= 0) LINEUP.splice(i, 1);
+  else if (LINEUP.length < 4) LINEUP.push(c);
+  else { $('#notice').textContent = '阵容已满 4 人，先点上面的槽位移除'; }
+  renderAll();
+}
+
+function renderStruct() {
+  if (!LINEUP.length) { $('#struct').innerHTML = ''; return; }
+  // 结构判断在前端做一份轻量版，只用于即时提示；权威结论以搜索返回为准
+  $('#struct').innerHTML = `<span class="tag info">已选 ${LINEUP.length} 人</span>`;
+}
+
+async function search() {
+  const btn = $('#btnSearch');
+  btn.disabled = true;
+  btn.textContent = '搜索中…';
+  $('#notice').textContent = '';
+  try {
+    const j = await api('/api/recompute', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        kind: 'lineup',
+        lineup: LINEUP,
+        player: $('#playerPick').value,
+      }),
+    });
+    render(j.result);
+  } catch (e) {
+    $('#notice').textContent = '搜索失败：' + e.message;
+  } finally {
+    btn.textContent = '重新搜索';
+    btn.disabled = LINEUP.length !== 4;
+  }
+}
+
+function scoreColor(s) {
+  // 2.00 居中；低于 1.6 偏危险，高于 2.4 偏有利
+  if (s == null) return 'var(--dim)';
+  if (s < 1.6) return 'var(--low)';
+  if (s < 2.0) return '#e0a862';
+  if (s < 2.4) return 'var(--mid)';
+  return 'var(--high)';
+}
+
+function render(R) {
+  $('#resultCard').style.display = '';
+  const s = R.summary || {};
+  $('#summary').innerHTML = `
+    <div>最克这套的是 <b>${s.worst || '—'}</b>（<b>${f2(s.worst_score)}</b>）</div>
+    <div>最怕的是 <b>${s.best || '—'}</b>（<b>${f2(s.best_score)}</b>）</div>
+    <div>逐监管均值 <b>${f2(s.avg)}</b></div>`;
+
+  // 结构项
+  const st = R.structure || {items: []};
+  const tags = (st.items || []).map(it =>
+    `<span class="tag bad">${it.desc} −${f2(it.deduct)}</span>`).join('')
+    || '<span class="tag ok">结构无扣分</span>';
+  $('#summary').insertAdjacentHTML('beforeend',
+    `<div style="flex-basis:100%">结构：${tags}</div>`);
+
+  // 选手加权
+  const p = R.player;
+  $('#playerBox').innerHTML = p ? `
+    <div style="font-size:12px;color:var(--dim);margin-bottom:6px">
+      按 ${p.name} 的实际选用加权：他大概率把这套阵容打成
+      <b style="color:${scoreColor(p.expect)};font-size:15px">${f2(p.expect)}</b>
+    </div>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px">
+      ${p.top3.map(t => `<span>${Char.chip(t.char, {size: 28})}
+        <span style="color:var(--dim)">×${f2(t.w)}</span>
+        <b style="font-family:Consolas,monospace">${f2(t.score)}</b></span>`).join('')}
+    </div>` : '';
+
+  const rows = R.per_hunter || [];
+  const lo = Math.min(...rows.map(r => r.score));
+  const hi = Math.max(...rows.map(r => r.score));
+  $('#tbl').innerHTML =
+    '<thead><tr><th style="width:210px">监管</th><th class="num" style="width:80px">得分</th>'
+    + '<th style="width:170px"></th><th class="num" style="width:80px">基础分</th>'
+    + '<th>这套阵容里最弱的三人</th></tr></thead><tbody>'
+    + rows.map((r, i) => {
+      const pct = hi > lo ? (r.score - lo) / (hi - lo) * 100 : 50;
+      const bottom = r.crew.slice().sort((a, b) => a.score - b.score).slice(0, 3)
+        .map(x => `<span style="margin-right:10px">${Char.chip(x.char, {size: 22})}
+          <span style="font-family:Consolas,monospace;color:var(--dim)">${f2(x.score)}</span></span>`)
+        .join('');
+      return `<tr class="${i === 0 ? 'top' : ''}">
+        <td class="hname">${Char.chip(r.hunter, {size: 30})}</td>
+        <td class="num" style="color:${scoreColor(r.score)};font-weight:600">${f2(r.score)}</td>
+        <td><div class="bar"><i style="width:${pct}%;background:${scoreColor(r.score)}"></i></div></td>
+        <td class="num" style="color:var(--dim)">${f2(r.base)}</td>
+        <td>${bottom}</td></tr>`;
+    }).join('') + '</tbody>';
+}
+
+boot();
+</script>
+</body>
+</html>

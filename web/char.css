@@ -1,0 +1,14 @@
+/* 角色头像与名字的统一外观（所有页面共用） */
+.char-avatar{
+  display:inline-block;vertical-align:middle;border-radius:4px;
+  object-fit:cover;background:#2c313d;flex:none;
+  border:1px solid rgba(255,255,255,.08);
+}
+.char-avatar.broken{
+  background:repeating-linear-gradient(45deg,#2c313d,#2c313d 3px,#232833 3px,#232833 6px);
+}
+.char-chip{
+  display:inline-flex;align-items:center;gap:5px;
+  vertical-align:middle;line-height:1.35;
+}
+.char-chip > .char-name{white-space:nowrap}

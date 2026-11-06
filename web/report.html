@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BP 教练报告</title>
+<link rel="stylesheet" href="char.css">
+<style>
+:root{
+  --bg:#14161c;--panel:#1b1e26;--panel2:#21252f;--border:#2e3340;
+  --text:#dfe5f0;--dim:#8b94a8;--accent:#6b8cff;--warn:#e0a35a;
+  --danger:#d4645c;--good:#4fa88a;--ban:#8a5a9e;
+}
+*{box-sizing:border-box}
+html{height:100%}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--text);
+  overflow-x:hidden;
+  font:13.5px/1.7 -apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
+header{padding:14px 26px;border-bottom:1px solid var(--border);
+  background:var(--panel);position:sticky;top:0;z-index:20;
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+header .hd{min-width:0}
+header h1{margin:0;font-size:16px;font-weight:600}
+header .sub{color:var(--dim);font-size:12px;margin-top:2px}
+/* 「← 首页」统一固定在页首最左，作为所有页面的唯一回退入口 */
+a.home{color:var(--dim);text-decoration:none;font-weight:400;font-size:12.5px;
+  flex:none;padding:4px 10px;border-radius:6px;border:1px solid var(--border)}
+a.home:hover{color:var(--text);border-color:var(--accent)}
+main{width:100%;margin:0 auto;padding:16px 26px 90px}
+.sel{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.sel label{color:var(--dim);font-size:12px}
+select{background:var(--panel2);color:var(--text);border:1px solid var(--border);
+  border-radius:7px;padding:7px 11px;font-size:12.5px;min-width:150px;
+  max-width:100%}
+select:hover{border-color:var(--accent)}
+button{background:var(--panel2);color:var(--text);border:1px solid var(--border);
+  border-radius:7px;padding:6px 12px;font-size:12.5px;cursor:pointer}
+button:hover{border-color:var(--accent)}
+button.primary{background:#2a3f6e;border-color:var(--accent);color:#cfe0ff}
+.io{font-size:11.5px;color:var(--dim);margin-left:4px}
+.io.ok{color:var(--good)} .io.err{color:var(--danger)}
+a.genlink{color:#cfe0ff;text-decoration:none;font-size:12.5px;
+  border:1px solid var(--accent);background:#2a3f6e;border-radius:7px;padding:6px 12px}
+a.genlink:hover{background:#33518c}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:12px;
+  padding:14px 18px;margin-bottom:14px;min-width:0}
+.card h2{margin:0 0 4px;font-size:14.5px;font-weight:600;
+  display:flex;align-items:center;gap:9px}
+.card h2 .num{width:24px;height:24px;border-radius:50%;background:var(--accent);
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  font-size:12.5px;font-weight:600;flex:none}
+.card .lead{color:var(--dim);font-size:12px;margin:0 0 10px 33px}
+.verdict{background:var(--panel2);border-left:3px solid var(--accent);
+  border-radius:0 8px 8px 0;padding:10px 14px;margin:10px 0 0;font-size:12.5px}
+.verdict.warn{border-left-color:var(--warn)}
+.verdict.good{border-left-color:var(--good)}
+.verdict.bad{border-left-color:var(--danger)}
+.verdict b{color:#fff}
+.tablewrap{width:100%;overflow-x:hidden}
+table{border-collapse:collapse;width:100%;table-layout:fixed;font-size:12.5px}
+th,td{text-align:left;padding:5px 8px;border-bottom:1px solid rgba(255,255,255,.055);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+th{color:var(--dim);font-weight:500;font-size:11px}
+/* 窄屏时表格内容会被截断，鼠标悬停看全 */
+td[title]{cursor:help}
+tr:last-child td{border-bottom:none}
+tr.hl td{background:rgba(107,140,255,.10)}
+tr.hl td:first-child{box-shadow:inset 3px 0 0 var(--accent)}
+tr.click{cursor:pointer}
+tr.click:hover td{background:rgba(255,255,255,.035)}
+.num{text-align:right;font-variant-numeric:tabular-nums;
+  font-family:Consolas,monospace}
+.dim{color:var(--dim)}
+.good{color:var(--good)}.warn{color:var(--warn)}.danger{color:var(--danger)}
+.pill{display:inline-block;font-size:10.5px;padding:1px 7px;border-radius:8px;
+  background:var(--panel2);border:1px solid var(--border);margin-right:4px}
+.pill.ban{border-color:var(--ban);color:#c9a0dd}
+.pill.pick{border-color:var(--accent);color:#cfe0ff}
+.pill.only{border-color:var(--good);color:#9fd8c4}
+.flow{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+.step{background:var(--panel2);border:1px solid var(--border);border-radius:8px;
+  padding:6px 10px;font-size:12px}
+.step .s1{color:var(--dim);font-size:10.5px;margin-bottom:3px}
+.step.ban{border-color:#5a3d68}
+.step.pick{border-color:#35507e}
+.lineup{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
+.meta{color:var(--dim);font-size:11.5px;margin-top:6px}
+/* 「本次生成用的设置」：左右两栏的键值表 */
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:4px 22px}
+.two .kv{display:flex;gap:12px;align-items:flex-start;padding:4px 0;
+  border-bottom:1px solid rgba(255,255,255,.04)}
+.two .kv .k{color:var(--dim);font-size:12px;flex:none;width:96px}
+.two .kv .v{font-size:12px;min-width:0;word-break:break-word}
+.two .kv .v code{background:var(--panel2);padding:1px 5px;border-radius:4px;
+  font:11px Consolas,monospace}
+.empty{color:var(--dim);padding:40px 0;text-align:center}
+footer{color:var(--dim);font-size:11px;margin:0 auto;
+  padding:0 26px 50px;line-height:1.9}
+footer b{color:var(--text)}
+/* 监管集合的组合按钮 */
+.sets{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.sets button{background:var(--panel2);color:var(--dim);border:1px solid var(--border);
+  border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:5px}
+.sets button:hover{border-color:var(--accent);color:var(--text)}
+.sets button.on{background:#2a3f6e;border-color:var(--accent);color:#cfe0ff}
+.sets button .cnt{font:10px Consolas,monospace;color:var(--dim)}
+</style>
+</head>
+<body>
+<header>
+  <a href="index.html" class="home">← 首页</a>
+  <div class="hd">
+    <h1>BP 教练报告</h1>
+    <div class="sub" id="sub">加载中…</div>
+  </div>
+</header>
+
+<main>
+  <div class="sel">
+    <label>报告</label>
+    <span style="margin-left:auto;display:flex;gap:6px;align-items:center">
+      <a class="genlink" href="generate.html">生成新报告 →</a>
+      <button id="impBtn">导入报告</button>
+      <span id="ioMsg" class="io"></span>
+    </span>
+  </div>
+
+  <div id="body"><div class="empty">正在读取数据…</div></div>
+</main>
+
+<footer>
+  <b>读法</b>：数值单位是「局均逃脱」，2.00 为平局线；经「最低 3 人」聚合后系统性偏低，
+  只用于同一对手下的相对比较，不代表真实逃脱人数。<br>
+  <b>结构项</b>：无救人位 −0.45、救人位超过 1 个每多 1 个 −1.20、无牵制型 −0.30。<br>
+  <b>常规性</b>：救人位 ≥2 或无任何辅位 → 不常规；无救人位 / 无牵制型 / 无破译型 → 接近常规；
+  全部满足 → 常规。该判定只作提示，不计入评估值。<br>
+  <b>数据来源</b>：导入 <code>data/reports/</code> 里的报告文件；
+  报告页只支持导入，不做导出、不维护索引。
+</footer>
+
+<script src="char.js"></script>
+<script src="filemodal.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+let REP = null;        // 当前报告
+
+/** 分数统一显示两位小数 */
+const f2 = v => (v == null || !isFinite(v)) ? '—' : Number(v).toFixed(2);
+const esc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;')
+                                .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+function regCls(v) {
+  return v === '常规' ? 'good' : v === '接近常规' ? 'warn' : 'danger';
+}
+
+/** 报告页只靠导入：进来时是空的，导入了才渲染。
+ *
+ *  从生成页跳过来时带 ?file=<文件名>，直接读那一份出来显示 ——
+ *  相当于「刚生成的报告自动打开」。
+ */
+async function boot() {
+  $('#body').innerHTML = `<div class="empty">
+    还没有载入报告。<br>
+    点右上角「导入报告」，从 <code>data/reports/</code> 里挑一份；<br>
+    或者去 <a class="genlink" href="generate.html">生成页</a> 现算一份。
+  </div>`;
+  $('#sub').textContent = '导入一份报告查看';
+
+  const q = new URLSearchParams(location.search);
+  const file = q.get('file');
+  if (!file) return;
+  try {
+    const r = await fetch('/api/files/read', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ path: 'data/reports/' + file }),
+    });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const j = await r.json();
+    const d = j.data;
+    const rep = Array.isArray(d) ? d[0] : (d && d.meta ? d : (d.reports || [])[0]);
+    if (!rep) throw new Error('文件里没有报告');
+    showReport(rep);
+    setIo('已打开刚生成的报告', 'ok');
+  } catch (e) {
+    setIo('打开失败：' + e.message, 'err');
+  }
+}
+
+// ── 导入 ──
+const setIo = (t, cls) => {
+  const el = $('#ioMsg');
+  el.textContent = t;
+  el.className = 'io ' + (cls || '');
+};
+
+/* 报告页只支持导入：从 data/reports/ 里挑一份读进来直接渲染。
+ * 不做导出、不维护索引 —— 报告本身就是独立文件。 */
+$('#impBtn').onclick = () => {
+  FileModal.pick({
+    title: '导入报告',
+    dir: 'data/reports',
+    onPick: obj => {
+      // 兼容三种输入：单份报告、报告数组、旧的索引结构
+      const incoming = Array.isArray(obj) ? obj
+        : Array.isArray(obj.reports) ? obj.reports
+        : obj && obj.meta ? [obj] : null;
+      if (!incoming || !incoming.length) {
+        setIo('导入失败：文件里没有报告数据', 'err');
+        return;
+      }
+      const bad = incoming.filter(r => !r.meta || !r.meta.team
+        || !r.meta.player || !r.meta.game);
+      if (bad.length) {
+        setIo(`导入失败：${bad.length} 份报告缺少 meta（team/player/game）`, 'err');
+        return;
+      }
+      // 新结构是「以对手 ban 组合为轴」，老结构只有 sets/plans，页面渲染不了
+      const old = incoming.filter(r => !(r.combos || (r.summary || {}).sections));
+      if (old.length && old.length === incoming.length) {
+        setIo('导入失败：这些报告是旧结构（按监管假设组织），'
+          + '页面现在按「对手 ban 组合」渲染，请重新生成', 'err');
+        return;
+      }
+      showReport(incoming[0]);
+      setIo(incoming.length > 1
+        ? `已导入 ${incoming.length} 份，显示其中一份`
+        : '已导入', 'ok');
+    },
+  });
+};
+
+function showReport(rep) {
+  REP = rep;
+  const m = REP.meta;
+  $('#sub').innerHTML =
+    `${esc(m.season)} · ${esc(m.team)}（求生） vs ${esc(m.player)}（监管） · 第 ${m.game} 局 · `
+    + `生成于 ${esc(m.generated_at)} · 我方 ban 名额 ${m.ban_quota ?? 0}`;
+  render();
+}
+
+// ══════════════════════════════════════════════════════════════
+// 报告正文：四段 + 对位情报卡，顺序与教练看报告的思路一致
+//   ① 对手前两个 ban 位（用户选）  ② 我方应 ban 哪几个
+//   ③ 我方前两手    ④ 后面博弈树怎么选
+//
+// 新结构（bp_combo_report）：以「对手 ban 组合」为轴，
+// 每个 combo 自带完整的 ②③④；②③ 跟着当前选择走。
+// ══════════════════════════════════════════════════════════════
+const chips = arr => (arr || []).map(c => Char.chip(c, {size: 25})).join(' ')
+  || '<span class="dim">—</span>';
+const bansHtml = arr => (arr || []).map(c =>
+  `<span class="pill ban">${Char.icon(c, 19)}${esc(c)}</span>`).join('')
+  || '<span class="dim">不 ban</span>';
+
+/** 逐手路线：ban 紫、选人蓝 */
+function flowOf(line) {
+  if (!(line || []).length) return '<span class="dim">没有逐手数据</span>';
+  return '<div class="flow">' + line.map(x => {
+    const isBan = (x.name || '').includes('ban');
+    return `<div class="step ${isBan ? 'ban' : 'pick'}">
+      <div class="s1">${esc(x.stage)} ${esc(x.name)}</div>
+      ${Char.chip(x.char, {size: 20})}
+      <div class="s1" style="margin:3px 0 0">${f2(x.value)}</div></div>`;
+  }).join('') + '</div>';
+}
+
+function card(num, title, lead, inner) {
+  return `<div class="card">
+    <h2><span class="num">${num}</span>${title}</h2>
+    ${lead ? `<p class="lead">${lead}</p>` : ''}
+    ${inner}
+  </div>`;
+}
+
+function render() {
+  if (REP.combos || (REP.summary || {}).sections) return renderNew();
+  $('#body').innerHTML = '<div class="empty">这份报告没有任何可显示的段落。</div>';
+}
+
+/** 当前选中的 ban 组合下标 */
+let COMBO = 0;
+
+function renderNew() {
+  const m = REP.meta;
+  const combos = REP.combos || [];  if (!combos.length) {
+    $('#body').innerHTML = settingsCard()
+      + '<div class="card"><div class="verdict warn">这份报告没有可用的 ban 组合。</div></div>';
+    return;
+  }
+  if (COMBO >= combos.length) COMBO = 0;
+  const C = combos[COMBO];
+
+  // ── ① 对手前两个 ban 位：下拉切换 ──
+  const optHtml = combos.map((c, i) =>
+    `<option value="${i}"${i === COMBO ? ' selected' : ''}>${esc(c.label)}`
+    + `（可能 ${f2(c.weight)}）</option>`).join('');
+  // 每个 ban 对的指向监管前 3，分数归一化成占比（softmax 语义的简化版：
+  // 直接按分数占比展示，负分视为 0，避免出现负百分比）
+  const hunterBar = c => {
+    const hs = c.hunter_scores
+      || (c.hunters || []).map(h => ({char: h, score: c.weight}));
+    const pos = hs.map(x => ({...x, s: Math.max(x.score, 0)}));
+    const tot = pos.reduce((a, x) => a + x.s, 0) || 1;
+    return `<div style="display:flex;flex-direction:column;gap:3px">`
+      + pos.map(x => `<div style="display:flex;align-items:center;gap:6px">
+          <span style="flex:none">${Char.chip(x.char, {size: 20})}</span>
+          <span style="flex:none;font-size:11px;min-width:34px;text-align:right">${x.s > 0 ? Math.round(x.s / tot * 100) + '%' : '—'}</span>
+        </div>`).join('') + `</div>`;
+  };
+  const c1 = card(1, '对手前两个 ban 位',
+    `对手已经 ban 了哪两个求生，决定了后面所有推演。`
+    + `换成别的组合，②③④ 会整体跟着变。右侧的百分比 = 这组 ban`
+    + `最可能指向的监管前 3（按 ban 指纹+单角色倾向+热门度打分，占比归一）。`,
+    `<div class="row" style="margin-bottom:10px">
+       <label class="lb">对手的 ban</label>
+       <select id="comboSel" style="min-width:280px">${optHtml}</select>
+     </div>
+     <div class="verdict"><b>当前选择：${bansHtml(C.bans)}</b></div>
+     ${C.intent_note ? `<div class="meta" style="margin-top:8px">${esc(C.intent_note)}</div>` : ''}
+     <div class="tablewrap" style="margin-top:10px"><table>
+       <thead><tr><th style="width:24%">对手的 ban</th><th style="width:44%">最可能指向的监管（前 3）</th>
+         <th class="num">可能性</th></tr></thead>
+       <tbody>${combos.map((c, i) => `<tr class="${i === COMBO ? 'hl' : ''}">
+         <td>${chips(c.bans)}</td><td>${hunterBar(c)}</td>
+         <td class="num">${f2(c.weight)}</td></tr>`).join('')}</tbody></table></div>`);
+
+  // ── （原②已删：监管方可能考虑的监管 —— 用户判定没有参考价值）──
+
+  // ── ② 我方应 ban 哪几个监管 ──
+  const quota = C.ban_quota ?? 0;
+  let inner3;
+  if (quota === 0) {
+    inner3 = `<div class="verdict warn">第 ${m.game} 局没有 ban 监管的名额，
+      不必填这一项，直接从第 ③ 段看选人。</div>`;
+  } else {
+    const rows3 = (C.ban_options || []).map(x => {
+      const on = (C.ban_hunter || []).includes(x.char);
+      return `<tr class="${on ? 'hl' : ''}">
+        <td>${Char.chip(x.char, {size: 22})}</td>
+        <td class="num">${f2(x.value)}</td>
+        <td class="num dim">${(x.p_use * 100).toFixed(1)}%</td></tr>`;
+    }).join('');
+    inner3 = `<div class="verdict good"><b>建议 ban ${chips(C.ban_hunter)}</b></div>
+      ${C.ban_note ? `<div class="meta" style="margin-top:6px">${esc(C.ban_note)}</div>` : ''}
+      <div class="tablewrap" style="margin-top:10px"><table>
+        <thead><tr><th style="width:40%">ban 掉这个监管</th>
+          <th class="num">评估</th><th class="num">对方使用率</th></tr></thead>
+        <tbody>${rows3}</tbody></table></div>`;
+  }
+  const c3 = card(2, `我方应 ban 的监管（配额 ${quota} 个）`, null, inner3);
+
+  // ── ④ 我方前两手 ──
+  const fRows = (C.first_options || []).map(x => `<tr class="${x.char === C.first_pick ? 'hl' : ''}">
+      <td title="${esc(x.char)}">${Char.chip(x.char, {size: 22})}</td>
+      <td class="num">${f2(x.value)}</td>
+      <td class="dim">${esc((x.pos || []).join('/') || '—')}</td></tr>`).join('');
+  const sRows = (C.second_options || []).map(x => `<tr class="${x.char === C.second_pick ? 'hl' : ''}">
+      <td title="${esc(x.char)}">${Char.chip(x.char, {size: 22})}</td>
+      <td class="num">${f2(x.value)}</td>
+      <td class="dim">${esc((x.pos || []).join('/') || '—')}</td></tr>`).join('');
+  const c4 = card(3, '我方前两手怎么选',
+    `第一手和第二手分开评：每行的「评估」是选他之后双方把后面走完的结果。`,
+    `<div class="verdict"><b>前两手：${chips(C.picks)}</b>
+       <span class="dim">（救人位 ${C.solid_n ?? 0} 个）</span></div>
+     <div class="two" style="margin-top:10px">
+       <div>
+         <div class="meta">第一手</div>
+         <div class="tablewrap"><table>
+           <thead><tr><th style="width:46%">角色</th><th class="num">评估</th><th>定位</th></tr></thead>
+           <tbody>${fRows}</tbody></table></div>
+       </div>
+       <div>
+         <div class="meta">第二手（第一手定下之后）</div>
+         <div class="tablewrap"><table>
+           <thead><tr><th style="width:46%">角色</th><th class="num">评估</th><th>定位</th></tr></thead>
+           <tbody>${sRows}</tbody></table></div>
+       </div>
+     </div>`);
+
+  // ── ⑤ 后面博弈树 ──
+  // 沿最优线每一步的评估都是同一个数 —— 那就是这条线的最终结果。
+  // 有区分度的是下面的「各步关键备选」（换他之后会怎样）。
+  const lineRows = (C.line || []).map(x => `<tr>
+      <td class="dim">${esc(x.stage)}</td><td>${esc(x.name)}</td>
+      <td>${Char.chip(x.char, {size: 22})}</td>
+      <td class="num">${f2(x.value)}</td></tr>`).join('');
+  const stepRows = (C.steps || []).map(s => {
+    const isBan = (s.name || '').includes('ban');
+    const opts = (s.options || []).map(o =>
+      `<span class="pill ${o.chosen ? 'pick' : (o.better ? 'only' : '')}">`
+      + `${Char.icon(o.char, 16)}${esc(o.char)} ${f2(o.value)}</span>`).join(' ');
+    return `<tr>
+      <td class="dim">${esc(s.stage)}</td><td>${esc(s.name)}</td>
+      <td>${Char.chip(s.chosen, {size: 20})}</td>
+      <td>${opts}</td></tr>`;
+  }).join('');
+  const c5 = card(4, '后面博弈树怎么选',
+    `主变线路（每一步的评估都是这条线的最终结果，所以数值相同）`
+    + `，以及每一步的关键备选 —— 备选里的数是「换他之后」的结果，`
+    + `绿色表示比主选更好。`,
+    ((C.line || []).length ? `<div class="tablewrap"><table>
+        <thead><tr><th style="width:10%">阶段</th><th style="width:20%">动作</th>
+          <th style="width:20%">主选</th><th class="num">这条线的结果</th></tr></thead>
+        <tbody>${lineRows}</tbody></table></div>` : '')
+    + ((C.steps || []).length ? `<div class="meta" style="margin-top:12px">各步关键备选</div>
+        <div class="tablewrap"><table>
+        <thead><tr><th style="width:10%">阶段</th><th style="width:20%">动作</th>
+          <th style="width:18%">主选</th><th>备选</th></tr></thead>
+        <tbody>${stepRows}</tbody></table></div>` : ''));
+
+  // ── 对位情报：显著互斥对（出场率显著低于赛季平均的行为统计）──
+  const alerts = REP.matchup_alerts || [];
+  const alertPill = a => {
+    const cls = a.kind === '对手会ban' ? 'ban' : a.kind === '我方回避' ? 'only' : '';
+    return `<span class="pill ${cls}">${esc(a.kind)}</span>`;
+  };
+  const alertRows = alerts.map(a => `<tr>
+      <td>${Char.chip(a.surv, {size: 22})}</td>
+      <td>${Char.chip(a.hunter, {size: 22})}</td>
+      <td>${alertPill(a)}</td>
+      <td class="num dim">${a.esc != null ? f2(a.esc) + '（' + a.esc_n + ' 局）' : '没出场过'}</td>
+      <td class="dim" title="${esc(a.note)}">${esc(a.note)}</td></tr>`).join('');
+  const cAlert = alerts.length ? card('⚠', '对位情报：互相回避的组合',
+    `赛季行为统计（不修正分数）：这些 (求生 × 监管) 组合的实际出场率显著低于该角色的赛季平均。`
+    + `「对手会ban」= 大多被对手拦截，别指望他留在场上；「我方回避」= 本队一直没选，`
+    + `选出即是逆版本，围绕他构建阵容前先想清楚。`,
+    `<div class="tablewrap"><table>
+       <thead><tr><th style="width:16%">求生</th><th style="width:16%">面对的监管</th>
+         <th style="width:13%">归因</th><th class="num" style="width:18%">出场时的局均逃脱</th>
+         <th>依据</th></tr></thead>
+       <tbody>${alertRows}</tbody></table></div>`) : '';
+
+  const gbLine = (m.global_ban_surv || []).length || (m.global_ban_hunt || []).length
+    ? `<div class="meta">生成时已排除的全局禁选：`
+      + `${chips(m.global_ban_surv)}（求生）${chips(m.global_ban_hunt)}（监管）</div>` : '';
+
+  $('#body').innerHTML =
+    settingsCard()
+    + c1 + c3 + c4 + c5 + cAlert;
+
+  const sel = $('#comboSel');
+  if (sel) sel.onchange = () => { COMBO = +sel.value; renderNew(); };
+}
+
+/** 本次生成用的设置：监管数据来源、求生角色池、全局禁选。 */
+function settingsCard() {
+  const m = REP.meta || {};
+  const gs = m.global_ban_surv || [];
+  const gh = m.global_ban_hunt || [];
+  const pool = m.our_pool || [];
+  let src;
+  if (m.scores_source) {
+    src = `导入的配置 <b>${esc(m.scores_source)}</b>`;
+  } else {
+    src = '预编辑基准表';
+  }
+  const rosterSrc = m.roster_source
+    ? `导入的配置 <b>${esc(m.roster_source)}</b>`
+    : '预编辑基准角色池';
+  const kv = (k, v) => `<div class="kv"><span class="k">${k}</span>`
+    + `<span class="v">${v}</span></div>`;
+  return `<div class="card">
+    <h2><span class="num">i</span>本次生成用的设置</h2>
+    <p class="lead">这些是生成这份报告时的输入，换掉其中任何一项都会得到不同的结论。</p>
+    <div class="two">
+      <div>
+        ${kv('对局', `${esc(m.team)}（求生） vs ${esc(m.player)}（监管） · 第 ${m.game} 局`)}
+        ${kv('我方 ban 名额', `${m.ban_quota ?? 0} 个（第 1 局 0、第 2 局 1、第 3 局起 2）`)}
+        ${kv('搜索范围', `监管前 ${m.hunters ?? '—'} · ban 组合前 ${m.bantop ?? '—'}`)}
+        ${kv('可选 ban 组合', `${m.combo_count ?? '—'} 组（第 ① 段可切换）`)}
+        ${kv('监管数据', src)}
+        ${kv('求生角色池', `${rosterSrc} · ${esc(m.team)} 共 ${pool.length} 个`)}
+      </div>
+      <div>
+        ${kv('我方已用掉的求生', gs.length ? chips(gs) : '<span class="dim">无</span>')}
+        ${kv('对方已用掉的监管', gh.length ? chips(gh) : '<span class="dim">无</span>')}
+      </div>
+    </div>
+    ${pool.length ? `<div class="meta" style="margin-top:8px">
+      我方角色池：${chips(pool)}</div>` : ''}
+  </div>`;
+}
+
+/** 旧格式（按监管集合组织）的兼容渲染 —— 已下线，报告一律走新结构。 */
+
+boot();
+</script>
+</body>
+</html>

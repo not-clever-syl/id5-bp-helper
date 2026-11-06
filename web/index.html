@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IVL 2026 秋 · 求生方 BP 工具</title>
+<link rel="stylesheet" href="char.css">
+<style>
+:root{
+  --bg:#12141a;--panel:#191c24;--panel2:#21252f;--border:#2c313d;
+  --text:#dfe5f0;--dim:#8a93a6;--accent:#6b8cff;
+  --ok:#6dc4a0;--err:#e0837b;--warn:#d8b25f;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+  font:13px/1.6 -apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
+header{padding:26px 24px 20px;border-bottom:1px solid var(--border);
+  background:var(--panel)}
+header h1{margin:0 0 6px;font-size:19px;font-weight:600;letter-spacing:.3px}
+header p{margin:0;color:var(--dim);font-size:12.5px}
+main{max-width:960px;margin:0 auto;padding:26px 24px 70px}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+a.card{display:block;background:var(--panel);border:1px solid var(--border);
+  border-radius:11px;padding:16px 18px 15px;text-decoration:none;color:inherit;
+  transition:border-color .14s,transform .14s,background .14s}
+a.card:hover{border-color:var(--accent);background:var(--panel2);transform:translateY(-2px)}
+a.card .t{display:flex;align-items:center;gap:9px;font-size:15px;font-weight:600;
+  margin-bottom:7px}
+a.card .t .arrow{margin-left:auto;color:var(--dim);font-size:15px;transition:.14s}
+a.card:hover .t .arrow{color:var(--accent);transform:translateX(3px)}
+a.card .d{color:var(--dim);font-size:12.5px;line-height:1.75}
+a.card .tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:10px}
+.tag{font-size:11px;padding:1px 8px;border-radius:10px;
+  background:rgba(107,140,255,.14);color:#9db2ff}
+.tag.g{background:rgba(109,196,160,.14);color:var(--ok)}
+
+.ico{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;
+  justify-content:center;font-size:14px;background:var(--panel2);flex:none}
+
+section{margin-top:30px}
+section h2{font-size:13px;font-weight:600;color:var(--dim);margin:0 0 12px;
+  padding-bottom:7px;border-bottom:1px solid var(--border)}
+
+footer{margin-top:40px;color:#5b6373;font-size:11.5px;line-height:1.9}
+footer code{background:var(--panel2);padding:1px 6px;border-radius:4px;
+  font:11px Consolas,monospace;color:var(--dim)}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>IVL 2026 秋季赛 · 求生方 BP 工具</h1>
+  <p>按对手监管角色正向推演 BP，判断阵容常规性，并查看各角色得分。</p>
+</header>
+
+<main>
+
+  <section style="margin-top:0">
+    <h2>主要功能</h2>
+    <div class="grid">
+
+      <a class="card" href="data.html">
+        <div class="t"><span class="ico">📊</span>数据<span class="arrow">→</span></div>
+        <div class="d">
+          总榜：每个求生角色面对每个监管的局均逃脱。<br>
+          选手榜：单个监管选手的实测 / 全局 / 折合。<br>
+          角色池：各队能用哪些求生。
+        </div>
+        <div class="tags"><span class="tag">总榜</span><span class="tag">选手</span><span class="tag">角色池</span><span class="tag g">只读</span></div>
+      </a>
+
+      <a class="card" href="expect.html">
+        <div class="t"><span class="ico">🎯</span>阵容期望分<span class="arrow">→</span></div>
+        <div class="d">
+          选一套 4 人求生阵容 + 一位监管选手，算出这套阵容面对
+          每个监管角色的期望得分，按最危险的排前面。
+        </div>
+        <div class="tags"><span class="tag">逐监管</span><span class="tag g">选手加权</span></div>
+      </a>
+
+    </div>
+  </section>
+
+  <section>
+    <h2>报告与推演</h2>
+    <div class="grid">
+
+      <a class="card" href="report.html">
+        <div class="t"><span class="ico">📄</span>BP 报告<span class="arrow">→</span></div>
+        <div class="d">
+          查看已生成的教练报告。按「前两个 ban 位 → 对手可能的监管 → 我方 ban
+          → 我方前两手 → 后面博弈树」的顺序给出整条路线，支持导入和导出。
+        </div>
+        <div class="tags"><span class="tag">五段路线</span><span class="tag">导入导出</span></div>
+      </a>
+
+      <a class="card" href="generate.html">
+        <div class="t"><span class="ico">⚙️</span>报告生成<span class="arrow">→</span></div>
+        <div class="d">
+          选战队、监管选手、局次，按局数自动给出 ban 名额与全局禁选提示，
+          一键生成报告并登记到报告页。预编辑数据只读，自定义数据可改。
+        </div>
+        <div class="tags"><span class="tag">全局禁选</span><span class="tag g">一键生成</span></div>
+      </a>
+
+    </div>
+  </section>
+
+  <footer>
+    分数单位是「局均逃脱」，2.00 为居中值。<br>
+    本地服务：<code>python scripts/serve.py 8766</code>。<br>
+    预制数据在 <code>data/</code> 根目录，只读；配置与报告分别放在
+    <code>data/hunter/</code>、<code>data/survivor/</code>、<code>data/reports/</code>。
+  </footer>
+
+</main>
+
+</body>
+</html>

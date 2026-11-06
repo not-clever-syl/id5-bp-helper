@@ -1,0 +1,24 @@
+# 本地归档：被清理的非运行时文件（原始数据、构建管线、死脚本）。
+# 上传 GitHub 时不包含；需要重建数据时从这里取回。
+tmp/
+
+# 本地生成的测试报告（含预制报告，都是本机测试产物）
+data/reports/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 日志与临时文件
+*.log
+*.out
