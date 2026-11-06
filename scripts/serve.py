@@ -25,8 +25,11 @@ POST /api/generate     —— 生成一份 BP 报告并存进 data/reports/
     python scripts/serve.py 8080       # 换端口
 """
 import json
+import socket
 import sys
+import threading
 import urllib.parse
+import webbrowser
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
@@ -62,6 +65,10 @@ def _list_reports() -> list:
 
 
 class Handler(SimpleHTTPRequestHandler):
+    # 端口探测靠 bind 试错，服务器本身也必须用同样的判定，
+    # 否则探测说「可用」但实际 bind 失败，会退回到硬报错。
+    allow_reuse_address = False
+
     def __init__(self, *a, **kw):
         super().__init__(*a, directory=str(ROOT), **kw)
 
@@ -460,13 +467,47 @@ class Handler(SimpleHTTPRequestHandler):
             print(fmt % args, flush=True)
 
 
+def _pick_port(preferred: int, tries: int = 20) -> int:
+    """找一个能用的端口：优先用 preferred，被占用就往后顺延。
+
+    小白最常撞的坑是「端口被占用 → 服务起不来 → 不知道为什么」。
+    这里直接自动换端口，保证双击就能用。
+
+    探测方式：尝试 bind + listen，能绑上就说明没人占用。
+    注意不能用 SO_REUSEADDR —— 那样即使端口已被别的服务
+    占用也能 bind 成功，探测结果会是假的。
+    """
+    for p in range(preferred, preferred + tries):
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.bind(("127.0.0.1", p))
+                s.listen(1)
+            return p
+        except OSError:
+            continue
+    raise OSError(f"{preferred}~{preferred + tries - 1} 端口都被占用了，"
+                   f"请关闭占用端口的程序后重试")
+
+
 def main():
     port = int(sys.argv[1]) if len(sys.argv) > 1 else 8765
+    try:
+        port = _pick_port(port)
+    except OSError as e:
+        print(f"启动失败：{e}", flush=True)
+        return
     srv = ThreadingHTTPServer(("127.0.0.1", port), Handler)
-    print(f"服务已启动 http://localhost:{port}/web/index.html", flush=True)
+    url = f"http://localhost:{port}/web/index.html"
+    print(f"服务已启动 {url}", flush=True)
     print(f"配置目录：{file_api.DIR_HUNTER}（监管）"
           f" / {file_api.DIR_SURVIVOR}（角色池）"
           f" / {file_api.DIR_REPORTS}（报告）", flush=True)
+    print("按 Ctrl+C 停止服务", flush=True)
+
+    # 自动打开浏览器（延迟一点，等服务真正开始监听）
+    if "--no-browser" not in sys.argv:
+        threading.Timer(0.8, lambda: webbrowser.open(url)).start()
+
     try:
         srv.serve_forever()
     except KeyboardInterrupt:
