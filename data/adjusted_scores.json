@@ -1,0 +1,7762 @@
+{
+ "meta": {
+  "description": "战队求生角色 × 监管角色 的折合得分",
+  "baseline": "行业标准水平的监管选手（主力角色内选手熟练度均值为零）",
+  "lambda_player": 3.0,
+  "max_adjust": 0.5,
+  "min_main_n": 20,
+  "iterations": 9,
+  "mu": 1.6577,
+  "mu_main_subset": 1.6667,
+  "halves": 260,
+  "main_chars": [
+   "台球手",
+   "喧嚣",
+   "女王蜂",
+   "歌剧演员",
+   "牙医",
+   "跛脚羊",
+   "鹿头"
+  ],
+  "counter_pick_chars": [
+   "26号守卫",
+   "使徒",
+   "小丑",
+   "时空之影",
+   "杂货商",
+   "渔女",
+   "破轮",
+   "蜡像师",
+   "记录员",
+   "雕刻家"
+  ],
+  "score_formula": "adjusted = raw + adjust(p,c), adjust = clip(-beta)",
+  "counter_pick_rule": "对策卡不参与 α/β 估计，adjust 恒为 0"
+ },
+ "hunter_char_effect": {
+  "跛脚羊": {
+   "alpha": -0.3108,
+   "n": 24,
+   "estimated": true
+  },
+  "牙医": {
+   "alpha": -0.2519,
+   "n": 57,
+   "estimated": true
+  },
+  "鹿头": {
+   "alpha": -0.2456,
+   "n": 22,
+   "estimated": true
+  },
+  "歌剧演员": {
+   "alpha": 0.1308,
+   "n": 35,
+   "estimated": true
+  },
+  "喧嚣": {
+   "alpha": 0.1488,
+   "n": 20,
+   "estimated": true
+  },
+  "女王蜂": {
+   "alpha": 0.2322,
+   "n": 33,
+   "estimated": true
+  },
+  "台球手": {
+   "alpha": 0.2964,
+   "n": 25,
+   "estimated": true
+  }
+ },
+ "counter_pick_chars": {
+  "26号守卫": {
+   "n": 4
+  },
+  "使徒": {
+   "n": 1
+  },
+  "小丑": {
+   "n": 2
+  },
+  "时空之影": {
+   "n": 11
+  },
+  "杂货商": {
+   "n": 6
+  },
+  "渔女": {
+   "n": 2
+  },
+  "破轮": {
+   "n": 8
+  },
+  "蜡像师": {
+   "n": 5
+  },
+  "记录员": {
+   "n": 4
+  },
+  "雕刻家": {
+   "n": 1
+  }
+ },
+ "player_char_adjust": {
+  "BaiLu@喧嚣": {
+   "n": 1,
+   "beta": -0.48,
+   "adjust": 0.48,
+   "adjust_unclipped": 0.48,
+   "clipped": false,
+   "shrink_weight": 0.25,
+   "counter_pick": false
+  },
+  "BaiLu@女王蜂": {
+   "n": 2,
+   "beta": 0.0083,
+   "adjust": -0.0083,
+   "adjust_unclipped": -0.0083,
+   "clipped": false,
+   "shrink_weight": 0.4,
+   "counter_pick": false
+  },
+  "BaiLu@歌剧演员": {
+   "n": 1,
+   "beta": 0.016,
+   "adjust": -0.016,
+   "adjust_unclipped": -0.016,
+   "clipped": false,
+   "shrink_weight": 0.25,
+   "counter_pick": false
+  },
+  "BaiLu@牙医": {
+   "n": 2,
+   "beta": -0.2045,
+   "adjust": 0.2045,
+   "adjust_unclipped": 0.2045,
+   "clipped": false,
+   "shrink_weight": 0.4,
+   "counter_pick": false
+  },
+  "BaiLu@记录员": {
+   "n": 1,
+   "beta": 0.0,
+   "adjust": 0.0,
+   "adjust_unclipped": 0.0,
+   "clipped": false,
+   "shrink_weight": 0.0,
+   "counter_pick": true
+  },
+  "BaiLu@跛脚羊": {
+   "n": 1,
+   "beta": -0.3698,
+   "adjust": 0.3698,
+   "adjust_unclipped": 0.3698,
+   "clipped": false,
+   "shrink_weight": 0.25,
+   "counter_pick": false
+  },
+  "BaiLu@鹿头": {
+   "n": 1,
+   "beta": 0.1155,
+   "adjust": -0.1155,
+   "adjust_unclipped": -0.1155,
+   "clipped": false,
+   "shrink_weight": 0.25,
+   "counter_pick": false
+  },
+  "ChoAi@台球手": {
+   "n": 2,
+   "beta": 0.1833,
+   "adjust": -0.1833,
+   "adjust_unclipped": -0.1833,
+   "clipped": false,
+   "shrink_weight": 0.4,
+   "counter_pick": false
+  },
+  "ChoAi@喧嚣": {
+   "n": 1,
+   "beta": 0.27,
+   "adjust": -0.27,
+   "adjust_unclipped": -0.27,
+   "clipped": false,
+   "shrink_weight": 0.25,
+   "counter_pick": false
+  },
+  "ChoAi@女王蜂": {
+   "n": 2,
+   "beta": 0.2083,
+   "adjust": -0.2083,
+   "adjust_unclipped": -0.2083,
+   "clipped": false,
+   "shrink_weight": 0.4,
+   "counter_pick": false
+  },
+  "ChoAi@杂货商": {
+   "n": 1,
+   "beta": 0.0,
+   "adjust": 0.0,
+   "adjust_unclipped": 0.0,
+   "clipped": false,
+   "shrink_weight": 0.0,
+   "counter_pick": true
+  },
+  "ChoAi@歌剧演员": {
+   "n": 2,
+   "beta": 0.0464,
+   "adjust": -0.0464,
+   "adjust_unclipped": -0.0464,
+   "clipped": false,
+   "shrink_weight": 0.4,
+   "counter_pick": false
+  },
+  "ChoAi@牙医": {
+   "n": 2,
+   "beta": 0.1955,
+   "adjust": -0.1955,
+   "adjust_unclipped": -0.1955,
+   "clipped": false,
+   "shrink_weight": 0.4,
+   "counter_pick": false
+  },
+  "ChoAi@跛脚羊": {
+   "n": 3,
+   "beta": -0.2087,
+   "adjust": 0.2087,
+   "adjust_unclipped": 0.2087,
+   "clipped": false,
+   "shrink_weight": 0.5,
+   "counter_pick": false
+  },
+  "ChoAi@鹿头": {
+   "n": 1,
+   "beta": 0.1155,
+   "adjust": -0.1155,
+   "adjust_unclipped": -0.1155,
+   "clipped": false,
+   "shrink_weight": 0.25,
+   "counter_pick": false
+  },
+  "CyanX@台球手": {
+   "n": 1,
+   "beta": -0.0223,
+   "adjust": 0.0223,
+   "adjust_unclipped": 0.0223,
+   "clipped": false,
+   "shrink_weight": 0.25,
+   "counter_pick": false
+  },
+  "CyanX@女王蜂": {
+   "n": 3,
+   "beta": 0.185,
+   "adjust": -0.185,
+   "adjust_unclipped": -0.185,
+   "clipped": false,
+   "shrink_weight": 0.5,
+   "counter_pick": false
+  },
+  "CyanX@牙医": {
+   "n": 4,
+   "beta": -0.5613,
+   "adjust": 0.5,
+   "adjust_unclipped": 0.5613,
+   "clipped": true,
+   "shrink_weight": 0.571,
+   "counter_pick": false
+  },
+  "CyanX@鹿头": {
+   "n": 2,
+   "beta": 0.2023,
+   "adjust": -0.2023,
+   "adjust_unclipped": -0.2023,
+   "clipped": false,
+   "shrink_weight": 0.4,
+   "counter_pick": false
+  },
+  "DongX@台球手": {
+   "n": 2,
+   "beta": -0.2167,
+   "adjust": 0.2167,
+   "adjust_unclipped": 0.2167,
+   "clipped": false,
+   "shrink_weight": 0.4,
+   "counter_pick": false
+  },
+  "DongX@喧嚣": {
+   "n": 1,
+   "beta": 0.27,
+   "adjust": -0.27,
+   "adjust_unclipped": -0.27,
+   "clipped": false,
+   "shrink_weight": 0.25,
+   "counter_pick": false
+  },
+  "DongX@女王蜂": {
+   "n": 3,
+   "beta": -0.4816,
+   "adjust": 0.4816,
+   "adjust_unclipped": 0.4816,
+   "clipped": false,
+   "shrink_weight": 0.5,
+   "counter_pick": false
+  },
+  "DongX@时空之影": {
+   "n": 4,
+   "beta": 0.0,
+   "adjust": 0.0,
+   "adjust_unclipped": 0.0,
+   "clipped": false,
+   "shrink_weight": 0.0,
+   "counter_pick": true
+  },
+  "DongX@蜡像师": {
+   "n": 1,
+   "beta": 0.0,
+   "adjust": 0.0,
+   "adjust_unclipped": 0.0,
+   "clipped": false,
+   "shrink_weight": 0.0,
+   "counter_pick": true
+  },
+  "DongX@鹿头": {
+   "n": 4,
+   "beta": -0.6985,
+   "adjust": 0.5,
+   "adjust_unclipped": 0.6985,
+   "clipped": true,
+   "shrink_weight": 0.571,
+   "counter_pick": false
+  },
+  "Jin@台球手": {
+   "n": 2,
+   "beta": 0.1833,
+   "adjust": -0.1833,
+   "adjust_unclipped": -0.1833,
+   "clipped": false,
+   "shrink_weight": 0.4,
+   "counter_pick": false
+  },
+  "Jin@喧嚣": {
+   "n": 2,
+   "beta": -0.1523,
+   "adjust": 0.1523,
+   "adjust_unclipped": 0.1523,
+   "clipped": false,
+   "shrink_weight": 0.4,
+   "counter_pick": false
+  },
+  "Jin@歌剧演员": {
+   "n": 2,
+   "beta": 0.0464,
+   "adjust": -0.0464,
+   "adjust_unclipped": -0.0464,
+   "clipped": false,
+   "shrink_weight": 0.4,
+   "counter_pick": false
+  },
+  "Jin@牙医": {
+   "n": 4,
+   "beta": -0.2756,
+   "adjust": 0.2756,
+   "adjust_unclipped": 0.2756,
+   "clipped": false,
+   "shrink_weight": 0.571,
+   "counter_pick": false
+  },
+  "Jin@破轮": {
+   "n": 5,
+   "beta": 0.0,
+   "adjust": 0.0,
+   "adjust_unclipped": 0.0,
+   "clipped": false,
+   "shrink_weight": 0.0,
+   "counter_pick": true
+  },
+  "Jin@跛脚羊": {
+   "n": 2,
+   "beta": -0.3732,
+   "adjust": 0.3732,
+   "adjust_unclipped": 0.3732,
+   "clipped": false,
+   "shrink_weight": 0.4,
+   "counter_pick": false
+  },
+  "Jin@鹿头": {
+   "n": 1,
+   "beta": 0.3655,
+   "adjust": -0.3655,
+   "adjust_unclipped": -0.3655,
+   "clipped": false,
+   "shrink_weight": 0.25,
+   "counter_pick": false
+  },
+  "Mort1s@26号守卫": {
+   "n": 1,
+   "beta": 0.0,
+   "adjust": 0.0,
+   "adjust_unclipped": 0.0,
+   "clipped": false,
+   "shrink_weight": 0.0,
+   "counter_pick": true
+  },
+  "Mort1s@喧嚣": {
+   "n": 3,
+   "beta": 0.0661,
+   "adjust": -0.0661,
+   "adjust_unclipped": -0.0661,
+   "clipped": false,
+   "shrink_weight": 0.5,
+   "counter_pick": false
+  },
+  "Mort1s@女王蜂": {
+   "n": 2,
+   "beta": 0.2083,
+   "adjust": -0.2083,
+   "adjust_unclipped": -0.2083,
+   "clipped": false,
+   "shrink_weight": 0.4,
+   "counter_pick": false
+  },
+  "Mort1s@小丑": {
+   "n": 1,
+   "beta": 0.0,
+   "adjust": 0.0,
+   "adjust_unclipped": 0.0,
+   "clipped": false,
+   "shrink_weight": 0.0,
+   "counter_pick": true
+  },
+  "Mort1s@杂货商": {
+   "n": 1,
+   "beta": 0.0,
+   "adjust": 0.0,
+   "adjust_unclipped": 0.0,
+   "clipped": false,
+   "shrink_weight": 0.0,
+   "counter_pick": true
+  },
+  "Mort1s@牙医": {
+   "n": 4,
+   "beta": 0.2958,
+   "adjust": -0.2958,
+   "adjust_unclipped": -0.2958,
+   "clipped": false,
+   "shrink_weight": 0.571,
+   "counter_pick": false
+  },
+  "Mort1s@破轮": {
+   "n": 3,
+   "beta": 0.0,
+   "adjust": 0.0,
+   "adjust_unclipped": 0.0,
+   "clipped": false,
+   "shrink_weight": 0.0,
+   "counter_pick": true
+  },
+  "N1e@26号守卫": {
+   "n": 1,
+   "beta": 0.0,
+   "adjust": 0.0,
+   "adjust_unclipped": 0.0,
+   "clipped": false,
+   "shrink_weight": 0.0,
+   "counter_pick": true
+  },
+  "N1e@台球手": {
+   "n": 2,
+   "beta": -0.2167,
+   "adjust": 0.2167,
+   "adjust_unclipped": 0.2167,
+   "clipped": false,
+   "shrink_weight": 0.4,
+   "counter_pick": false
+  },
+  "N1e@喧嚣": {
+   "n": 1,
+   "beta": 0.02,
+   "adjust": -0.02,
+   "adjust_unclipped": -0.02,
+   "clipped": false,
+   "shrink_weight": 0.25,
+   "counter_pick": false
+  },
+  "N1e@女王蜂": {
+   "n": 3,
+   "beta": -0.4816,
+   "adjust": 0.4816,
+   "adjust_unclipped": 0.4816,
+   "clipped": false,
+   "shrink_weight": 0.5,
+   "counter_pick": false
+  },
+  "N1e@时空之影": {
+   "n": 1,
+   "beta": 0.0,
+   "adjust": 0.0,
+   "adjust_unclipped": 0.0,
+   "clipped": false,
+   "shrink_weight": 0.0,
+   "counter_pick": true
+  },
+  "N1e@杂货商": {
+   "n": 1,
+   "beta": 0.0,
+   "adjust": 0.0,
+   "adjust_unclipped": 0.0,
+   "clipped": false,
+   "shrink_weight": 0.0,
+   "counter_pick": true
+  },
+  "N1e@歌剧演员": {
+   "n": 4,
+   "beta": -0.2046,
+   "adjust": 0.2046,
+   "adjust_unclipped": 0.2046,
+   "clipped": false,
+   "shrink_weight": 0.571,
+   "counter_pick": false
+  },
+  "N1e@牙医": {
+   "n": 1,
+   "beta": 0.1077,
+   "adjust": -0.1077,
+   "adjust_unclipped": -0.1077,
+   "clipped": false,
+   "shrink_weight": 0.25,
+   "counter_pick": false
+  },
+  "N1e@跛脚羊": {
+   "n": 1,
+   "beta": 0.6302,
+   "adjust": -0.5,
+   "adjust_unclipped": -0.6302,
+   "clipped": true,
+   "shrink_weight": 0.25,
+   "counter_pick": false
+  },
+  "Nokino@女王蜂": {
+   "n": 1,
+   "beta": -0.0069,
+   "adjust": 0.0069,
+   "adjust_unclipped": 0.0069,
+   "clipped": false,
+   "shrink_weight": 0.25,
+   "counter_pick": false
+  },
+  "Nokino@渔女": {
+   "n": 1,
+   "beta": 0.0,
+   "adjust": 0.0,
+   "adjust_unclipped": 0.0,
+   "clipped": false,
+   "shrink_weight": 0.0,
+   "counter_pick": true
+  },
+  "Nokino@牙医": {
+   "n": 1,
+   "beta": 0.1077,
+   "adjust": -0.1077,
+   "adjust_unclipped": -0.1077,
+   "clipped": false,
+   "shrink_weight": 0.25,
+   "counter_pick": false
+  },
+  "NonSept@使徒": {
+   "n": 1,
+   "beta": 0.0,
+   "adjust": 0.0,
+   "adjust_unclipped": 0.0,
+   "clipped": false,
+   "shrink_weight": 0.0,
+   "counter_pick": true
+  },
+  "NonSept@台球手": {
+   "n": 1,
+   "beta": 0.2277,
+   "adjust": -0.2277,
+   "adjust_unclipped": -0.2277,
+   "clipped": false,
+   "shrink_weight": 0.25,
+   "counter_pick": false
+  },
+  "NonSept@女王蜂": {
+   "n": 1,
+   "beta": -0.0069,
+   "adjust": 0.0069,
+   "adjust_unclipped": 0.0069,
+   "clipped": false,
+   "shrink_weight": 0.25,
+   "counter_pick": false
+  },
+  "NonSept@歌剧演员": {
+   "n": 2,
+   "beta": 0.0464,
+   "adjust": -0.0464,
+   "adjust_unclipped": -0.0464,
+   "clipped": false,
+   "shrink_weight": 0.4,
+   "counter_pick": false
+  },
+  "NonSept@牙医": {
+   "n": 4,
+   "beta": 0.0101,
+   "adjust": -0.0101,
+   "adjust_unclipped": -0.0101,
+   "clipped": false,
+   "shrink_weight": 0.571,
+   "counter_pick": false
+  },
+  "NonSept@跛脚羊": {
+   "n": 2,
+   "beta": 0.4268,
+   "adjust": -0.4268,
+   "adjust_unclipped": -0.4268,
+   "clipped": false,
+   "shrink_weight": 0.4,
+   "counter_pick": false
+  },
+  "NonSept@鹿头": {
+   "n": 2,
+   "beta": 0.0023,
+   "adjust": -0.0023,
+   "adjust_unclipped": -0.0023,
+   "clipped": false,
+   "shrink_weight": 0.4,
+   "counter_pick": false
+  },
+  "Qiu@26号守卫": {
+   "n": 2,
+   "beta": 0.0,
+   "adjust": 0.0,
+   "adjust_unclipped": 0.0,
+   "clipped": false,
+   "shrink_weight": 0.0,
+   "counter_pick": true
+  },
+  "Qiu@喧嚣": {
+   "n": 2,
+   "beta": 0.2477,
+   "adjust": -0.2477,
+   "adjust_unclipped": -0.2477,
+   "clipped": false,
+   "shrink_weight": 0.4,
+   "counter_pick": false
+  },
+  "Qiu@女王蜂": {
+   "n": 4,
+   "beta": 0.1684,
+   "adjust": -0.1684,
+   "adjust_unclipped": -0.1684,
+   "clipped": false,
+   "shrink_weight": 0.571,
+   "counter_pick": false
+  },
+  "Qiu@歌剧演员": {
+   "n": 4,
+   "beta": -0.0617,
+   "adjust": 0.0617,
+   "adjust_unclipped": 0.0617,
+   "clipped": false,
+   "shrink_weight": 0.571,
+   "counter_pick": false
+  },
+  "Qiu@牙医": {
+   "n": 5,
+   "beta": 0.2021,
+   "adjust": -0.2021,
+   "adjust_unclipped": -0.2021,
+   "clipped": false,
+   "shrink_weight": 0.625,
+   "counter_pick": false
+  },
+  "Qiu@蜡像师": {
+   "n": 3,
+   "beta": 0.0,
+   "adjust": 0.0,
+   "adjust_unclipped": 0.0,
+   "clipped": false,
+   "shrink_weight": 0.0,
+   "counter_pick": true
+  },
+  "Qiu@跛脚羊": {
+   "n": 4,
+   "beta": -0.0913,
+   "adjust": 0.0913,
+   "adjust_unclipped": 0.0913,
+   "clipped": false,
+   "shrink_weight": 0.571,
+   "counter_pick": false
+  },
+  "Qiu@鹿头": {
+   "n": 1,
+   "beta": -0.3845,
+   "adjust": 0.3845,
+   "adjust_unclipped": 0.3845,
+   "clipped": false,
+   "shrink_weight": 0.25,
+   "counter_pick": false
+  },
+  "Qx@台球手": {
+   "n": 1,
+   "beta": 0.4777,
+   "adjust": -0.4777,
+   "adjust_unclipped": -0.4777,
+   "clipped": false,
+   "shrink_weight": 0.25,
+   "counter_pick": false
+  },
+  "Qx@喧嚣": {
+   "n": 1,
+   "beta": 0.02,
+   "adjust": -0.02,
+   "adjust_unclipped": -0.02,
+   "clipped": false,
+   "shrink_weight": 0.25,
+   "counter_pick": false
+  },
+  "Qx@歌剧演员": {
+   "n": 2,
+   "beta": 0.2464,
+   "adjust": -0.2464,
+   "adjust_unclipped": -0.2464,
+   "clipped": false,
+   "shrink_weight": 0.4,
+   "counter_pick": false
+  },
+  "Qx@牙医": {
+   "n": 7,
+   "beta": 0.071,
+   "adjust": -0.071,
+   "adjust_unclipped": -0.071,
+   "clipped": false,
+   "shrink_weight": 0.7,
+   "counter_pick": false
+  },
+  "Qx@跛脚羊": {
+   "n": 1,
+   "beta": -0.1198,
+   "adjust": 0.1198,
+   "adjust_unclipped": 0.1198,
+   "clipped": false,
+   "shrink_weight": 0.25,
+   "counter_pick": false
+  },
+  "Tear@台球手": {
+   "n": 4,
+   "beta": -0.2961,
+   "adjust": 0.2961,
+   "adjust_unclipped": 0.2961,
+   "clipped": false,
+   "shrink_weight": 0.571,
+   "counter_pick": false
+  },
+  "Tear@喧嚣": {
+   "n": 4,
+   "beta": -0.3493,
+   "adjust": 0.3493,
+   "adjust_unclipped": 0.3493,
+   "clipped": false,
+   "shrink_weight": 0.571,
+   "counter_pick": false
+  },
+  "Tear@女王蜂": {
+   "n": 5,
+   "beta": -0.469,
+   "adjust": 0.469,
+   "adjust_unclipped": 0.469,
+   "clipped": false,
+   "shrink_weight": 0.625,
+   "counter_pick": false
+  },
+  "Tear@歌剧演员": {
+   "n": 1,
+   "beta": 0.266,
+   "adjust": -0.266,
+   "adjust_unclipped": -0.266,
+   "clipped": false,
+   "shrink_weight": 0.25,
+   "counter_pick": false
+  },
+  "Tear@牙医": {
+   "n": 5,
+   "beta": -0.1729,
+   "adjust": 0.1729,
+   "adjust_unclipped": 0.1729,
+   "clipped": false,
+   "shrink_weight": 0.625,
+   "counter_pick": false
+  },
+  "Tear@记录员": {
+   "n": 2,
+   "beta": 0.0,
+   "adjust": 0.0,
+   "adjust_unclipped": 0.0,
+   "clipped": false,
+   "shrink_weight": 0.0,
+   "counter_pick": true
+  },
+  "Tear@跛脚羊": {
+   "n": 2,
+   "beta": 0.0268,
+   "adjust": -0.0268,
+   "adjust_unclipped": -0.0268,
+   "clipped": false,
+   "shrink_weight": 0.4,
+   "counter_pick": false
+  },
+  "Tear@雕刻家": {
+   "n": 1,
+   "beta": 0.0,
+   "adjust": 0.0,
+   "adjust_unclipped": 0.0,
+   "clipped": false,
+   "shrink_weight": 0.0,
+   "counter_pick": true
+  },
+  "YuM@台球手": {
+   "n": 6,
+   "beta": -0.118,
+   "adjust": 0.118,
+   "adjust_unclipped": 0.118,
+   "clipped": false,
+   "shrink_weight": 0.667,
+   "counter_pick": false
+  },
+  "YuM@女王蜂": {
+   "n": 1,
+   "beta": 0.2431,
+   "adjust": -0.2431,
+   "adjust_unclipped": -0.2431,
+   "clipped": false,
+   "shrink_weight": 0.25,
+   "counter_pick": false
+  },
+  "YuM@小丑": {
+   "n": 1,
+   "beta": 0.0,
+   "adjust": 0.0,
+   "adjust_unclipped": 0.0,
+   "clipped": false,
+   "shrink_weight": 0.0,
+   "counter_pick": true
+  },
+  "YuM@时空之影": {
+   "n": 1,
+   "beta": 0.0,
+   "adjust": 0.0,
+   "adjust_unclipped": 0.0,
+   "clipped": false,
+   "shrink_weight": 0.0,
+   "counter_pick": true
+  },
+  "YuM@杂货商": {
+   "n": 1,
+   "beta": 0.0,
+   "adjust": 0.0,
+   "adjust_unclipped": 0.0,
+   "clipped": false,
+   "shrink_weight": 0.0,
+   "counter_pick": true
+  },
+  "YuM@歌剧演员": {
+   "n": 7,
+   "beta": 0.0072,
+   "adjust": -0.0072,
+   "adjust_unclipped": -0.0072,
+   "clipped": false,
+   "shrink_weight": 0.7,
+   "counter_pick": false
+  },
+  "YuM@牙医": {
+   "n": 6,
+   "beta": -0.3151,
+   "adjust": 0.3151,
+   "adjust_unclipped": 0.3151,
+   "clipped": false,
+   "shrink_weight": 0.667,
+   "counter_pick": false
+  },
+  "YuM@跛脚羊": {
+   "n": 2,
+   "beta": -0.1732,
+   "adjust": 0.1732,
+   "adjust_unclipped": 0.1732,
+   "clipped": false,
+   "shrink_weight": 0.4,
+   "counter_pick": false
+  },
+  "YuM@鹿头": {
+   "n": 5,
+   "beta": 0.2076,
+   "adjust": -0.2076,
+   "adjust_unclipped": -0.2076,
+   "clipped": false,
+   "shrink_weight": 0.625,
+   "counter_pick": false
+  },
+  "YuZ@牙医": {
+   "n": 1,
+   "beta": 0.3577,
+   "adjust": -0.3577,
+   "adjust_unclipped": -0.3577,
+   "clipped": false,
+   "shrink_weight": 0.25,
+   "counter_pick": false
+  },
+  "mhxm@女王蜂": {
+   "n": 2,
+   "beta": 0.0083,
+   "adjust": -0.0083,
+   "adjust_unclipped": -0.0083,
+   "clipped": false,
+   "shrink_weight": 0.4,
+   "counter_pick": false
+  },
+  "mhxm@杂货商": {
+   "n": 2,
+   "beta": 0.0,
+   "adjust": 0.0,
+   "adjust_unclipped": 0.0,
+   "clipped": false,
+   "shrink_weight": 0.0,
+   "counter_pick": true
+  },
+  "mhxm@歌剧演员": {
+   "n": 2,
+   "beta": 0.0464,
+   "adjust": -0.0464,
+   "adjust_unclipped": -0.0464,
+   "clipped": false,
+   "shrink_weight": 0.4,
+   "counter_pick": false
+  },
+  "mhxm@牙医": {
+   "n": 2,
+   "beta": -0.0045,
+   "adjust": 0.0045,
+   "adjust_unclipped": 0.0045,
+   "clipped": false,
+   "shrink_weight": 0.4,
+   "counter_pick": false
+  },
+  "mhxm@跛脚羊": {
+   "n": 1,
+   "beta": 0.1302,
+   "adjust": -0.1302,
+   "adjust_unclipped": -0.1302,
+   "clipped": false,
+   "shrink_weight": 0.25,
+   "counter_pick": false
+  },
+  "mhxm@鹿头": {
+   "n": 1,
+   "beta": 0.1155,
+   "adjust": -0.1155,
+   "adjust_unclipped": -0.1155,
+   "clipped": false,
+   "shrink_weight": 0.25,
+   "counter_pick": false
+  },
+  "moonlight@喧嚣": {
+   "n": 1,
+   "beta": 0.02,
+   "adjust": -0.02,
+   "adjust_unclipped": -0.02,
+   "clipped": false,
+   "shrink_weight": 0.25,
+   "counter_pick": false
+  },
+  "moonlight@歌剧演员": {
+   "n": 1,
+   "beta": 0.016,
+   "adjust": -0.016,
+   "adjust_unclipped": -0.016,
+   "clipped": false,
+   "shrink_weight": 0.25,
+   "counter_pick": false
+  },
+  "moonlight@牙医": {
+   "n": 1,
+   "beta": 0.1077,
+   "adjust": -0.1077,
+   "adjust_unclipped": -0.1077,
+   "clipped": false,
+   "shrink_weight": 0.25,
+   "counter_pick": false
+  },
+  "ppei@台球手": {
+   "n": 1,
+   "beta": -0.0223,
+   "adjust": 0.0223,
+   "adjust_unclipped": 0.0223,
+   "clipped": false,
+   "shrink_weight": 0.25,
+   "counter_pick": false
+  },
+  "ppei@喧嚣": {
+   "n": 2,
+   "beta": 0.0477,
+   "adjust": -0.0477,
+   "adjust_unclipped": -0.0477,
+   "clipped": false,
+   "shrink_weight": 0.4,
+   "counter_pick": false
+  },
+  "ppei@女王蜂": {
+   "n": 2,
+   "beta": 0.2083,
+   "adjust": -0.2083,
+   "adjust_unclipped": -0.2083,
+   "clipped": false,
+   "shrink_weight": 0.4,
+   "counter_pick": false
+  },
+  "ppei@歌剧演员": {
+   "n": 4,
+   "beta": -0.2046,
+   "adjust": 0.2046,
+   "adjust_unclipped": 0.2046,
+   "clipped": false,
+   "shrink_weight": 0.571,
+   "counter_pick": false
+  },
+  "ppei@渔女": {
+   "n": 1,
+   "beta": 0.0,
+   "adjust": 0.0,
+   "adjust_unclipped": 0.0,
+   "clipped": false,
+   "shrink_weight": 0.0,
+   "counter_pick": true
+  },
+  "ppei@牙医": {
+   "n": 7,
+   "beta": -0.029,
+   "adjust": 0.029,
+   "adjust_unclipped": 0.029,
+   "clipped": false,
+   "shrink_weight": 0.7,
+   "counter_pick": false
+  },
+  "ppei@记录员": {
+   "n": 1,
+   "beta": 0.0,
+   "adjust": 0.0,
+   "adjust_unclipped": 0.0,
+   "clipped": false,
+   "shrink_weight": 0.0,
+   "counter_pick": true
+  },
+  "ppei@鹿头": {
+   "n": 1,
+   "beta": 0.3655,
+   "adjust": -0.3655,
+   "adjust_unclipped": -0.3655,
+   "clipped": false,
+   "shrink_weight": 0.25,
+   "counter_pick": false
+  },
+  "zz9@台球手": {
+   "n": 3,
+   "beta": -0.1797,
+   "adjust": 0.1797,
+   "adjust_unclipped": 0.1797,
+   "clipped": false,
+   "shrink_weight": 0.5,
+   "counter_pick": false
+  },
+  "zz9@喧嚣": {
+   "n": 1,
+   "beta": 0.02,
+   "adjust": -0.02,
+   "adjust_unclipped": -0.02,
+   "clipped": false,
+   "shrink_weight": 0.25,
+   "counter_pick": false
+  },
+  "zz9@女王蜂": {
+   "n": 2,
+   "beta": 0.2083,
+   "adjust": -0.2083,
+   "adjust_unclipped": -0.2083,
+   "clipped": false,
+   "shrink_weight": 0.4,
+   "counter_pick": false
+  },
+  "zz9@时空之影": {
+   "n": 5,
+   "beta": 0.0,
+   "adjust": 0.0,
+   "adjust_unclipped": 0.0,
+   "clipped": false,
+   "shrink_weight": 0.0,
+   "counter_pick": true
+  },
+  "zz9@歌剧演员": {
+   "n": 3,
+   "beta": -0.2666,
+   "adjust": 0.2666,
+   "adjust_unclipped": 0.2666,
+   "clipped": false,
+   "shrink_weight": 0.5,
+   "counter_pick": false
+  },
+  "zz9@牙医": {
+   "n": 1,
+   "beta": 0.1077,
+   "adjust": -0.1077,
+   "adjust_unclipped": -0.1077,
+   "clipped": false,
+   "shrink_weight": 0.25,
+   "counter_pick": false
+  },
+  "zz9@蜡像师": {
+   "n": 1,
+   "beta": 0.0,
+   "adjust": 0.0,
+   "adjust_unclipped": 0.0,
+   "clipped": false,
+   "shrink_weight": 0.0,
+   "counter_pick": true
+  },
+  "zz9@跛脚羊": {
+   "n": 5,
+   "beta": 0.1218,
+   "adjust": -0.1218,
+   "adjust_unclipped": -0.1218,
+   "clipped": false,
+   "shrink_weight": 0.625,
+   "counter_pick": false
+  },
+  "zz9@鹿头": {
+   "n": 3,
+   "beta": -0.4065,
+   "adjust": 0.4065,
+   "adjust_unclipped": 0.4065,
+   "clipped": false,
+   "shrink_weight": 0.5,
+   "counter_pick": false
+  }
+ },
+ "adjusted_scores": {
+  "北京WBG": {
+   "古董商": {
+    "牙医": {
+     "n": 4,
+     "raw": 1.75,
+     "adjusted": 1.828,
+     "delta": 0.078,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.832,
+     "delta": -0.168,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.885,
+     "delta": -0.115,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.118,
+     "delta": 0.118,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "祭司": {
+    "牙医": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.005,
+     "delta": 0.005,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "木偶师": {
+    "牙医": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 1.905,
+     "delta": -0.095,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "时空之影": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.792,
+     "delta": -0.208,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.217,
+     "delta": 0.217,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 2,
+     "raw": 1.5,
+     "adjusted": 1.73,
+     "delta": 0.23,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "渔女": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "大副": {
+    "牙医": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.005,
+     "delta": 0.005,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.406,
+     "delta": 0.406,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 1.999,
+     "delta": -0.001,
+     "confidence": "medium",
+     "counter_pick": false
+    }
+   },
+   "病患": {
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.954,
+     "delta": -0.046,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.798,
+     "delta": -0.202,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "玩具商": {
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.954,
+     "delta": -0.046,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "斗牛士": {
+    "歌剧演员": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 1.969,
+     "delta": -0.031,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "喧嚣": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.98,
+     "delta": -0.02,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.798,
+     "delta": -0.202,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 2.017,
+     "delta": 0.017,
+     "confidence": "medium",
+     "counter_pick": false
+    }
+   },
+   "佣兵": {
+    "歌剧演员": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 1.969,
+     "delta": -0.031,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "时空之影": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "喧嚣": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.752,
+     "delta": -0.248,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "鹿头": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 1.838,
+     "delta": -0.162,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.469,
+     "delta": 0.469,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "弓箭手": {
+    "杂货商": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "喧嚣": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.752,
+     "delta": -0.248,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.792,
+     "delta": -0.208,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.892,
+     "delta": -0.108,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "心理学家": {
+    "杂货商": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.992,
+     "delta": -0.008,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "法罗女士": {
+    "杂货商": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.406,
+     "delta": 0.406,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 1.801,
+     "delta": -0.199,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.993,
+     "delta": -0.007,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "记录员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "守墓人": {
+    "杂货商": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "跛脚羊": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.878,
+     "delta": -0.122,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 4,
+     "raw": 1.75,
+     "adjusted": 1.776,
+     "delta": 0.026,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.993,
+     "delta": -0.007,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "渔女": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "咒术师": {
+    "跛脚羊": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.878,
+     "delta": -0.122,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.817,
+     "delta": -0.183,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 3,
+     "raw": 1.667,
+     "adjusted": 1.823,
+     "delta": 0.156,
+     "confidence": "high",
+     "counter_pick": false
+    }
+   },
+   "飞行家": {
+    "跛脚羊": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.878,
+     "delta": -0.122,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.832,
+     "delta": -0.168,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 2,
+     "raw": 2.5,
+     "adjusted": 2.467,
+     "delta": -0.033,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 4,
+     "raw": 1.75,
+     "adjusted": 1.8,
+     "delta": 0.05,
+     "confidence": "high",
+     "counter_pick": false
+    }
+   },
+   "幻灯师": {
+    "跛脚羊": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.878,
+     "delta": -0.122,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "喧嚣": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.752,
+     "delta": -0.248,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "记录员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.007,
+     "delta": 0.007,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "气象学家": {
+    "鹿头": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.406,
+     "delta": 0.406,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.804,
+     "delta": -0.196,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.993,
+     "delta": -0.007,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.217,
+     "delta": 0.217,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "记录员": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "默剧艺人": {
+    "鹿头": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 2.146,
+     "delta": 0.146,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 1.988,
+     "delta": -0.012,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.007,
+     "delta": 0.007,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "记录员": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "空军": {
+    "时空之影": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "幸运儿": {
+    "时空之影": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.792,
+     "delta": -0.208,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 2,
+     "raw": 1.5,
+     "adjusted": 1.567,
+     "delta": 0.067,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "渔女": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.469,
+     "delta": 0.469,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "邮差": {
+    "喧嚣": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.98,
+     "delta": -0.02,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "记录员": {
+     "n": 2,
+     "raw": 1.0,
+     "adjusted": 1.0,
+     "delta": 0.0,
+     "confidence": "medium",
+     "counter_pick": true
+    }
+   },
+   "火灾调查员": {
+    "喧嚣": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.98,
+     "delta": -0.02,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "渔女": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "野人": {
+    "喧嚣": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.98,
+     "delta": -0.02,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.832,
+     "delta": -0.168,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.804,
+     "delta": -0.196,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 2,
+     "raw": 1.5,
+     "adjusted": 1.667,
+     "delta": 0.167,
+     "confidence": "medium",
+     "counter_pick": false
+    }
+   },
+   "作曲家": {
+    "女王蜂": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.832,
+     "delta": -0.168,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.885,
+     "delta": -0.115,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.118,
+     "delta": 0.118,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 2.033,
+     "delta": 0.033,
+     "confidence": "medium",
+     "counter_pick": false
+    }
+   },
+   "入殓师": {
+    "喧嚣": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.752,
+     "delta": -0.248,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.984,
+     "delta": -0.016,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "逃脱大师": {
+    "台球手": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.817,
+     "delta": -0.183,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "记录员": {
+     "n": 2,
+     "raw": 1.0,
+     "adjusted": 1.0,
+     "delta": 0.0,
+     "confidence": "medium",
+     "counter_pick": true
+    },
+    "牙医": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.892,
+     "delta": -0.108,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   }
+  },
+  "GR": {
+   "古董商": {
+    "女王蜂": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 1.999,
+     "delta": -0.001,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.296,
+     "delta": 0.296,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "作曲家": {
+    "女王蜂": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.007,
+     "delta": 0.007,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "记录员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "台球手": {
+     "n": 2,
+     "raw": 3.0,
+     "adjusted": 2.82,
+     "delta": -0.18,
+     "confidence": "medium",
+     "counter_pick": false
+    }
+   },
+   "逃脱大师": {
+    "女王蜂": {
+     "n": 4,
+     "raw": 1.75,
+     "adjusted": 1.825,
+     "delta": 0.075,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "记录员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.754,
+     "delta": -0.246,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "飞行家": {
+    "女王蜂": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 1.999,
+     "delta": -0.001,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.029,
+     "delta": 0.029,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.062,
+     "delta": 0.062,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "跛脚羊": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 0.878,
+     "delta": -0.122,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "幻灯师": {
+    "歌剧演员": {
+     "n": 4,
+     "raw": 2.0,
+     "adjusted": 2.039,
+     "delta": 0.039,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.469,
+     "delta": 0.469,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "蜡像师": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "牙医": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.204,
+     "delta": 0.204,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "默剧艺人": {
+    "歌剧演员": {
+     "n": 3,
+     "raw": 2.0,
+     "adjusted": 2.007,
+     "delta": 0.007,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "喧嚣": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.349,
+     "delta": 0.349,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 2,
+     "raw": 1.0,
+     "adjusted": 1.048,
+     "delta": 0.048,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.792,
+     "delta": -0.208,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "园丁": {
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.205,
+     "delta": 0.205,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "记录员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "佣兵": {
+    "歌剧演员": {
+     "n": 3,
+     "raw": 2.0,
+     "adjusted": 2.157,
+     "delta": 0.157,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 3,
+     "raw": 2.667,
+     "adjusted": 2.645,
+     "delta": -0.021,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 2,
+     "raw": 1.0,
+     "adjusted": 1.048,
+     "delta": 0.048,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.792,
+     "delta": -0.208,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "弓箭手": {
+    "跛脚羊": {
+     "n": 2,
+     "raw": 2.5,
+     "adjusted": 2.189,
+     "delta": -0.311,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 4,
+     "raw": 1.0,
+     "adjusted": 1.019,
+     "delta": 0.019,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.469,
+     "delta": 0.469,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "蜡像师": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.885,
+     "delta": -0.115,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "气象学家": {
+    "跛脚羊": {
+     "n": 1,
+     "raw": 4.0,
+     "adjusted": 3.5,
+     "delta": -0.5,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 4,
+     "raw": 1.0,
+     "adjusted": 1.019,
+     "delta": 0.019,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 2.238,
+     "delta": 0.238,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "蜡像师": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.885,
+     "delta": -0.115,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "心理学家": {
+    "跛脚羊": {
+     "n": 1,
+     "raw": 4.0,
+     "adjusted": 3.5,
+     "delta": -0.5,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 2.099,
+     "delta": 0.099,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.832,
+     "delta": -0.168,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.18,
+     "delta": 0.18,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "大副": {
+    "跛脚羊": {
+     "n": 2,
+     "raw": 2.5,
+     "adjusted": 2.189,
+     "delta": -0.311,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.022,
+     "delta": 0.022,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "蜡像师": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.993,
+     "delta": -0.007,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "守墓人": {
+    "牙医": {
+     "n": 5,
+     "raw": 1.2,
+     "adjusted": 1.175,
+     "delta": -0.025,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.18,
+     "delta": 0.18,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.885,
+     "delta": -0.115,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "咒术师": {
+    "歌剧演员": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 2.133,
+     "delta": 0.133,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "喧嚣": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.349,
+     "delta": 0.349,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "勘探员": {
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.022,
+     "delta": 0.022,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "火灾调查员": {
+    "台球手": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 2.101,
+     "delta": 0.101,
+     "confidence": "medium",
+     "counter_pick": false
+    }
+   },
+   "幸运儿": {
+    "台球手": {
+     "n": 3,
+     "raw": 2.667,
+     "adjusted": 2.614,
+     "delta": -0.053,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 2,
+     "raw": 1.0,
+     "adjusted": 1.056,
+     "delta": 0.056,
+     "confidence": "medium",
+     "counter_pick": false
+    }
+   },
+   "入殓师": {
+    "记录员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "喧嚣": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.349,
+     "delta": 0.349,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 2,
+     "raw": 1.5,
+     "adjusted": 1.363,
+     "delta": -0.137,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "跛脚羊": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 0.878,
+     "delta": -0.122,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.885,
+     "delta": -0.115,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "木偶师": {
+    "女王蜂": {
+     "n": 2,
+     "raw": 1.5,
+     "adjusted": 1.73,
+     "delta": 0.23,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 2,
+     "raw": 3.0,
+     "adjusted": 2.82,
+     "delta": -0.18,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.804,
+     "delta": -0.196,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "前锋": {
+    "喧嚣": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.349,
+     "delta": 0.349,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "斗牛士": {
+    "女王蜂": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.832,
+     "delta": -0.168,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.892,
+     "delta": -0.108,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.118,
+     "delta": 0.118,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "法罗女士": {
+    "女王蜂": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.832,
+     "delta": -0.168,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "囚徒": {
+    "牙医": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.798,
+     "delta": -0.202,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "空军": {
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.754,
+     "delta": -0.246,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 2,
+     "raw": 1.0,
+     "adjusted": 1.048,
+     "delta": 0.048,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.792,
+     "delta": -0.208,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "病患": {
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.993,
+     "delta": -0.007,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "先知": {
+    "女王蜂": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.792,
+     "delta": -0.208,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   }
+  },
+  "ACT": {
+   "祭司": {
+    "喧嚣": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.98,
+     "delta": -0.02,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "野人": {
+    "喧嚣": {
+     "n": 3,
+     "raw": 1.667,
+     "adjusted": 1.637,
+     "delta": -0.029,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.815,
+     "delta": -0.185,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "跛脚羊": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.091,
+     "delta": 0.091,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.792,
+     "delta": -0.208,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "古董商": {
+    "喧嚣": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.98,
+     "delta": -0.02,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 5,
+     "raw": 1.6,
+     "adjusted": 1.634,
+     "delta": 0.034,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 2,
+     "raw": 2.5,
+     "adjusted": 2.323,
+     "delta": -0.177,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.118,
+     "delta": 0.118,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "气象学家": {
+    "喧嚣": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.98,
+     "delta": -0.02,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 3,
+     "raw": 1.333,
+     "adjusted": 1.479,
+     "delta": 0.146,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "跛脚羊": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.091,
+     "delta": 0.091,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.757,
+     "delta": -0.243,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "拉拉队员": {
+    "女王蜂": {
+     "n": 3,
+     "raw": 1.0,
+     "adjusted": 1.261,
+     "delta": 0.261,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "喧嚣": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.98,
+     "delta": -0.02,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "跛脚羊": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.209,
+     "delta": 0.209,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.993,
+     "delta": -0.007,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "前锋": {
+    "女王蜂": {
+     "n": 3,
+     "raw": 1.0,
+     "adjusted": 1.477,
+     "delta": 0.477,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "喧嚣": {
+     "n": 4,
+     "raw": 2.5,
+     "adjusted": 2.392,
+     "delta": -0.108,
+     "confidence": "high",
+     "counter_pick": false
+    }
+   },
+   "幸运儿": {
+    "女王蜂": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.482,
+     "delta": 0.482,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "喧嚣": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.73,
+     "delta": -0.27,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 2.152,
+     "delta": 0.152,
+     "confidence": "medium",
+     "counter_pick": false
+    }
+   },
+   "作曲家": {
+    "女王蜂": {
+     "n": 3,
+     "raw": 1.0,
+     "adjusted": 1.261,
+     "delta": 0.261,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "喧嚣": {
+     "n": 2,
+     "raw": 1.5,
+     "adjusted": 1.466,
+     "delta": -0.034,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "跛脚羊": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.209,
+     "delta": 0.209,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "破轮": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.993,
+     "delta": -0.007,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "守墓人": {
+    "鹿头": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.5,
+     "delta": 0.5,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 3,
+     "raw": 2.0,
+     "adjusted": 2.003,
+     "delta": 0.003,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.757,
+     "delta": -0.243,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "咒术师": {
+    "鹿头": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.5,
+     "delta": 0.5,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.757,
+     "delta": -0.243,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "医生": {
+    "鹿头": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.5,
+     "delta": 0.5,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "26号守卫": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.757,
+     "delta": -0.243,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "斗牛士": {
+    "鹿头": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.5,
+     "delta": 0.5,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 2,
+     "raw": 2.5,
+     "adjusted": 2.648,
+     "delta": 0.148,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "喧嚣": {
+     "n": 3,
+     "raw": 2.0,
+     "adjusted": 1.879,
+     "delta": -0.121,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "破轮": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "逃脱大师": {
+    "牙医": {
+     "n": 2,
+     "raw": 1.0,
+     "adjusted": 1.081,
+     "delta": 0.081,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.205,
+     "delta": 0.205,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.118,
+     "delta": 0.118,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "飞行家": {
+    "牙医": {
+     "n": 3,
+     "raw": 2.0,
+     "adjusted": 1.908,
+     "delta": -0.092,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.815,
+     "delta": -0.185,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.118,
+     "delta": 0.118,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "调酒师": {
+    "女王蜂": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.482,
+     "delta": 0.482,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "喧嚣": {
+     "n": 4,
+     "raw": 2.5,
+     "adjusted": 2.392,
+     "delta": -0.108,
+     "confidence": "high",
+     "counter_pick": false
+    }
+   },
+   "木偶师": {
+    "女王蜂": {
+     "n": 2,
+     "raw": 1.0,
+     "adjusted": 1.475,
+     "delta": 0.475,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "喧嚣": {
+     "n": 2,
+     "raw": 2.5,
+     "adjusted": 2.441,
+     "delta": -0.059,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.792,
+     "delta": -0.208,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "病患": {
+    "喧嚣": {
+     "n": 2,
+     "raw": 2.5,
+     "adjusted": 2.457,
+     "delta": -0.043,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.205,
+     "delta": 0.205,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "佣兵": {
+    "26号守卫": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "弓箭手": {
+    "26号守卫": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "跛脚羊": {
+     "n": 2,
+     "raw": 0.5,
+     "adjusted": 0.65,
+     "delta": 0.15,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.205,
+     "delta": 0.205,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "破轮": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.792,
+     "delta": -0.208,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "法罗女士": {
+    "26号守卫": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "喧嚣": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.752,
+     "delta": -0.248,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.993,
+     "delta": -0.007,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "大副": {
+    "跛脚羊": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.209,
+     "delta": 0.209,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.832,
+     "delta": -0.168,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "心理学家": {
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.205,
+     "delta": 0.205,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.173,
+     "delta": 0.173,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.792,
+     "delta": -0.208,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "幻灯师": {
+    "喧嚣": {
+     "n": 2,
+     "raw": 1.5,
+     "adjusted": 1.552,
+     "delta": 0.052,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "跛脚羊": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.091,
+     "delta": 0.091,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.993,
+     "delta": -0.007,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "园丁": {
+    "牙医": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.704,
+     "delta": -0.296,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.118,
+     "delta": 0.118,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "记者": {
+    "破轮": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   }
+  },
+  "FPX.ZQ": {
+   "弓箭手": {
+    "时空之影": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.792,
+     "delta": -0.208,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 2,
+     "raw": 1.5,
+     "adjusted": 1.473,
+     "delta": -0.027,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.798,
+     "delta": -0.202,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "飞行家": {
+    "时空之影": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "渔女": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "牙医": {
+     "n": 5,
+     "raw": 2.0,
+     "adjusted": 2.017,
+     "delta": 0.017,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.815,
+     "delta": -0.185,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "幸运儿": {
+    "时空之影": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "牙医": {
+     "n": 3,
+     "raw": 2.0,
+     "adjusted": 1.908,
+     "delta": -0.092,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 0.993,
+     "delta": -0.007,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "破轮": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.022,
+     "delta": 0.022,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "骑士": {
+    "时空之影": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "前锋": {
+    "歌剧演员": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 3.267,
+     "delta": 0.267,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "渔女": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "破轮": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "祭司": {
+    "歌剧演员": {
+     "n": 2,
+     "raw": 2.5,
+     "adjusted": 2.736,
+     "delta": 0.236,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.315,
+     "delta": 0.315,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "雕刻家": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "医生": {
+    "歌剧演员": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 2.13,
+     "delta": 0.13,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "喧嚣": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 2.142,
+     "delta": 0.142,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.798,
+     "delta": -0.202,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "心理学家": {
+    "歌剧演员": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 2.164,
+     "delta": 0.164,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "渔女": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.022,
+     "delta": 0.022,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "幻灯师": {
+    "鹿头": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.406,
+     "delta": 0.406,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "破轮": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.022,
+     "delta": 0.022,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.062,
+     "delta": 0.062,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "咒术师": {
+    "鹿头": {
+     "n": 2,
+     "raw": 1.0,
+     "adjusted": 1.102,
+     "delta": 0.102,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "喧嚣": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 2.142,
+     "delta": 0.142,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "杂货商": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "先知": {
+    "鹿头": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.406,
+     "delta": 0.406,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "佣兵": {
+    "鹿头": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.406,
+     "delta": 0.406,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.792,
+     "delta": -0.208,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "杂货商": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "破轮": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.022,
+     "delta": 0.022,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.205,
+     "delta": 0.205,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "古董商": {
+    "牙医": {
+     "n": 6,
+     "raw": 2.0,
+     "adjusted": 2.081,
+     "delta": 0.081,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.815,
+     "delta": -0.185,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.385,
+     "delta": 0.385,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "园丁": {
+    "牙医": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.029,
+     "delta": 0.029,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "守墓人": {
+    "牙医": {
+     "n": 6,
+     "raw": 2.0,
+     "adjusted": 2.002,
+     "delta": 0.002,
+     "confidence": "high",
+     "counter_pick": false
+    }
+   },
+   "气象学家": {
+    "女王蜂": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.792,
+     "delta": -0.208,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.173,
+     "delta": 0.173,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.062,
+     "delta": 0.062,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "作曲家": {
+    "女王蜂": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 1.792,
+     "delta": -0.208,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "破轮": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.385,
+     "delta": 0.385,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "入殓师": {
+    "渔女": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "魔术师": {
+    "喧嚣": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.934,
+     "delta": -0.066,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "大副": {
+    "喧嚣": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 2.142,
+     "delta": 0.142,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 2,
+     "raw": 1.0,
+     "adjusted": 1.027,
+     "delta": 0.027,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.276,
+     "delta": 0.276,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "拉拉队员": {
+    "破轮": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "病患": {
+    "破轮": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.954,
+     "delta": -0.046,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.385,
+     "delta": 0.385,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "斗牛士": {
+    "女王蜂": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.792,
+     "delta": -0.208,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "雕刻家": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "空军": {
+    "女王蜂": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.792,
+     "delta": -0.208,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.205,
+     "delta": 0.205,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "野人": {
+    "女王蜂": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.792,
+     "delta": -0.208,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "鹿头": {
+     "n": 2,
+     "raw": 1.0,
+     "adjusted": 1.091,
+     "delta": 0.091,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "雕刻家": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "木偶师": {
+    "杂货商": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "牙医": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 2.037,
+     "delta": 0.037,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.798,
+     "delta": -0.202,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.205,
+     "delta": 0.205,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "教授": {
+    "杂货商": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "调酒师": {
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.954,
+     "delta": -0.046,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "逃脱大师": {
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.954,
+     "delta": -0.046,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.815,
+     "delta": -0.185,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "机械师": {
+    "破轮": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.815,
+     "delta": -0.185,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.173,
+     "delta": 0.173,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "默剧艺人": {
+    "喧嚣": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.349,
+     "delta": 0.349,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "邮差": {
+    "雕刻家": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   }
+  },
+  "成都GG": {
+   "守墓人": {
+    "牙医": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.704,
+     "delta": -0.296,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "26号守卫": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "时空之影": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "女王蜂": {
+     "n": 2,
+     "raw": 3.0,
+     "adjusted": 2.792,
+     "delta": -0.208,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "跛脚羊": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.209,
+     "delta": 0.209,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "飞行家": {
+    "牙医": {
+     "n": 4,
+     "raw": 1.25,
+     "adjusted": 1.163,
+     "delta": -0.087,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "喧嚣": {
+     "n": 2,
+     "raw": 1.0,
+     "adjusted": 1.251,
+     "delta": 0.251,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "时空之影": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "弓箭手": {
+    "牙医": {
+     "n": 3,
+     "raw": 1.667,
+     "adjusted": 1.554,
+     "delta": -0.113,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "跛脚羊": {
+     "n": 4,
+     "raw": 1.25,
+     "adjusted": 1.329,
+     "delta": 0.079,
+     "confidence": "high",
+     "counter_pick": false
+    }
+   },
+   "气象学家": {
+    "牙医": {
+     "n": 2,
+     "raw": 1.5,
+     "adjusted": 1.367,
+     "delta": -0.133,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.296,
+     "delta": 0.296,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "跛脚羊": {
+     "n": 2,
+     "raw": 1.0,
+     "adjusted": 1.232,
+     "delta": 0.232,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 2,
+     "raw": 2.5,
+     "adjusted": 2.637,
+     "delta": 0.137,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.998,
+     "delta": -0.002,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "时空之影": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "大副": {
+    "破轮": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.296,
+     "delta": 0.296,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.205,
+     "delta": 0.205,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "跛脚羊": {
+     "n": 3,
+     "raw": 1.0,
+     "adjusted": 1.153,
+     "delta": 0.153,
+     "confidence": "high",
+     "counter_pick": false
+    }
+   },
+   "木偶师": {
+    "破轮": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.998,
+     "delta": -0.002,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "跛脚羊": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.878,
+     "delta": -0.122,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "古董商": {
+    "破轮": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "喧嚣": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.349,
+     "delta": 0.349,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 2,
+     "raw": 3.0,
+     "adjusted": 2.792,
+     "delta": -0.208,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": -0.01,
+     "delta": -0.01,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "跛脚羊": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.209,
+     "delta": 0.209,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "祭司": {
+    "破轮": {
+     "n": 2,
+     "raw": 0.0,
+     "adjusted": 0.0,
+     "delta": 0.0,
+     "confidence": "medium",
+     "counter_pick": true
+    },
+    "26号守卫": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "拉拉队员": {
+    "小丑": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "跛脚羊": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 0.973,
+     "delta": -0.027,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "时空之影": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "蜡像师": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "作曲家": {
+    "小丑": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "跛脚羊": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 0.973,
+     "delta": -0.027,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "蜡像师": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "前锋": {
+    "小丑": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "跛脚羊": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 0.973,
+     "delta": -0.027,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.062,
+     "delta": 0.062,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "喧嚣": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.152,
+     "delta": 0.152,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "病患": {
+    "小丑": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "歌剧演员": {
+     "n": 2,
+     "raw": 1.5,
+     "adjusted": 1.633,
+     "delta": 0.133,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "破轮": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "野人": {
+    "26号守卫": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "喧嚣": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.349,
+     "delta": 0.349,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "跛脚羊": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.091,
+     "delta": 0.091,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.482,
+     "delta": 0.482,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.954,
+     "delta": -0.046,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "幸运儿": {
+    "26号守卫": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "女王蜂": {
+     "n": 3,
+     "raw": 2.667,
+     "adjusted": 2.684,
+     "delta": 0.017,
+     "confidence": "high",
+     "counter_pick": false
+    }
+   },
+   "先知": {
+    "26号守卫": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "女王蜂": {
+     "n": 2,
+     "raw": 2.5,
+     "adjusted": 2.63,
+     "delta": 0.13,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "杂货商": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "邮差": {
+    "26号守卫": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "蜡像师": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "默剧艺人": {
+    "喧嚣": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.349,
+     "delta": 0.349,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "跛脚羊": {
+     "n": 4,
+     "raw": 1.25,
+     "adjusted": 1.388,
+     "delta": 0.138,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.954,
+     "delta": -0.046,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "斗牛士": {
+    "女王蜂": {
+     "n": 3,
+     "raw": 2.333,
+     "adjusted": 2.581,
+     "delta": 0.247,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "喧嚣": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.152,
+     "delta": 0.152,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "时空之影": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "逃脱大师": {
+    "女王蜂": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.469,
+     "delta": 0.469,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 3,
+     "raw": 1.0,
+     "adjusted": 0.983,
+     "delta": -0.017,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "杂货商": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "冒险家": {
+    "台球手": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.296,
+     "delta": 0.296,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "咒术师": {
+    "台球手": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.296,
+     "delta": 0.296,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 2.079,
+     "delta": 0.079,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "破轮": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "火灾调查员": {
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.062,
+     "delta": 0.062,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "医生": {
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.062,
+     "delta": 0.062,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "幻灯师": {
+    "26号守卫": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "牙医": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.929,
+     "delta": -0.071,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.954,
+     "delta": -0.046,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "勘探员": {
+    "26号守卫": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "时空之影": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.998,
+     "delta": -0.002,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 2,
+     "raw": 3.0,
+     "adjusted": 2.792,
+     "delta": -0.208,
+     "confidence": "medium",
+     "counter_pick": false
+    }
+   },
+   "心理学家": {
+    "女王蜂": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.482,
+     "delta": 0.482,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.205,
+     "delta": 0.205,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "蜡像师": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "调酒师": {
+    "时空之影": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "杂货商": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "园丁": {
+    "牙医": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": -0.01,
+     "delta": -0.01,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "佣兵": {
+    "鹿头": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.998,
+     "delta": -0.002,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "时空之影": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.792,
+     "delta": -0.208,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "入殓师": {
+    "喧嚣": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.152,
+     "delta": 0.152,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "法罗女士": {
+    "破轮": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "小说家": {
+    "杂货商": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   }
+  },
+  "MRC": {
+   "拉拉队员": {
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.118,
+     "delta": 0.118,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "古董商": {
+    "台球手": {
+     "n": 3,
+     "raw": 1.667,
+     "adjusted": 1.877,
+     "delta": 0.21,
+     "confidence": "high",
+     "counter_pick": false
+    }
+   },
+   "守墓人": {
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.118,
+     "delta": 0.118,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 3,
+     "raw": 2.0,
+     "adjusted": 1.906,
+     "delta": -0.094,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.954,
+     "delta": -0.046,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "气象学家": {
+    "台球手": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 2.167,
+     "delta": 0.167,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 4,
+     "raw": 1.25,
+     "adjusted": 1.309,
+     "delta": 0.059,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "跛脚羊": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 0.878,
+     "delta": -0.122,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "心理学家": {
+    "牙医": {
+     "n": 2,
+     "raw": 1.0,
+     "adjusted": 1.122,
+     "delta": 0.122,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "跛脚羊": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.209,
+     "delta": 0.209,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.217,
+     "delta": 0.217,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.954,
+     "delta": -0.046,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "咒术师": {
+    "牙医": {
+     "n": 3,
+     "raw": 0.333,
+     "adjusted": 0.588,
+     "delta": 0.255,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "跛脚羊": {
+     "n": 2,
+     "raw": 1.5,
+     "adjusted": 1.543,
+     "delta": 0.043,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.217,
+     "delta": 0.217,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "逃脱大师": {
+    "牙医": {
+     "n": 3,
+     "raw": 0.333,
+     "adjusted": 0.663,
+     "delta": 0.329,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 2.217,
+     "delta": 0.217,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.406,
+     "delta": 0.406,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "飞行家": {
+    "牙医": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.315,
+     "delta": 0.315,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.217,
+     "delta": 0.217,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.205,
+     "delta": 0.205,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "幸运儿": {
+    "鹿头": {
+     "n": 2,
+     "raw": 1.5,
+     "adjusted": 1.646,
+     "delta": 0.146,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 2.056,
+     "delta": 0.056,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "杂货商": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "先知": {
+    "鹿头": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.792,
+     "delta": -0.208,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "时空之影": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "杂货商": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.817,
+     "delta": -0.183,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "前锋": {
+    "鹿头": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.792,
+     "delta": -0.208,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "时空之影": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "跛脚羊": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.209,
+     "delta": 0.209,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.817,
+     "delta": -0.183,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "调酒师": {
+    "鹿头": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.792,
+     "delta": -0.208,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "时空之影": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "杂货商": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "幻灯师": {
+    "跛脚羊": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.173,
+     "delta": 0.173,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "蜡像师": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "歌剧演员": {
+     "n": 3,
+     "raw": 2.0,
+     "adjusted": 2.037,
+     "delta": 0.037,
+     "confidence": "high",
+     "counter_pick": false
+    }
+   },
+   "小说家": {
+    "跛脚羊": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.173,
+     "delta": 0.173,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.798,
+     "delta": -0.202,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.5,
+     "delta": 0.5,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "哭泣小丑": {
+    "跛脚羊": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.173,
+     "delta": 0.173,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "杂货商": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "冒险家": {
+    "跛脚羊": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.173,
+     "delta": 0.173,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "作曲家": {
+    "牙医": {
+     "n": 2,
+     "raw": 1.5,
+     "adjusted": 1.485,
+     "delta": -0.015,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "跛脚羊": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 0.878,
+     "delta": -0.122,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "弓箭手": {
+    "蜡像师": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "牙医": {
+     "n": 2,
+     "raw": 1.0,
+     "adjusted": 1.215,
+     "delta": 0.215,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.406,
+     "delta": 0.406,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "野人": {
+    "蜡像师": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "默剧艺人": {
+    "蜡像师": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "牙医": {
+     "n": 2,
+     "raw": 1.0,
+     "adjusted": 1.215,
+     "delta": 0.215,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.406,
+     "delta": 0.406,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.296,
+     "delta": 0.296,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "祭司": {
+    "鹿头": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.5,
+     "delta": 0.5,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 2,
+     "raw": 1.0,
+     "adjusted": 1.133,
+     "delta": 0.133,
+     "confidence": "medium",
+     "counter_pick": false
+    }
+   },
+   "佣兵": {
+    "鹿头": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.5,
+     "delta": 0.5,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.954,
+     "delta": -0.046,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "园丁": {
+    "时空之影": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "歌剧演员": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 2.079,
+     "delta": 0.079,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.406,
+     "delta": 0.406,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "调香师": {
+    "牙医": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.5,
+     "delta": 0.5,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "病患": {
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.954,
+     "delta": -0.046,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "机械师": {
+    "跛脚羊": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.209,
+     "delta": 0.209,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "大副": {
+    "跛脚羊": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 0.878,
+     "delta": -0.122,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.296,
+     "delta": 0.296,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.205,
+     "delta": 0.205,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.276,
+     "delta": 0.276,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "法罗女士": {
+    "牙医": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.99,
+     "delta": -0.01,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "囚徒": {
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.217,
+     "delta": 0.217,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "木偶师": {
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.954,
+     "delta": -0.046,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "斗牛士": {
+    "台球手": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.817,
+     "delta": -0.183,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   }
+  },
+  "TE": {
+   "幸运儿": {
+    "牙医": {
+     "n": 4,
+     "raw": 1.25,
+     "adjusted": 1.226,
+     "delta": -0.024,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.118,
+     "delta": 0.118,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "飞行家": {
+    "牙医": {
+     "n": 7,
+     "raw": 1.143,
+     "adjusted": 1.23,
+     "delta": 0.087,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "时空之影": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "守墓人": {
+    "牙医": {
+     "n": 5,
+     "raw": 1.0,
+     "adjusted": 1.177,
+     "delta": 0.177,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.5,
+     "delta": 0.5,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "跛脚羊": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.091,
+     "delta": 0.091,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "弓箭手": {
+    "牙医": {
+     "n": 3,
+     "raw": 1.667,
+     "adjusted": 1.609,
+     "delta": -0.058,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.993,
+     "delta": -0.007,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "时空之影": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "法罗女士": {
+    "歌剧演员": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 1.969,
+     "delta": -0.031,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "喧嚣": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.349,
+     "delta": 0.349,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "时空之影": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "气象学家": {
+    "歌剧演员": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 1.969,
+     "delta": -0.031,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.5,
+     "delta": 0.5,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "喧嚣": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.349,
+     "delta": 0.349,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "跛脚羊": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.091,
+     "delta": 0.091,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.217,
+     "delta": 0.217,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "大副": {
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.954,
+     "delta": -0.046,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 2,
+     "raw": 1.5,
+     "adjusted": 1.363,
+     "delta": -0.137,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "喧嚣": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 2.165,
+     "delta": 0.165,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.217,
+     "delta": 0.217,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "咒术师": {
+    "歌剧演员": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 1.954,
+     "delta": -0.046,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "蜡像师": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 3.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "喧嚣": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.349,
+     "delta": 0.349,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.118,
+     "delta": 0.118,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "跛脚羊": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.091,
+     "delta": 0.091,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "心理学家": {
+    "杂货商": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.5,
+     "delta": 0.5,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.984,
+     "delta": -0.016,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "斗牛士": {
+    "杂货商": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "蜡像师": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 3.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "喧嚣": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.98,
+     "delta": -0.02,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "佣兵": {
+    "杂货商": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "蜡像师": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 3.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "歌剧演员": {
+     "n": 3,
+     "raw": 2.333,
+     "adjusted": 2.31,
+     "delta": -0.023,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.482,
+     "delta": 0.482,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "空军": {
+    "杂货商": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "昆虫学者": {
+    "女王蜂": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 0.992,
+     "delta": -0.008,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "火灾调查员": {
+    "女王蜂": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 0.992,
+     "delta": -0.008,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "逃脱大师": {
+    "女王蜂": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 0.992,
+     "delta": -0.008,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.118,
+     "delta": 0.118,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "时空之影": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "古董商": {
+    "女王蜂": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 0.992,
+     "delta": -0.008,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.5,
+     "delta": 0.5,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 4,
+     "raw": 0.75,
+     "adjusted": 0.946,
+     "delta": 0.196,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "喧嚣": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.98,
+     "delta": -0.02,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.217,
+     "delta": 0.217,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "医生": {
+    "蜡像师": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 3.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "机械师": {
+    "牙医": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.892,
+     "delta": -0.108,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "默剧艺人": {
+    "喧嚣": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.98,
+     "delta": -0.02,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 2,
+     "raw": 0.5,
+     "adjusted": 0.908,
+     "delta": 0.408,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.482,
+     "delta": 0.482,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "调香师": {
+    "歌剧演员": {
+     "n": 2,
+     "raw": 2.5,
+     "adjusted": 2.473,
+     "delta": -0.027,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.217,
+     "delta": 0.217,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "病患": {
+    "歌剧演员": {
+     "n": 2,
+     "raw": 2.5,
+     "adjusted": 2.473,
+     "delta": -0.027,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.482,
+     "delta": 0.482,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "幻灯师": {
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.118,
+     "delta": 0.118,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.482,
+     "delta": 0.482,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "祭司": {
+    "跛脚羊": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.091,
+     "delta": 0.091,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   }
+  },
+  "ASC": {
+   "气象学家": {
+    "牙医": {
+     "n": 4,
+     "raw": 1.25,
+     "adjusted": 1.434,
+     "delta": 0.184,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.992,
+     "delta": -0.008,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "喧嚣": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.48,
+     "delta": 0.48,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.18,
+     "delta": 0.18,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "时空之影": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "调香师": {
+    "牙医": {
+     "n": 3,
+     "raw": 0.667,
+     "adjusted": 0.819,
+     "delta": 0.153,
+     "confidence": "high",
+     "counter_pick": false
+    }
+   },
+   "古董商": {
+    "牙医": {
+     "n": 3,
+     "raw": 1.0,
+     "adjusted": 1.14,
+     "delta": 0.14,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 0.792,
+     "delta": -0.208,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.992,
+     "delta": -0.008,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "喧嚣": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.48,
+     "delta": 0.48,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "26号守卫": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "守墓人": {
+    "牙医": {
+     "n": 3,
+     "raw": 1.0,
+     "adjusted": 1.281,
+     "delta": 0.281,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "跛脚羊": {
+     "n": 2,
+     "raw": 1.5,
+     "adjusted": 1.481,
+     "delta": -0.019,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "喧嚣": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.48,
+     "delta": 0.48,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "时空之影": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "病患": {
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.817,
+     "delta": -0.183,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 3,
+     "raw": 1.0,
+     "adjusted": 1.157,
+     "delta": 0.157,
+     "confidence": "high",
+     "counter_pick": false
+    }
+   },
+   "逃脱大师": {
+    "台球手": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 1.998,
+     "delta": -0.002,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 3,
+     "raw": 0.667,
+     "adjusted": 0.801,
+     "delta": 0.134,
+     "confidence": "high",
+     "counter_pick": false
+    }
+   },
+   "作曲家": {
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.817,
+     "delta": -0.183,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 0.993,
+     "delta": -0.007,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "跛脚羊": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.87,
+     "delta": -0.13,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "咒术师": {
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.817,
+     "delta": -0.183,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 3,
+     "raw": 1.0,
+     "adjusted": 1.155,
+     "delta": 0.155,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "时空之影": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "幸运儿": {
+    "牙医": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.315,
+     "delta": 0.315,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 2,
+     "raw": 1.5,
+     "adjusted": 1.737,
+     "delta": 0.237,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "跛脚羊": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.37,
+     "delta": 0.37,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.267,
+     "delta": 0.267,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "26号守卫": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "弓箭手": {
+    "牙医": {
+     "n": 2,
+     "raw": 1.5,
+     "adjusted": 1.622,
+     "delta": 0.122,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "跛脚羊": {
+     "n": 2,
+     "raw": 0.5,
+     "adjusted": 0.731,
+     "delta": 0.231,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.18,
+     "delta": 0.18,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.482,
+     "delta": 0.482,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "飞行家": {
+    "鹿头": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 0.792,
+     "delta": -0.208,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "跛脚羊": {
+     "n": 3,
+     "raw": 1.0,
+     "adjusted": 1.11,
+     "delta": 0.11,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 2,
+     "raw": 0.5,
+     "adjusted": 0.736,
+     "delta": 0.236,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 0.929,
+     "delta": -0.071,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "大副": {
+    "鹿头": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 0.792,
+     "delta": -0.208,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.992,
+     "delta": -0.008,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "跛脚羊": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.37,
+     "delta": 0.37,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.267,
+     "delta": 0.267,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 2,
+     "raw": 1.5,
+     "adjusted": 1.411,
+     "delta": -0.089,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "26号守卫": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "心理学家": {
+    "鹿头": {
+     "n": 3,
+     "raw": 1.0,
+     "adjusted": 1.059,
+     "delta": 0.059,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 2,
+     "raw": 1.0,
+     "adjusted": 1.133,
+     "delta": 0.133,
+     "confidence": "medium",
+     "counter_pick": false
+    }
+   },
+   "木偶师": {
+    "歌剧演员": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 0.993,
+     "delta": -0.007,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.18,
+     "delta": 0.18,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "时空之影": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "跛脚羊": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.091,
+     "delta": 0.091,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.892,
+     "delta": -0.108,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "空军": {
+    "小丑": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "佣兵": {
+    "小丑": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.062,
+     "delta": 0.062,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.482,
+     "delta": 0.482,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "法罗女士": {
+    "小丑": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "斗牛士": {
+    "小丑": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "跛脚羊": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.87,
+     "delta": -0.13,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.5,
+     "delta": 0.5,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "先知": {
+    "歌剧演员": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.205,
+     "delta": 0.205,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "前锋": {
+    "鹿头": {
+     "n": 2,
+     "raw": 1.0,
+     "adjusted": 1.192,
+     "delta": 0.192,
+     "confidence": "medium",
+     "counter_pick": false
+    }
+   },
+   "教授": {
+    "鹿头": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.885,
+     "delta": -0.115,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "拉拉队员": {
+    "鹿头": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.885,
+     "delta": -0.115,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "幻灯师": {
+    "喧嚣": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.48,
+     "delta": 0.48,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "26号守卫": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "调酒师": {
+    "鹿头": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.5,
+     "delta": 0.5,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "火灾调查员": {
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.062,
+     "delta": 0.062,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.482,
+     "delta": 0.482,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   }
+  },
+  "成都Wolves": {
+   "守墓人": {
+    "记录员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "时空之影": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "牙医": {
+     "n": 4,
+     "raw": 2.0,
+     "adjusted": 1.923,
+     "delta": -0.077,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "跛脚羊": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.12,
+     "delta": 0.12,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "拉拉队员": {
+    "记录员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "古董商": {
+    "记录员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "牙医": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 1.867,
+     "delta": -0.133,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "跛脚羊": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.12,
+     "delta": 0.12,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.832,
+     "delta": -0.168,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "破轮": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.792,
+     "delta": -0.208,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "飞行家": {
+    "记录员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "时空之影": {
+     "n": 2,
+     "raw": 3.0,
+     "adjusted": 3.0,
+     "delta": 0.0,
+     "confidence": "medium",
+     "counter_pick": true
+    },
+    "牙医": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.704,
+     "delta": -0.296,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "跛脚羊": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.573,
+     "delta": -0.427,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "喧嚣": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.73,
+     "delta": -0.27,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.832,
+     "delta": -0.168,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "破轮": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "大副": {
+    "歌剧演员": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.734,
+     "delta": -0.266,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "跛脚羊": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.878,
+     "delta": -0.122,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "喧嚣": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 1.832,
+     "delta": -0.168,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": -0.002,
+     "delta": -0.002,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "蜡像师": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "牙医": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.276,
+     "delta": 0.276,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "斗牛士": {
+    "歌剧演员": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.734,
+     "delta": -0.266,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.792,
+     "delta": -0.208,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.276,
+     "delta": 0.276,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "咒术师": {
+    "歌剧演员": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.734,
+     "delta": -0.266,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "喧嚣": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 0.934,
+     "delta": -0.066,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.635,
+     "delta": -0.365,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "木偶师": {
+    "歌剧演员": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.734,
+     "delta": -0.266,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "跛脚羊": {
+     "n": 2,
+     "raw": 2.5,
+     "adjusted": 2.226,
+     "delta": -0.274,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "喧嚣": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 1.832,
+     "delta": -0.168,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "时空之影": {
+     "n": 1,
+     "raw": 4.0,
+     "adjusted": 4.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "教授": {
+    "时空之影": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "牙医": {
+     "n": 3,
+     "raw": 2.0,
+     "adjusted": 1.995,
+     "delta": -0.005,
+     "confidence": "high",
+     "counter_pick": false
+    }
+   },
+   "弓箭手": {
+    "时空之影": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "杂货商": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.754,
+     "delta": -0.246,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 1.979,
+     "delta": -0.021,
+     "confidence": "medium",
+     "counter_pick": false
+    }
+   },
+   "气象学家": {
+    "跛脚羊": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.878,
+     "delta": -0.122,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "喧嚣": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 0.934,
+     "delta": -0.066,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "使徒": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.754,
+     "delta": -0.246,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "鹿头": {
+     "n": 2,
+     "raw": 2.5,
+     "adjusted": 2.213,
+     "delta": -0.287,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "蜡像师": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "牙医": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.276,
+     "delta": 0.276,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "作曲家": {
+    "跛脚羊": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.878,
+     "delta": -0.122,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.704,
+     "delta": -0.296,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.832,
+     "delta": -0.168,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "逃脱大师": {
+    "女王蜂": {
+     "n": 2,
+     "raw": 2.5,
+     "adjusted": 2.312,
+     "delta": -0.188,
+     "confidence": "medium",
+     "counter_pick": false
+    }
+   },
+   "法罗女士": {
+    "女王蜂": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.792,
+     "delta": -0.208,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "喧嚣": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.73,
+     "delta": -0.27,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "幸运儿": {
+    "女王蜂": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.792,
+     "delta": -0.208,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "使徒": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "跛脚羊": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.12,
+     "delta": 0.12,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "蜡像师": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "破轮": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.792,
+     "delta": -0.208,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "野人": {
+    "杂货商": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "跛脚羊": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.573,
+     "delta": -0.427,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.754,
+     "delta": -0.246,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "破轮": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "时空之影": {
+     "n": 1,
+     "raw": 4.0,
+     "adjusted": 4.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "先知": {
+    "杂货商": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": -0.002,
+     "delta": -0.002,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "园丁": {
+    "杂货商": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "使徒": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.754,
+     "delta": -0.246,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.276,
+     "delta": 0.276,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "幻灯师": {
+    "跛脚羊": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.573,
+     "delta": -0.427,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "蜡像师": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "佣兵": {
+    "使徒": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "鹿头": {
+     "n": 2,
+     "raw": 2.5,
+     "adjusted": 2.213,
+     "delta": -0.287,
+     "confidence": "medium",
+     "counter_pick": false
+    }
+   },
+   "调酒师": {
+    "鹿头": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": -0.002,
+     "delta": -0.002,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "病患": {
+    "鹿头": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": -0.002,
+     "delta": -0.002,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "默剧艺人": {
+    "跛脚羊": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.12,
+     "delta": 0.12,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 3,
+     "raw": 2.0,
+     "adjusted": 1.995,
+     "delta": -0.005,
+     "confidence": "high",
+     "counter_pick": false
+    }
+   },
+   "心理学家": {
+    "鹿头": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.635,
+     "delta": -0.365,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "机械师": {
+    "时空之影": {
+     "n": 1,
+     "raw": 4.0,
+     "adjusted": 4.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   }
+  },
+  "DOU5": {
+   "古董商": {
+    "破轮": {
+     "n": 2,
+     "raw": 2.5,
+     "adjusted": 2.5,
+     "delta": 0.0,
+     "confidence": "medium",
+     "counter_pick": true
+    },
+    "跛脚羊": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.573,
+     "delta": -0.427,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "时空之影": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "牙医": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.5,
+     "delta": 0.5,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.482,
+     "delta": 0.482,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "逃脱大师": {
+    "破轮": {
+     "n": 2,
+     "raw": 2.5,
+     "adjusted": 2.5,
+     "delta": 0.0,
+     "confidence": "medium",
+     "counter_pick": true
+    },
+    "跛脚羊": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 1.873,
+     "delta": -0.127,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.18,
+     "delta": 0.18,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 2.142,
+     "delta": 0.142,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.929,
+     "delta": -0.071,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "幸运儿": {
+    "破轮": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 3.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.118,
+     "delta": 0.118,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "跛脚羊": {
+     "n": 2,
+     "raw": 1.5,
+     "adjusted": 1.473,
+     "delta": -0.027,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.029,
+     "delta": 0.029,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "飞行家": {
+    "破轮": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 3.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "跛脚羊": {
+     "n": 4,
+     "raw": 1.75,
+     "adjusted": 1.773,
+     "delta": 0.023,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.18,
+     "delta": 0.18,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 3,
+     "raw": 1.667,
+     "adjusted": 1.819,
+     "delta": 0.153,
+     "confidence": "high",
+     "counter_pick": false
+    }
+   },
+   "作曲家": {
+    "女王蜂": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.792,
+     "delta": -0.208,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "跛脚羊": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.973,
+     "delta": -0.027,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.929,
+     "delta": -0.071,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "前锋": {
+    "女王蜂": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.792,
+     "delta": -0.208,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 1.945,
+     "delta": -0.055,
+     "confidence": "medium",
+     "counter_pick": false
+    }
+   },
+   "幻灯师": {
+    "女王蜂": {
+     "n": 2,
+     "raw": 2.5,
+     "adjusted": 2.63,
+     "delta": 0.13,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 0.954,
+     "delta": -0.046,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "心理学家": {
+    "女王蜂": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.792,
+     "delta": -0.208,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 2,
+     "raw": 1.5,
+     "adjusted": 1.473,
+     "delta": -0.027,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.635,
+     "delta": -0.365,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "时空之影": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.296,
+     "delta": 0.296,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "弓箭手": {
+    "跛脚羊": {
+     "n": 2,
+     "raw": 1.5,
+     "adjusted": 1.773,
+     "delta": 0.273,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 1.979,
+     "delta": -0.021,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.469,
+     "delta": 0.469,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "默剧艺人": {
+    "跛脚羊": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.173,
+     "delta": 0.173,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.5,
+     "delta": 0.5,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "斗牛士": {
+    "歌剧演员": {
+     "n": 2,
+     "raw": 1.0,
+     "adjusted": 1.13,
+     "delta": 0.13,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.635,
+     "delta": -0.365,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "喧嚣": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.952,
+     "delta": -0.048,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "佣兵": {
+    "歌剧演员": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.993,
+     "delta": -0.007,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "病患": {
+    "歌剧演员": {
+     "n": 3,
+     "raw": 1.0,
+     "adjusted": 1.071,
+     "delta": 0.071,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "破轮": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    },
+    "喧嚣": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.952,
+     "delta": -0.048,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 2,
+     "raw": 1.0,
+     "adjusted": 1.148,
+     "delta": 0.148,
+     "confidence": "medium",
+     "counter_pick": false
+    }
+   },
+   "咒术师": {
+    "台球手": {
+     "n": 4,
+     "raw": 1.75,
+     "adjusted": 1.842,
+     "delta": 0.092,
+     "confidence": "high",
+     "counter_pick": false
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.798,
+     "delta": -0.202,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "时空之影": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "气象学家": {
+    "台球手": {
+     "n": 2,
+     "raw": 1.5,
+     "adjusted": 1.707,
+     "delta": 0.207,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "鹿头": {
+     "n": 2,
+     "raw": 2.5,
+     "adjusted": 2.216,
+     "delta": -0.284,
+     "confidence": "medium",
+     "counter_pick": false
+    },
+    "时空之影": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "medium",
+     "counter_pick": true
+    }
+   },
+   "守墓人": {
+    "歌剧演员": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 0.954,
+     "delta": -0.046,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.817,
+     "delta": -0.183,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "时空之影": {
+     "n": 2,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "medium",
+     "counter_pick": true
+    },
+    "牙医": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.5,
+     "delta": 0.5,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "跛脚羊": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.973,
+     "delta": -0.027,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "祭司": {
+    "台球手": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.772,
+     "delta": -0.228,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.815,
+     "delta": -0.185,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "小说家": {
+    "台球手": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.772,
+     "delta": -0.228,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.469,
+     "delta": 0.469,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "大副": {
+    "跛脚羊": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.373,
+     "delta": 0.373,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "歌剧演员": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.267,
+     "delta": 0.267,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "喧嚣": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.952,
+     "delta": -0.048,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.798,
+     "delta": -0.202,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.296,
+     "delta": 0.296,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "野人": {
+    "鹿头": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.635,
+     "delta": -0.365,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "牙医": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.029,
+     "delta": 0.029,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.482,
+     "delta": 0.482,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "法罗女士": {
+    "破轮": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "勘探员": {
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.817,
+     "delta": -0.183,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "女王蜂": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.815,
+     "delta": -0.185,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "囚徒": {
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.817,
+     "delta": -0.183,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "木偶师": {
+    "台球手": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.817,
+     "delta": -0.183,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "鹿头": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.798,
+     "delta": -0.202,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "跛脚羊": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 1.973,
+     "delta": -0.027,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "时空之影": {
+     "n": 1,
+     "raw": 2.0,
+     "adjusted": 2.0,
+     "delta": 0.0,
+     "confidence": "low",
+     "counter_pick": true
+    }
+   },
+   "教授": {
+    "台球手": {
+     "n": 1,
+     "raw": 1.0,
+     "adjusted": 1.18,
+     "delta": 0.18,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "园丁": {
+    "歌剧演员": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.267,
+     "delta": 0.267,
+     "confidence": "low",
+     "counter_pick": false
+    },
+    "喧嚣": {
+     "n": 1,
+     "raw": 3.0,
+     "adjusted": 2.952,
+     "delta": -0.048,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   },
+   "医生": {
+    "女王蜂": {
+     "n": 1,
+     "raw": 0.0,
+     "adjusted": 0.482,
+     "delta": 0.482,
+     "confidence": "low",
+     "counter_pick": false
+    }
+   }
+  }
+ }
+}
