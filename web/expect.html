@@ -116,6 +116,11 @@ tr.top .hname::after{content:" 最危险";font-size:10px;color:var(--low);margin
         <select id="playerPick" style="min-width:200px"></select>
         <span style="color:var(--dim);font-size:12px">← 对手监管选手</span>
       </div>
+      <div style="margin-bottom:8px">
+        <select id="mapPick" style="min-width:200px"></select>
+        <span style="color:var(--dim);font-size:12px">← 本局地图</span>
+      </div>
+      <div id="mapInfo" style="font-size:12.5px;color:var(--dim);line-height:1.9"></div>
       <div id="playerInfo" style="font-size:12.5px;color:var(--dim);line-height:1.9"></div>
     </div>
   </div>
@@ -188,10 +193,61 @@ async function boot() {
   $('#playerPick').onchange = showPlayer;
 
   window._roster = roster;
+  // 地图下拉：数据来自 /api/maps（按局数降序）
+  let MAPS = [];
+  try {
+    const mp = await api('/api/maps');
+    MAPS = (mp.maps || []).map(name => ({
+      name,
+      ...(mp.stats || {})[name],
+    }));
+  } catch (e) {}
+  window._maps = MAPS;
+  $('#mapPick').innerHTML = '<option value="">不指定（按全联盟口径）</option>'
+    + MAPS.map(m => `<option value="${Char.esc(m.name)}">${Char.esc(m.name)}（${m.halves} 局）</option>`
+    ).join('');
+  $('#mapPick').onchange = showMap;
+
   renderAll();
   showPlayer();
+  showMap();
   $('#btnSearch').onclick = search;
   $('#btnClear').onclick = () => { LINEUP = []; renderAll(); };
+}
+
+/** 地图说明：该图实测逃脱 + 监管倾向 + 职能倾向。
+ *  监管的 ×倍数 是收缩后的份额之比，该图只出场 1~2 次的会被放大，
+ *  因此一律标出原始场次，倍数旁边带 `*` 的表示样本不足 3 场。
+ */
+function showMap() {
+  const name = $('#mapPick').value;
+  const el = $('#mapInfo');
+  if (!name) { el.innerHTML = ''; return; }
+  const m = (window._maps || []).find(x => x.name === name) || {};
+  const hs = (m.hunters || []).slice(0, 5)
+    .map(h => {
+      const few = Number(h.n) < 3;
+      return `${Char.chip(h.char, {size: 22})} `
+        + `<span style="color:${few ? 'var(--dim)' : 'inherit'}">×${Number(h.mult).toFixed(2)}</span>`
+        + `<span style="font-size:10px;color:var(--dim)"> ${h.n} 场${few ? '*' : ''}</span>`;
+    })
+    .join('　');
+  const rs = m.roles || {};
+  const rl = ['破译型', '辅助型'].filter(r => rs[r])
+    .map(r => `${r} ${(rs[r].rate * 100).toFixed(0)}%`)
+    .join('　');
+  el.innerHTML = `<div><b>${Char.esc(name)}</b> · ${m.halves} 局 · 实测局均逃脱 <b>${f2(m.escape)}</b></div>`
+    + (hs ? `<div style="margin-top:4px">该图常用监管：</div>
+       <div style="margin-top:2px">${hs}</div>` : '')
+    + (rl ? `<div style="margin-top:4px">求生职能：${rl}</div>` : '')
+    + (m.halves < 12
+       ? `<div style="margin-top:4px;color:var(--warn)">样本少，地图权重已按全局份额收缩</div>`
+       : '');
+  if (hs) {
+    el.insertAdjacentHTML('beforeend',
+      `<div style="margin-top:2px;font-size:11px;color:var(--dim)">`
+      + `×倍数 = 该图出场份额 ÷ 全联盟份额；带 * 表示不足 3 场，仅供参考。</div>`);
+  }
 }
 
 function showPlayer() {
@@ -291,6 +347,7 @@ async function search() {
         kind: 'lineup',
         lineup: LINEUP,
         player: $('#playerPick').value,
+        map: $('#mapPick').value || '',
       }),
     });
     render(j.result);
@@ -331,21 +388,46 @@ function render(R) {
   const p = R.player;
   $('#playerBox').innerHTML = p ? `
     <div style="font-size:12px;color:var(--dim);margin-bottom:6px">
-      按 ${p.name} 的实际选用加权：他大概率把这套阵容打成
+      按 ${p.name} 的实际选用加权${R.map ? `（已按 <b>${Char.esc(R.map)}</b> 的监管倾向重排）` : ''}：
+      他大概率把这套阵容打成
       <b style="color:${scoreColor(p.expect)};font-size:15px">${f2(p.expect)}</b>
     </div>
     <div style="display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px">
       ${p.top3.map(t => `<span>${Char.chip(t.char, {size: 28})}
-        <span style="color:var(--dim)">×${f2(t.w)}</span>
+        <span style="color:var(--dim)">×${f2(t.w_map != null ? t.w_map : t.w)}</span>
+        ${t.mult != null && Number(t.mult) !== 1
+          ? `<span style="color:${Number(t.mult) > 1 ? 'var(--high)' : 'var(--low)'};font-size:11px">图×${Number(t.mult).toFixed(2)}</span>`
+          : ''}
         <b style="font-family:Consolas,monospace">${f2(t.score)}</b></span>`).join('')}
     </div>` : '';
+
+  // 地图倾向：逐监管的倍数（1.00 = 与全联盟平均持平）
+  const rm = R.role_mix;
+  if (R.map && rm) {
+    const rs = ['破译型', '辅助型'].filter(r => rm[r])
+      .map(r => {
+        const x = rm[r];
+        const hi2 = x.mult > 1.15, lo2 = x.mult < 0.85;
+        const col = hi2 ? 'var(--high)' : (lo2 ? 'var(--low)' : 'var(--dim)');
+        return `<span class="tag info">${r} ${(x.rate * 100).toFixed(0)}%
+          <span style="color:${col}">×${Number(x.mult).toFixed(2)}</span></span>`;
+      }).join(' ');
+    if (rs) {
+      $('#playerBox').insertAdjacentHTML('beforeend',
+        `<div style="margin-top:10px;font-size:12px;color:var(--dim)">
+          这张图的求生职能倾向（×倍数 相对全联盟）：</div>
+         <div style="margin-top:4px">${rs}</div>`);
+    }
+  }
 
   const rows = R.per_hunter || [];
   const lo = Math.min(...rows.map(r => r.score));
   const hi = Math.max(...rows.map(r => r.score));
+  const showMult = !!R.map;
   $('#tbl').innerHTML =
     '<thead><tr><th style="width:210px">监管</th><th class="num" style="width:80px">得分</th>'
     + '<th style="width:170px"></th><th class="num" style="width:80px">基础分</th>'
+    + (showMult ? '<th class="num" style="width:78px">该图倍数</th>' : '')
     + '<th>这套阵容里最弱的三人</th></tr></thead><tbody>'
     + rows.map((r, i) => {
       const pct = hi > lo ? (r.score - lo) / (hi - lo) * 100 : 50;
@@ -353,11 +435,20 @@ function render(R) {
         .map(x => `<span style="margin-right:10px">${Char.chip(x.char, {size: 22})}
           <span style="font-family:Consolas,monospace;color:var(--dim)">${f2(x.score)}</span></span>`)
         .join('');
+      const v = r.mult;
+      // 倍数 < 0.5 基本等于「这张图他不会拿」，用红字标出来
+      const mulCell = showMult
+        ? `<td class="num" style="color:${v == null ? 'var(--dim)'
+            : v < 0.5 ? 'var(--low)'
+            : v > 1.5 ? 'var(--high)' : 'var(--dim)'}">`
+          + `${v == null ? '—' : '×' + Number(v).toFixed(2)}</td>`
+        : '';
       return `<tr class="${i === 0 ? 'top' : ''}">
         <td class="hname">${Char.chip(r.hunter, {size: 30})}</td>
         <td class="num" style="color:${scoreColor(r.score)};font-weight:600">${f2(r.score)}</td>
         <td><div class="bar"><i style="width:${pct}%;background:${scoreColor(r.score)}"></i></div></td>
         <td class="num" style="color:var(--dim)">${f2(r.base)}</td>
+        ${mulCell}
         <td>${bottom}</td></tr>`;
     }).join('') + '</tbody>';
 }

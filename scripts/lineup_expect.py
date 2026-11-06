@@ -84,13 +84,20 @@ def lineup_vs_hunter(eng: Engine, chars, hunter: str) -> dict:
 
 
 def evaluate(eng: Engine, chars, player: str,
-             hunters: list | None = None) -> dict:
+             hunters: list | None = None, map_name: str | None = None) -> dict:
     """主入口。player 必选：整张表吃该选手的折合分。
+
     hunters 不给就只算该选手用过的监管。
 
     口径（2026-11-06 定）：载入选手折合分表
     （data/hunter/<选手>.json → scores_override），所有格子吃
     该选手的实测折合分，不做无选手的全局评估。
+
+    map_name：本局地图。它不改任何格子的分数，只回答两个问题：
+      · 这位选手在这张图上更可能拿哪几个监管（player.top3 的权重）
+      · 哪些监管在这张图上基本不会出现（per_hunter 里标 mult）
+    逐监管的 per_hunter 表本身不受影响 —— 「这套阵容面对某个监管
+    能打成多少」是阵容与监管的客观关系，跟地图无关。
     """
     chars = [c for c in chars if c]
     struct = structure_penalty(eng, chars)
@@ -104,9 +111,13 @@ def evaluate(eng: Engine, chars, player: str,
     rows = [lineup_vs_hunter(eng, chars, h) for h in hunters]
     # 分数越低说明这个监管越克制这套阵容，教练视角按「最危险」排前面
     rows.sort(key=lambda r: r["score"])
+    for r in rows:
+        if map_name:
+            r["mult"] = round(eng.map_mult(map_name, r["hunter"]), 4)
 
     out = {
         "lineup": chars,
+        "map": map_name or "",
         "structure": struct,
         "per_hunter": rows,
         "summary": {
@@ -118,12 +129,20 @@ def evaluate(eng: Engine, chars, player: str,
         },
     }
 
-    # 选手加权：该选手实际会选的监管，按威胁前 3、用使用次数加权
-    r = eng.expected_vs_player("", chars, player)
+    # 选手加权：该选手实际会选的监管，按威胁前 3、用使用次数加权。
+    # 给了地图就按「威胁 × 地图倍数」重排再取前 3，与引擎叶子口径一致。
+    r = eng.expected_vs_player("", chars, player, map_name=map_name)
     out["player"] = {
         "name": player,
         "expect": round(r["expect"], 4),
         "top3": [{"char": t["char"], "w": t["w"],
+                  "w_map": t.get("w_map"),
+                  "mult": t.get("mult", 1.0),
                   "score": round(t["score"], 4)} for t in r["top3"]],
     }
+
+    # 地图上的职能倾向：只做提示，不进分数
+    # （实测乘进排序只带来 +0.5% 的 top8 提升，已被角色级地图份额吸收）
+    if map_name:
+        out["role_mix"] = eng.map_surv_role_mix(map_name)
     return out

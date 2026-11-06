@@ -240,6 +240,11 @@ button.danger{border-color:#5c3330;color:#e0a09a}
       <div class="row">
         <label class="lb">对局</label>
         <select id="s3Game"></select>
+        <label class="lb" style="margin-left:14px">地图</label>
+        <select id="s3Map">
+          <option value="">不指定（按全联盟口径）</option>
+        </select>
+        <span class="stat" id="s3MapInfo" style="font-size:12px"></span>
       </div>
       <div class="hintbar" id="s3Hint"
         style="background:var(--panel2);border-left:3px solid var(--accent);
@@ -318,6 +323,7 @@ const ST = {
   rosterSource: '',  // 第 2 步：当前角色池来源（'' = 预编辑基准）
   team: null,        // 第 2 步：我方战队（由导入的角色池配置自动识别）
   game: 1,           // 第 3 步
+  map: '',           // 第 3 步：本局地图（'' = 不指定，按全联盟口径）
   player: null,
   hunters: 4,
   bantop: 5,
@@ -788,6 +794,38 @@ function renderQuotaHint() {
 
 $('#s3Game').onchange = renderQuotaHint;
 
+/** 地图下拉与说明。地图只影响候选排序与加权，不改任何分数格。 */
+function renderMapPick() {
+  const sel = $('#s3Map');
+  if (!sel) return;
+  const rows = (META && META.maps) || [];
+  sel.innerHTML = '<option value="">不指定（按全联盟口径）</option>' +
+    rows.map(m => `<option value="${esc(m.name)}">${esc(m.name)}（${m.halves} 局）</option>`
+    ).join('');
+  sel.value = ST.map || '';
+  sel.onchange = () => {
+    ST.map = sel.value;
+    syncMapInfo();
+    renderSummary();
+  };
+  syncMapInfo();
+}
+
+function syncMapInfo() {
+  const el = $('#s3MapInfo');
+  if (!el) return;
+  const rows = (META && META.maps) || [];
+  const m = rows.find(x => x.name === ST.map);
+  if (!ST.map || !m) {
+    el.innerHTML = '';
+    return;
+  }
+  el.innerHTML = `该图实测局均逃脱 <b>${f2(m.escape)}</b>`
+    + (m.halves < 12
+       ? ` · <span style="color:var(--warn)">仅 ${m.halves} 局，地图权重会被收缩</span>`
+       : '');
+}
+
 // ══════════════════════════════════════════════════════════
 // 第 4 步：汇总确认
 // ══════════════════════════════════════════════════════════
@@ -815,6 +853,9 @@ function renderSummary() {
       <div class="kv"><span class="k">我方战队</span><span class="v">${esc(ST.team)}</span></div>
       <div class="kv"><span class="k">对手选手</span><span class="v">${esc(opponent())}</span></div>
       <div class="kv"><span class="k">局次</span><span class="v">第 ${ST.game} 局 · 我方 ban 名额 ${q} 个</span></div>
+      <div class="kv"><span class="k">地图</span><span class="v">${
+        ST.map ? esc(ST.map) + '（只影响候选排序，不改分数格）'
+               : '不指定（按全联盟口径）'}</span></div>
       <div class="kv"><span class="k">搜索范围</span><span class="v">监管前 ${ST.hunters} · ban 组合前 ${ST.bantop} · 可选组合 ${ST.combos}</span></div>
     </div>
 
@@ -862,6 +903,7 @@ async function startGenerate() {
   ST.bantop = +$('#s4Bantop').value || 5;
   ST.combos = +$('#s4Combos').value || 8;
   ST.game = +$('#s3Game').value || 1;
+  ST.map = ($('#s3Map') && $('#s3Map').value) || '';
   if (!opponent()) { setMsg('#navMsg', '第 1 步还没导入监管数据配置，不知道对手是谁', 'err'); return; }
   // 全局禁选数量必须与局数吻合，否则拒绝生成
   const needS = (ST.game - 1) * 4, needH = ST.game - 1;
@@ -898,6 +940,7 @@ async function startGenerate() {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         team: ST.team, player: ST.player, game: ST.game,
+        map: ST.map || '',
         hunters: ST.hunters, bantop: ST.bantop, combos: ST.combos,
         global_ban_surv: [...ST.gbSurv],
         global_ban_hunt: [...ST.gbHunt],
@@ -978,6 +1021,7 @@ async function boot() {
   syncPlayerInfo();
   syncHunters();
   renderGban();
+  renderMapPick();
   renderQuotaHint();
 
   goto(1);

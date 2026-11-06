@@ -127,6 +127,10 @@ td .sc{font-family:Consolas,monospace}
         <select id="pViewPick">
           <option value="">总榜（全联盟）</option>
         </select>
+        <label class="lbl" style="margin-left:12px">地图</label>
+        <select id="mapPick">
+          <option value="">全部地图</option>
+        </select>
         <span class="sub" id="pSub" style="margin:0"></span>
         <span class="stat" id="sStat" style="margin-left:auto"></span>
       </div>
@@ -143,6 +147,8 @@ const HUNTERS = [];
 let SCORES = {cells: {}};
 let PS = null;              // 选手榜数据
 let CUR_P = null;           // 当前查看的选手
+let MAPDATA = null;         // 地图统计（/api/maps）
+let CUR_MAP = '';           // 当前筛的地图（'' = 全部）
 
 /** 分数统一显示两位小数（1.5 → 1.50，0.9167 → 0.92） */
 function f2(v) {
@@ -239,12 +245,45 @@ async function loadScores() {
   showView(CUR_P || '');
 }
 
-/** 表头：头像 + 角色名 + 本季出场次数（监管列按出场次数降序排） */
+/** 表头：头像 + 角色名 + 出场次数
+ *  未选地图时显示全季出场次数；选了地图时改成「该图倍数」。
+ *  倍数是收缩后的份额之比，该图只出场 1~2 次的角色会被放大到 ×4 以上，
+ *  这类倍数不可信，所以用 `*` 单独标出来（详细场次写在 title 里）。
+ */
 function hunterHead(h) {
   const n = (SCORES.hunter_counts || {})[h];
-  return `<th class="hhead" title="${Char.esc(h)}（本季出场 ${n ?? 0} 次）">`
-    + Char.chip(h, {size: 42})
-    + (n ? `<span class="hcnt">${n}</span>` : '') + '</th>';
+  let extra = n ? `<span class="hcnt">${n}</span>` : '';
+  let tip = `${h}（本季出场 ${n ?? 0} 次）`;
+  if (CUR_MAP && MAPDATA) {
+    const st = (MAPDATA.stats || {})[CUR_MAP];
+    const row = st && (st.hunters || []).find(x => x.char === h);
+    const v = row ? Number(row.mult) : 0;
+    const cnt = row ? Number(row.n) : 0;
+    const col = v >= 1.5 ? 'var(--high)' : (v <= 0.5 ? 'var(--low)' : '#5b6373');
+    // 该图不足 3 场的倍数不稳定，加 * 并压暗
+    const few = cnt < 3;
+    extra = `<span class="hcnt" style="color:${few ? '#4a5160' : col}">`
+      + `×${v.toFixed(2)}${cnt > 0 && few ? '<span style="color:var(--warn)">*</span>' : ''}</span>`;
+    tip = `${h} · ${CUR_MAP}：出场 ${cnt} 次 / 该图共 ${st ? st.halves : 0} 局`
+      + ` · 倍数 ×${v.toFixed(2)}（收缩后份额 ÷ 全联盟份额）`
+      + (few ? ' · 样本不足 3 场，倍数仅供参考' : '');
+  }
+  return `<th class="hhead" title="${Char.esc(tip)}">`
+    + Char.chip(h, {size: 42}) + extra + '</th>';
+}
+
+/** 选了地图时，监管列按该图出场场次重排（该图常用的排前面）。
+ *  不用倍数排序：低频角色（全局只出场几次）的收缩倍数会被放大到 4 倍以上，
+ *  按它排会让「该图只上过 3 场」的角色顶到最前，误导教练。
+ *  倍数只作为表头标注，用来读「相对全联盟偏多还是偏少」。
+ */
+function orderedHunters() {
+  if (!CUR_MAP || !MAPDATA) return HUNTERS;
+  const st = (MAPDATA.stats || {})[CUR_MAP];
+  if (!st) return HUNTERS;
+  const cnt = new Map();
+  (st.hunters || []).forEach(x => cnt.set(x.char, Number(x.n) || 0));
+  return HUNTERS.slice().sort((a, b) => (cnt.get(b) || 0) - (cnt.get(a) || 0));
 }
 
 /** 总榜表格：只读展示，格子染成红绿表示难度 */
@@ -253,11 +292,12 @@ function renderScores() {
   const cnt = SCORES.survivor_counts || {};
   const chars = (SCORES.all_survivors || []).slice().sort(
     (a, b) => (cnt[b] || 0) - (cnt[a] || 0) || byName(a, b));
+  const cols = orderedHunters();
   const head = '<thead><tr><th>求生 \\ 监管</th>' +
-    HUNTERS.map(hunterHead).join('') + '</tr></thead>';
+    cols.map(hunterHead).join('') + '</tr></thead>';
   const body = chars.map(c => {
     const row = SCORES.cells[c] || {};
-    const tds = HUNTERS.map(h => {
+    const tds = cols.map(h => {
       const v = row[h];
       if (v === undefined) return '<td class="na">—</td>';
       const sc = (typeof v === 'number') ? v : v.score;
@@ -307,11 +347,17 @@ function showView(p) {
   if (!p) {
     // ── 总榜：全联盟全局值，列是全部监管 ──
     $('#pTitle').innerHTML =
-      `总榜（全联盟） <span class="badge ${SCORES.status === 'custom' ? 'custom' : 'base'}">${SCORES.status === 'custom' ? '自定义' : '默认'}</span>`;
+      `总榜（全联盟）${CUR_MAP ? ' · ' + Char.esc(CUR_MAP) : ''} <span class="badge ${SCORES.status === 'custom' ? 'custom' : 'base'}">${SCORES.status === 'custom' ? '自定义' : '默认'}</span>`;
     $('#pSub').textContent = `${(SCORES.all_survivors || []).length} 个求生 × ${HUNTERS.length} 个监管`;
-    $('#pLegend').innerHTML =
-      `每个求生角色面对每个监管的局均逃脱（0~5，2.00 为居中值）。
-       红＝求生方难打，绿＝好打。要看某位选手的表现，在上方下拉里选他。`;
+    $('#pLegend').innerHTML = CUR_MAP
+      ? `每个求生角色面对每个监管的局均逃脱（0~4，2.00 为居中值）。
+         红＝求生方难打，绿＝好打。表头下方 <b>×倍数</b> = 该监管在
+         <b>${Char.esc(CUR_MAP)}</b> 的出场份额 ÷ 全联盟份额（1.00 = 持平），
+         列按该图出场场次重排。带 <span style="color:var(--warn)">*</span>
+         表示该图不足 3 场、倍数不稳定，别当强倾向用。分数本身跨地图，
+         不受这里筛选影响。`
+      : `每个求生角色面对每个监管的局均逃脱（0~4，2.00 为居中值）。
+         红＝求生方难打，绿＝好打。要看某位选手的表现，在上方下拉里选他。`;
     renderScores();
     return;
   }
@@ -330,7 +376,22 @@ function showView(p) {
      = w×实测 + (1-w)×全局，w = n/(n+${PS.meta.k_shrink})。`;
 
   const head = '<thead><tr><th>求生 \\ 监管</th>' +
-    hs.map(h => `<th class="hhead">${Char.chip(h, {size: 42})}</th>`).join('') +
+    hs.map(h => {
+      // 选了地图就在列头标出该图倍数（列序不动：这里只列他用过的监管，
+      // 顺序本来就无意义；倍数用来看「这张图他还会不会拿」）
+      if (!CUR_MAP || !MAPDATA) {
+        return `<th class="hhead">${Char.chip(h, {size: 42})}</th>`;
+      }
+      const st = (MAPDATA.stats || {})[CUR_MAP] || {};
+      const row = (st.hunters || []).find(x => x.char === h);
+      const v = row ? Number(row.mult) : 0;
+      const cnt = row ? Number(row.n) : 0;
+      const few = cnt < 3;
+      const col = v >= 1.5 ? 'var(--high)' : (v <= 0.5 ? 'var(--low)' : '#5b6373');
+      return `<th class="hhead" title="${Char.esc(`${h} · ${CUR_MAP}：该图共出场 ${cnt} 次，倍数 ×${v.toFixed(2)}${few ? '（样本不足 3 场，仅供参考）' : ''}`)}">`
+        + Char.chip(h, {size: 42})
+        + `<span class="hcnt" style="color:${few ? '#4a5160' : col}">×${v.toFixed(2)}</span></th>`;
+    }).join('') +
     '</tr></thead>';
   const body = chars.map(c => {
     const tds = hs.map(h => {
@@ -347,11 +408,31 @@ function showView(p) {
   relayout();
 }
 
+// ══════════ 地图筛选（仅影响列顺序与倍数标注，不改分数） ══════════
+async function loadMaps() {
+  try {
+    MAPDATA = await api('/api/maps');
+  } catch (e) {
+    return;
+  }
+  const sel = $('#mapPick');
+  sel.innerHTML = '<option value="">全部地图</option>'
+    + (MAPDATA.maps || []).map(m => {
+      const st = (MAPDATA.stats || {})[m] || {};
+      return `<option value="${Char.esc(m)}">${Char.esc(m)}（${st.halves ?? 0} 局）</option>`;
+    }).join('');
+  sel.onchange = () => {
+    CUR_MAP = sel.value;
+    showView(CUR_P || '');
+  };
+}
+
 // ══════════ 启动 ══════════
 (async () => {
   try {
     await loadScores();     // 会直接渲染总榜视图
     await loadPlayers();    // 填充下拉，并再按默认总榜渲染一次
+    await loadMaps();       // 地图下拉
   } catch (e) {
     document.body.insertAdjacentHTML('beforeend',
       `<div style="padding:20px;color:var(--err)">加载失败：${e.message}

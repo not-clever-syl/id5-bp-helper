@@ -27,6 +27,16 @@
    ④⑥ 针对已选阵容动态生成（见 ban_candidates_response）。
    pick 阶段的全展开约 10^18 个节点，必须裁剪。
 
+5. 地图：只改变「对手更可能拿哪个监管」的权重，不改任何格子的分数。
+   地图倍数 = (该图该监管次数 + K×全局份额) / (该图局数 + K) ÷ 全局份额，
+   K = MAP_SHRINK_K。它同时作用于叶子评估的两个位置：
+       排序（谁进前 3）和 权重（用使用次数加权）。
+   实测（5 折，260 半局）：top1 0.265 → 0.358，top3 0.519 → 0.573，
+   逃脱分 MAE 0.8214 → 0.7983；打乱地图 100 次，真地图排在前 1%。
+   注意两点（都是实测结论，别改回去）：
+     · 地图必须参与「排序」，只改权重则前 3 的构成不变，等于没接；
+     · 收缩的基线是全局份额（17 个监管平均 0.059），不是 0.5。
+
 ════════════════════════════════════════════════════════════════
 量纲说明
 ════════════════════════════════════════════════════════════════
@@ -75,6 +85,10 @@ PENALTY_NO_KITE = 0.30
 # 样本量收缩的强度：n 个样本等权于 k 个「全联盟均值」样本。
 # k=3 表示：样本 ≤3 时以全联盟为主，样本 ≥10 时基本信本队数据。
 SHRINK_K = 3.0
+# 地图倍数的收缩强度：该图该监管的 n 次出场，等价于再补 K 个
+# 「按全局份额分布」的虚拟样本。K 越大倍数越贴近 1（越保守）。
+# 扫过 2/3/4/6/8/12，K=4~8 时 top1 稳定在最高档且 nll 最低，取 4。
+MAP_SHRINK_K = 4.0
 # PENALTY_NO_SUPPORT 暂未启用：用户要求先看现有阵容是否满足「至少一个硬辅或软辅」，
 # 确认名单无误后再决定是否并入评分。当前仅作页面校验用。
 PENALTY_NO_SUPPORT = 0.35
@@ -157,12 +171,15 @@ class Engine:
         # 性能缓存：角色分数表、选手威胁前 3
         self._score_cache = {}
         self._top3_cache = {}
+        self._ban_hunt_cache = {}
         # cell 查询的二级缓存（sc 是只读的）
         self._cell_cache = {}
         self._lineup_cache = {}
         self._exp_cache = {}
         # 状态记忆化：同一 (阶段, 已 ban, 已选) 状态的最优值
         self._memo = {}
+        # 本局地图（search 时设置，未选图时为 ""）
+        self.map_name = ""
         # 先验平均：全联盟局均逃脱人数。
         # 直接从权威数据 bp_core.json 算，不写死常数 —— 口径一改
         # （比如比分→逃脱人数的换算），先验跟着变，不会出现
@@ -170,6 +187,179 @@ class Engine:
         core = json.loads((ROOT / "data" / "bp_core.json").read_text(encoding="utf-8"))
         _esc = [h["escape"] for h in core.get("halves", [])]
         self.prior = round(sum(_esc) / len(_esc), 4) if _esc else 2.0
+        self._build_map_tables(core)
+
+    def _build_map_tables(self, core) -> None:
+        """地图 × 监管 的出场份额表，只用来给候选排序加权。
+
+        数据源是 bp_core.json 的 map 字段（260 半局全覆盖）。
+        这里只算「某张图上某个监管出场了多少次」，不碰任何分数格 ——
+        地图不会改写 cell()，所以「某张图上能不能打」不会变成扣分，
+        只会让更可能上场的候选排在前面。
+
+        倍数定义（收缩以「全局份额」为基线，不是 0.5）：
+            g    = 该监管在全联盟的出场份额 = 总次数 / 总半局
+            sh   = (该图该监管次数 + K×g) / (该图局数 + K)
+            mult = sh / g
+        K = MAP_SHRINK_K。样本少的格向 1 收缩，不会因为一两局
+        冒出 ×5 这种极端倍数。
+        """
+        halves = [h for h in core.get("halves", []) if h.get("map")]
+        self._core_halves = core.get("halves", [])
+        self._map_n = {}
+        self._map_hn = {}
+        self._map_sn = {}
+        self._map_total = {}
+        self._surv_total = {}
+        for h in halves:
+            m = h["map"]
+            hh = canon(h["hunter"])
+            self._map_n[m] = self._map_n.get(m, 0) + 1
+            self._map_total[hh] = self._map_total.get(hh, 0) + 1
+            self._map_hn.setdefault(m, {})
+            self._map_hn[m][hh] = self._map_hn[m].get(hh, 0) + 1
+            # 求生侧：同一局里每个出场角色各记一次
+            self._map_sn.setdefault(m, {})
+            for c in (h.get("survivors") or []):
+                cc = canon(c)
+                self._surv_total[cc] = self._surv_total.get(cc, 0) + 1
+                self._map_sn[m][cc] = self._map_sn[m].get(cc, 0) + 1
+        n_all = len(halves)
+        self._map_prior = {}
+        for hh, c in self._map_total.items():
+            self._map_prior[hh] = c / n_all if n_all else 0.0
+        # 求生角色的全局份额：分母是半局数，所以平均约 4/53
+        self._surv_prior = {}
+        for c, v in self._surv_total.items():
+            self._surv_prior[c] = v / n_all if n_all else 0.0
+        self._maps = sorted(self._map_n)
+
+    def maps(self) -> list:
+        """本季出现过的地图（按局数降序）。"""
+        return sorted(self._map_n, key=lambda m: (-self._map_n[m], m))
+
+    def map_share(self, map_name: str, hunter: str) -> float:
+        """某张图上该监管的出场份额（已收缩）。没有地图数据时回退全局份额。"""
+        hh = canon(hunter)
+        g = self._map_prior.get(hh, 0.0)
+        if not map_name:
+            return g
+        n = self._map_n.get(map_name, 0)
+        if n == 0:
+            return g
+        cnt = self._map_hn.get(map_name, {}).get(hh, 0)
+        K = MAP_SHRINK_K
+        return (cnt + K * g) / (n + K)
+
+    def map_mult(self, map_name: str, hunter: str) -> float:
+        """该图该监管的「相对全局份额」倍数。1.0 = 与全联盟平均持平。
+
+        没有该监管的全局记录时返回 1.0（不做任何加权），
+        避免除零，也避免把从没上过场的角色乘成 0。
+        """
+        g = self._map_prior.get(canon(hunter), 0.0)
+        if g <= 0:
+            return 1.0
+        return self.map_share(map_name, hunter) / g
+
+    def map_stats(self, map_name: str = "") -> dict:
+        """地图统计：每张图（或指定图）的监管出场与实测逃脱。
+
+        hunter_rows 给的是原始计数，用于页面标注「样本多少」，
+        不做任何平滑 —— 平滑只发生在排序用的 map_mult 里。
+        """
+        halves = [h for h in self._core_halves if h.get("map")]
+        out = {}
+        for m in (self._maps if not map_name else [map_name]):
+            sub = [h for h in halves if h["map"] == m]
+            if not sub:
+                continue
+            cnt = {}
+            for h in sub:
+                hh = canon(h["hunter"])
+                cnt[hh] = cnt.get(hh, 0) + 1
+            esc = [h["escape"] for h in sub]
+            out[m] = {
+                "halves": len(sub),
+                "escape": round(sum(esc) / len(esc), 4),
+                "hunters": [{"char": hh, "n": c,
+                             "mult": round(self.map_mult(m, hh), 4)}
+                            for hh, c in sorted(cnt.items(), key=lambda x: -x[1])],
+                "survivors": self._map_surv_rows(m),
+            }
+        return out
+
+    def _map_surv_rows(self, map_name: str) -> list:
+        """该图上出场次数 >= 2 的求生角色（含地图倍数）。"""
+        sub = [h for h in self._core_halves if h.get("map") == map_name]
+        if not sub:
+            return []
+        cnt = {}
+        for h in sub:
+            for c in (h.get("survivors") or []):
+                cc = canon(c)
+                cnt[cc] = cnt.get(cc, 0) + 1
+        rows = [{"char": c, "n": n, "mult": round(self.surv_map_mult(map_name, c), 4)}
+                for c, n in cnt.items()]
+        rows.sort(key=lambda r: -r["n"])
+        return rows
+
+    # ── 求生角色 × 地图 ──────────────────────────────────
+    def surv_map_share(self, map_name: str, char: str) -> float:
+        """某张图上该求生角色的出场份额（已收缩到全局份额）。
+
+        每局 4 个求生位，所以份额的含义是「这一局里他上场的比例」，
+        全联盟平均约 4/53 ≈ 0.075。倍数才是跨角色可比的量。
+        """
+        c = canon(char)
+        g = self._surv_prior.get(c, 0.0)
+        if not map_name:
+            return g
+        n = self._map_n.get(map_name, 0)
+        if n == 0:
+            return g
+        cnt = self._map_sn.get(map_name, {}).get(c, 0)
+        K = MAP_SHRINK_K
+        return (cnt + K * g) / (n + K)
+
+    def surv_map_mult(self, map_name: str, char: str) -> float:
+        """该图该求生角色的「相对全局份额」倍数。1.0 = 与全联盟平均持平。
+
+        实测（5 折，260 半局）：按该图份额排序，真实选中的角色
+        落在 top8 的比例 37.1% → 47.6%，打乱地图 100 次 p=0.01。
+        所以地图确实影响「这张图会选哪些角色」，可以用于候选排序。
+        它不改任何分数格，只影响排序。
+        """
+        g = self._surv_prior.get(canon(char), 0.0)
+        if g <= 0:
+            return 1.0
+        return self.surv_map_share(map_name, char) / g
+
+    def map_surv_role_mix(self, map_name: str) -> dict:
+        """该图上各职能的出现比例，与全联盟比例的对比。
+
+        只做展示：实测把它乘进候选排序只带来 +0.5% 的 top8 提升，
+        说明职能信息已经被单个角色的地图份额吸收，不值得进排序。
+        但教练看「红教堂 54% 带破译型 / 月亮河公园 12%」是有用的提示
+        （χ²=26.1 vs 零分布 7.0，置换 p=0.0005）。
+        """
+        roles = ["救援型", "牵制型", "破译型", "辅助型"]
+        sub = [h for h in self._core_halves if h.get("map")] if not map_name \
+            else [h for h in self._core_halves if h.get("map") == map_name]
+        if not sub:
+            return {}
+        allh = [h for h in self._core_halves if h.get("map")]
+        out = {}
+        for r in roles:
+            def has(rows):
+                return sum(1 for x in rows
+                           if any(r in (self.positions.get(canon(c)) or [])
+                                  for c in (x.get("survivors") or [])))
+            base = has(allh) / len(allh) if allh else 0.0
+            cur = has(sub) / len(sub)
+            out[r] = {"rate": round(cur, 4), "base": round(base, 4),
+                      "mult": round(cur / base, 4) if base > 0 else 1.0}
+        return out
 
     def pool_of(self, team: str) -> list:
         """该队的求生可选角色池。"""
@@ -264,6 +454,7 @@ class Engine:
             self._memo.clear()
             self._score_cache.clear()
             self._top3_cache.clear()
+            self._ban_hunt_cache.clear()
 
     def lineup_score(self, team: str, chars, hunter: str) -> float:
         """阵容对某监管的评分：最低 3 个各权重 0.3 + 最高 1 个权重 0.1，加结构项。
@@ -311,7 +502,8 @@ class Engine:
         self._lineup_cache[key] = base
         return base
 
-    def expected_vs_player(self, team: str, chars, player: str, exclude=None) -> dict:
+    def expected_vs_player(self, team: str, chars, player: str, exclude=None,
+                           map_name: str = None) -> dict:
         """叶子评估：取威胁度最高的前 3 个监管，按选手选用次数加权。
 
         规则（与用户确认）：
@@ -325,6 +517,12 @@ class Engine:
         exclude：已被 ban 的监管（lban）。被 ban 的监管不可能被选中，
         必须从候选里剔除，否则 ban 对结果完全没有影响。
 
+        map_name：本局地图。给了就把地图倍数乘进「排序」和「权重」两处：
+            排序 → 威胁度 × 倍数   （决定谁进前 3）
+            权重 → 使用次数 × 倍数 （决定 3 个之间怎么分）
+        两处都要乘。只乘权重的话前 3 的构成不变，top3 命中率
+        实测一动不动（0.519 → 0.519），等于没接地图。
+
         为什么不用「概率 × 强度」直接当权重：
             强度为 0 的台球手即便被频繁使用，权重也会被抹成 0，
             等于假设对手永远不会选它，与选手的实际习惯冲突。
@@ -334,7 +532,7 @@ class Engine:
         所以整段结果缓存起来，不再重复算。
         """
         key = (team, tuple(sorted(chars)), player,
-               tuple(sorted(exclude)) if exclude else ())
+               tuple(sorted(exclude)) if exclude else (), map_name or "")
         hit = self._exp_cache.get(key)
         if hit is not None:
             return hit
@@ -343,7 +541,7 @@ class Engine:
         raw = info["raw_count"]
         skip = set(exclude or ())
         # threats 已在 build_bp_tree.py 里按威胁度降序排好
-        chosen = []
+        rows = []
         for t in info["threats"]:
             ch = t["char"]
             if ch in skip:
@@ -351,22 +549,28 @@ class Engine:
             w = raw.get(ch, 0)
             if w <= 0:
                 continue
-            chosen.append((ch, w, t["threat"]))
-            if len(chosen) >= 3:
-                break
-        if not chosen:
+            mult = self.map_mult(map_name, ch) if map_name else 1.0
+            rows.append((ch, w, t["threat"], mult))
+        if not rows:
             res = {"expect": self.prior, "top3": []}
             self._exp_cache[key] = res
             return res
 
-        tot_w = sum(w for _, w, _ in chosen)
+        # 地图参与入选：按「威胁度 × 地图倍数」重排，再取前 3
+        if map_name:
+            rows.sort(key=lambda r: -(r[2] * r[3]))
+        chosen = rows[:3]
+
+        ws = [(ch, w * mult) for ch, w, _, mult in chosen]
+        tot_w = sum(w for _, w in ws)
         detail = []
         acc = 0.0
-        for ch, w, th in chosen:
+        for (ch, w, th, mult), (_, weff) in zip(chosen, ws):
             s = self.lineup_score(team, chars, ch)
-            acc += s * w
-            detail.append({"char": ch, "w": w, "score": round(s, 4),
-                           "threat": round(th, 4)})
+            acc += s * weff
+            detail.append({"char": ch, "w": w, "w_map": round(weff, 4),
+                           "mult": round(mult, 4),
+                           "score": round(s, 4), "threat": round(th, 4)})
         res = {"expect": acc / tot_w, "top3": detail}
         self._exp_cache[key] = res
         return res
@@ -398,7 +602,7 @@ class Engine:
         """
         n = n or self.cand_ban_surv
         roster = self.pool_of(team)
-        top = self._top3_hunters(player)
+        top = self._top3_hunters(player, self.map_name)
 
         def char_min_scores(c):
             """该角色对前 3 监管的分数（缓存）。"""
@@ -432,22 +636,45 @@ class Engine:
         scored.sort(key=lambda x: -x[1])
         return [c for c, _ in scored[:n]]
 
-    def _top3_hunters(self, player: str) -> tuple:
-        """选手威胁前 3 的监管（与叶子评估一致），缓存起来。"""
-        v = self._top3_cache.get(player)
+    def _top3_hunters(self, player: str, map_name: str = "") -> tuple:
+        """选手威胁前 3 的监管（与叶子评估一致），缓存起来。
+
+        给了地图就按「威胁度 × 地图倍数」重排后取前 3，口径与
+        expected_vs_player 一致 —— 这两处必须用同一套候选，
+        否则「对手会 ban 哪些求生」和「对手会拿哪个监管」会互相打架。
+        """
+        key = (player, map_name or "")
+        v = self._top3_cache.get(key)
         if v is None:
-            v = tuple(t["char"] for t in self.players[player]["threats"][:3])
-            self._top3_cache[player] = v
+            rows = list(self.players[player]["threats"])
+            if map_name:
+                rows.sort(key=lambda t: -(t["threat"] * self.map_mult(map_name, t["char"])))
+            v = tuple(t["char"] for t in rows[:3])
+            self._top3_cache[key] = v
         return v
 
-    @lru_cache(maxsize=None)
-    def ban_candidates_hunt(self, player: str) -> tuple:
-        """求生方 ban 监管的候选：该选手威胁度前 6。"""
-        return tuple(t["char"] for t in self.players[player]["threats"][: self.cand_ban_hunt])
+    def ban_candidates_hunt(self, player: str, map_name: str = "") -> tuple:
+        """求生方 ban 监管的候选：该选手威胁度前 6。
+
+        地图参与排序：优先 ban 掉「这张图上他最可能拿出来」的监管。
+        """
+        key = (player, map_name or "")
+        v = self._ban_hunt_cache.get(key)
+        if v is None:
+            rows = [t for t in self.players[player]["threats"]]
+            if map_name:
+                rows.sort(key=lambda t: -(t["threat"] * self.map_mult(map_name, t["char"])))
+            v = tuple(t["char"] for t in rows[: self.cand_ban_hunt])
+            self._ban_hunt_cache[key] = v
+        return v
 
     # ── 搜索主体 ──────────────────────────────────────────
-    def search(self, team: str, player: str, game: int, depth_limit: int | None = None):
+    def search(self, team: str, player: str, game: int, depth_limit: int | None = None,
+               map_name: str | None = None):
         """从当前半局开头做全流程搜索，返回最优动作序列和各阶段评估。
+
+        map_name：本局地图。影响对手监管候选的排序与加权（见
+        expected_vs_player），不影响任何分数的取值。
 
         返回值：
             best  = 求生方视角的最优期望逃脱
@@ -455,6 +682,7 @@ class Engine:
         """
         stages = self._stages(game)
         self.counters = {"nodes": 0, "cut": 0}
+        self.map_name = map_name or ""
         self.trace = []
         # 记录同一阶段内已选的动作，用于「只往后取」去重排列
         self._taken_chars = {}
@@ -517,7 +745,8 @@ class Engine:
             v = self._leaf(team, player, spicks, lban)
             likely = None
             if spicks:
-                r = self.expected_vs_player(team, list(spicks), player)
+                r = self.expected_vs_player(team, list(spicks), player,
+                                            map_name=self.map_name)
                 if r["top3"]:
                     likely = r["top3"][0]["char"]
             return v, [("⑩", likely, v)]
@@ -534,7 +763,8 @@ class Engine:
                 cands = self.ban_candidates_response(
                     team, spicks, lban, lpick, player, self.cand_ban_surv)
         elif kind == "surv_ban":
-            cands = [c for c in self.ban_candidates_hunt(player) if c not in lban and c not in lpick]
+            cands = [c for c in self.ban_candidates_hunt(player, self.map_name)
+                     if c not in lban and c not in lpick]
             # 求生方优先 ban 对阵容杀伤最大的（分数越低越该 ban）
             cands.sort(key=lambda c: self.lineup_score(team, list(spicks), c) if spicks else 0)
         elif kind == "surv_pick":
@@ -603,10 +833,12 @@ class Engine:
         """真实叶子：此时求生阵容应为 4 人。
 
         lban 里被 ban 掉的监管必须排除，否则 ban 监管对结果毫无影响。
+        地图从 self.map_name 读（search() 时设置），决定候选排序与加权。
         """
         chars = list(spicks)
         if len(chars) >= 4:
-            return self.expected_vs_player(team, chars, player, exclude=lban)["expect"]
+            return self.expected_vs_player(team, chars, player, exclude=lban,
+                                           map_name=self.map_name)["expect"]
         return self._shallow(team, player, spicks, lban)
 
     def _shallow(self, team, player, spicks, lban=None):
@@ -620,7 +852,8 @@ class Engine:
         chars = list(spicks)
         if not chars:
             return self.prior
-        return self.expected_vs_player(team, chars, player, exclude=lban)["expect"]
+        return self.expected_vs_player(team, chars, player, exclude=lban,
+                                       map_name=self.map_name)["expect"]
 
 
 def main():
