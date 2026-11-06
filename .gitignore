@@ -19,6 +19,15 @@ venv/
 Thumbs.db
 desktop.ini
 
+# macOS 在非 HFS 卷上会生成 AppleDouble 元数据文件（形如 ._foo）
+._*
+
 # 日志与临时文件
 *.log
 *.out
+
+# 编辑器备份与临时文件
+*.tmp
+*.bak
+*.swp
+*~
