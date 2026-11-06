@@ -4,28 +4,29 @@
 
 纯 Python 标准库实现（3.10+），无第三方依赖，前端为原生 HTML/JS/CSS，无需构建。
 
-## 获取代码
+## 零基础上手（三步）
 
-```bash
-git clone https://github.com/not-clever-syl/id5-bp-helper.git
-cd id5-bp-helper
-```
+### 第 1 步：装 Python（只需一次）
 
-仓库已包含全部预编辑数据（分数表、BP 决策树、监管选手与角色池配置），克隆后无需额外下载或构建即可运行。
+去 <https://www.python.org/downloads/> 下载 Python 3.10 或更高版本。
 
-## 快速开始
+安装时**务必勾选 `Add Python to PATH`**（在安装界面最下方），否则系统认不出 Python 命令。
 
-```bash
-python scripts/serve.py 8766
-```
+### 第 2 步：下载代码
 
-打开浏览器访问 <http://localhost:8766/web/index.html> 即可。
+在 GitHub 仓库页面点右上角 <kbd>Code</kbd> → <kbd>Download ZIP</kbd>，下载后解压。
 
-后续更新代码时：
+解压后目录里应该能看到 `启动.bat`、`scripts`、`web`、`data` 这几项。
 
-```bash
-git pull
-```
+### 第 3 步：双击 `启动.bat`
+
+双击 `启动.bat`，黑窗口出现「正在启动服务」后，**浏览器会自动打开工具首页**。
+
+- 想换端口：右键 `启动.bat` → 编辑，把 `8766` 改成别的数字
+- 端口被占用时会自动往后顺延（8766 → 8767 → …），不会报错
+- **关闭那个黑窗口就等于停止服务**
+
+> 第一次运行时 Windows 可能弹出「是否允许运行 Python」，选「允许」即可。
 
 ## 使用方法
 
@@ -66,3 +67,72 @@ git pull
 - 分数单位是「局均逃脱」（0~4 人），**2.00 为居中值**
 - 数据只使用 2026 秋季赛战报，权威源为 `data/bp_core.json`
 - 阵容期望分必须选择监管选手，整表按该选手的折合分计算
+
+---
+
+## 开发者信息
+
+### 命令行启动
+
+```bash
+git clone https://github.com/not-clever-syl/id5-bp-helper.git
+cd id5-bp-helper
+python scripts/serve.py 8766
+```
+
+浏览器访问 <http://localhost:8766/web/index.html>
+
+常用参数：
+
+```bash
+python scripts/serve.py 8080          # 换端口
+python scripts/serve.py 8766 --no-browser  # 不自动打开浏览器
+```
+
+后续更新代码：
+
+```bash
+git pull
+```
+
+### 目录结构
+
+```
+├── 启动.bat              # Windows 双击启动（零基础入口）
+├── scripts/              # 后端（Python 标准库，无第三方依赖）
+│   ├── serve.py          # 本地 HTTP 服务 + 全部 API 入口
+│   ├── bp_search_engine.py # 核心 BP 搜索引擎（α-β 剪枝 + 阵容聚合评分）
+│   ├── bp_combo_report.py  # 教练报告主逻辑（以对手 ban 组合为轴）
+│   ├── bp_coach_report.py  # 单个 ban 组合的完整推演
+│   ├── ban_intel.py      # ban 位情报（监管 ban 指纹、PMI、互斥对）
+│   ├── lineup_expect.py  # 阵容期望分计算（吃选手折合分）
+│   ├── custom_data.py    # 预编辑基准数据加载与缓存
+│   └── file_api.py       # 页面导入/导出的文件读写 API
+├── web/                  # 前端（原生 HTML/JS/CSS，无构建步骤）
+│   ├── index.html        # 导航首页
+│   ├── data.html         # 数据页
+│   ├── expect.html       # 阵容期望分页
+│   ├── report.html       # BP 报告页
+│   ├── generate.html     # 报告生成页
+│   ├── char.js / char.css # 角色头像+名字的统一组件
+│   ├── filemodal.js      # 导入/导出文件选择弹窗
+│   └── avatars/          # 角色头像
+└── data/                 # 数据
+    ├── bp_core.json      # ★ 权威数据源：260 半局战报明细
+    ├── bp_query.json     # 预编辑分数表
+    ├── bp_tree.json      # BP 决策树 + 选手威胁分布 + ban 统计
+    ├── web_bp.json       # 前端数据汇总
+    ├── hunter/           # 监管选手配置（每人一份）
+    ├── survivor/         # 角色池配置（每队一份）
+    └── reports/          # 生成的 BP 报告（本地产物，不入库）
+```
+
+### 数据说明
+
+- `data/` 根目录的 7 个 JSON 是**只读预编辑数据**，程序不写它们
+- 三个子目录 `hunter/`、`survivor/`、`reports/` 是**可写目录**，页面导入导出直接读写
+- 监管选手配置文件的 `cells` 字段是 (求生 × 监管角色) 的折合分格子，阵容期望分整表吃这份折合分
+
+### 注意事项
+
+- 纯本地工具，服务只监听 `127.0.0.1`，没有鉴权，不要暴露到公网
