@@ -99,6 +99,8 @@ class Handler(SimpleHTTPRequestHandler):
             return self._api_roster_get()
         if self.path.startswith("/api/scores"):
             return self._api_scores_get()
+        if self.path.startswith("/api/maps"):
+            return self._api_maps()
         if self.path.startswith("/api/expect/meta"):
             return self._api_expect_meta()
         if self.path.startswith("/api/generate/meta"):
@@ -211,6 +213,37 @@ class Handler(SimpleHTTPRequestHandler):
             "roster_status": custom_data.roster_status(),
         })
 
+    def _api_maps(self):
+        """地图统计：每张图的局数、实测逃脱、监管出场、求生职能倾向。
+
+        只读，由 bp_core.json 的 map 字段即时算出（不落盘）。
+        多张图的倍数表是给页面看「这张图谁更可能上场」的，
+        参数 ?map=图名 只返回那一张。
+        """
+        try:
+            from bp_search_engine import Engine
+            eng = Engine()
+            name = ""
+            if "?" in self.path:
+                q = self.path.split("?", 1)[1]
+                for kv in q.split("&"):
+                    if kv.startswith("map="):
+                        name = urllib.parse.unquote(kv[4:])
+            data = eng.map_stats(name)
+            roles = {m: eng.map_surv_role_mix(m) for m in data}
+            for m in data:
+                data[m]["roles"] = roles.get(m) or {}
+            self._json(200, {
+                "ok": True,
+                "maps": eng.maps(),
+                "stats": data,
+                "hunter_prior": {k: round(v, 4) for k, v in eng._map_prior.items()},
+            })
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            self._json(500, {"ok": False, "error": f"{type(e).__name__}: {e}"})
+
     def _api_player_scores(self):
         """选手榜：每个监管选手 × 求生角色 × 他用过的监管 的 实测/全局/折合。"""
         p = ROOT / "data" / "player_scores.json"
@@ -283,6 +316,16 @@ class Handler(SimpleHTTPRequestHandler):
         base_cells = custom_data.base_cells()
         reports = _list_reports()
         player_cells, player_hunters = self._player_cells()
+        # 地图列表给生成页的下拉用。局数一并给出，让教练知道哪些图样本太少。
+        try:
+            from bp_search_engine import Engine
+            _eng = Engine()
+            _stats = _eng.map_stats()
+            map_rows = [{"name": m, "halves": _stats[m]["halves"],
+                         "escape": _stats[m]["escape"]}
+                        for m in _eng.maps()]
+        except Exception:
+            map_rows = []
         self._json(200, {
             "teams": sorted(base_roster),
             "players": [{"name": p, "team": t} for p, t in players.items()],
@@ -290,6 +333,7 @@ class Handler(SimpleHTTPRequestHandler):
             "all_hunters": custom_data.all_hunters(),
             "hunter_counts": custom_data.hunter_counts(),
             "survivor_counts": custom_data.survivor_counts(),
+            "maps": map_rows,
             "roster": {"base": base_roster},
             "scores": {
                 "base": base_cells,
@@ -384,12 +428,19 @@ class Handler(SimpleHTTPRequestHandler):
             # pool_override：本次生成选的求生角色池配置
             pool_ov = {team: list(pool)} if pool else None
             eng = Engine(scores_override=scores_ov, pool_override=pool_ov)
+            # 本局地图：只影响候选排序与加权，不改任何分数格。
+            # 传空串或未传 = 不按地图加权，与旧行为一致。
+            map_name = data.get("map") or ""
+            if map_name and map_name not in eng.maps():
+                return self._json(400, {"ok": False,
+                                        "error": f"未知地图 {map_name}"})
             res = bp_compute(eng, team, player, game, n_hunters, bantop,
                              n_combos=int(data.get("combos") or 8),
                              global_ban_surv=gban_s, global_ban_hunt=gban_h,
                              our_pool=pool,
                              scores_source=data.get("scores_source"),
-                             roster_source=data.get("roster_source"))
+                             roster_source=data.get("roster_source"),
+                             map_name=map_name or None)
         except Exception as e:
             import traceback
             traceback.print_exc()
@@ -438,16 +489,26 @@ class Handler(SimpleHTTPRequestHandler):
                 if not player:
                     return self._json(400, {
                         "ok": False, "error": "必须选择监管选手 —— 期望分按选手的折合分计算，不做无选手的全局评估"})
+                map_name = data.get("map") or ""
+                if map_name and map_name not in eng.maps():
+                    return self._json(400, {"ok": False,
+                                            "error": f"未知地图 {map_name}"})
                 res = evaluate(eng, chars, player,
-                               data.get("hunters") or None)
+                               data.get("hunters") or None,
+                               map_name=map_name or None)
                 return self._json(200, {"ok": True, "result": res})
             if kind == "bp":
                 from bp_combo_report import compute as bp_compute
+                map_name = data.get("map") or ""
+                if map_name and map_name not in eng.maps():
+                    return self._json(400, {"ok": False,
+                                            "error": f"未知地图 {map_name}"})
                 res = bp_compute(eng, data.get("team"), data.get("player"),
                                  int(data.get("game") or 3),
                                  int(data.get("hunters") or 4),
                                  int(data.get("bantop") or 4),
-                                 int(data.get("combos") or 8))
+                                 int(data.get("combos") or 8),
+                                 map_name=map_name or None)
                 return self._json(200, {"ok": True, "result": res})
             return self._json(400, {"ok": False, "error": f"未知的计算类型 {kind}"})
         except Exception as e:

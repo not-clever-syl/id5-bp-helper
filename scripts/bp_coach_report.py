@@ -138,25 +138,51 @@ def value_after(eng, team, player, game, state, char, extra=None):
     return v, (nidx, ntaken, lban, lpick, spicks)
 
 
-def pick_candidates(eng, team, player, state, topn=6):
-    """当前可选的求生角色，按补进来后的浅层评估排序。"""
+def pick_candidates(eng, team, player, state, topn=6, map_name=None):
+    """当前可选的求生角色，按补进来后的浅层评估排序。
+
+    map_name：本局地图。给了就用「浅层评估 × 地图倍数」重排，
+    因为浅层评估本身已经含了地图对监管候选的影响，再乘一次
+    求生角色的地图倍数，才是「这张图更可能选谁」的排序。
+
+    注意：这里截断到 topn，所以排序会真正决定候选范围。
+    引擎 _dfs 里的 surv_pick 是对全 roster 求最大，排序只影响
+    剪枝效率、不影响结果，地图在那个位置没有作用。
+    """
     roster = eng.pool_of(team)
     cs = [c for c in roster if c not in state["lban"] and c not in state["lpick"]]
-    cs.sort(key=lambda c: -eng._shallow(team, player, frozenset(set(state["spicks"]) | {c})))
+
+    def key(c):
+        v = eng._shallow(team, player, frozenset(set(state["spicks"]) | {c}))
+        if map_name:
+            v = v * eng.surv_map_mult(map_name, c)
+        return -v
+
+    cs.sort(key=key)
     return cs[:topn]
 
 
-def ban_hunter_candidates(eng, player, state, topn=5, gone_hunt=None):
+def ban_hunter_candidates(eng, player, state, topn=5, gone_hunt=None,
+                          map_name=None):
     """② 求生 ban 监管的候选：威胁度降序。
 
     gone_hunt：本场之前对方已经用掉的监管，对方拿不到，我方也不必 ban。
+    map_name：本局地图，按「威胁度 × 地图倍数」重排 —— 这张图上他更可能
+    拿的监管优先 ban。实测真实监管落在前 3 的比例 59.7% → 66.7%。
     """
     lb, lp = state.get("lban") or set(), state.get("lpick") or set()
     gone = set(gone_hunt or ())
-    cs = [c for c in eng.ban_candidates_hunt(player)
+    cs = [c for c in eng.ban_candidates_hunt(player, map_name or "")
           if c not in lb and c not in lp and c not in gone]
-    cs.sort(key=lambda c: -next((t["threat"] for t in eng.players[player]["threats"]
-                                 if t["char"] == c), 0.0))
+
+    def key(c):
+        th = next((t["threat"] for t in eng.players[player]["threats"]
+                   if t["char"] == c), 0.0)
+        if map_name:
+            th *= eng.map_mult(map_name, c)
+        return -th
+
+    cs.sort(key=key)
     return cs[:topn]
 
 
@@ -172,7 +198,7 @@ def fmt_gap(v, base, is_max):
 # 问题 1：从「ban 了这组求生者」反推对手想打的监管
 # ═══════════════════════════════════════════════════════════════
 def infer_hunter_intent(eng, team, player, banned_survivors, topn=6,
-                        gone_surv=None, gone_hunt=None):
+                        gone_surv=None, gone_hunt=None, map_name=None):
     """反推：对手 ban 掉这些求生者之后，最可能是为了打哪些监管。
 
     两个信号：
@@ -216,12 +242,16 @@ def infer_hunter_intent(eng, team, player, banned_survivors, topn=6,
             hit = ban_best - best3
         else:
             hit = 0.0
+        # 地图：这张图上他更可能拿的监管排在前面（乘在威胁度那一项上，
+        # 不动压制力 —— 压制力是这对阵容的客观强度，与地图无关）
+        mult = eng.map_mult(map_name, h) if map_name else 1.0
         rows.append({
             "char": h, "p_use": t["p_use"], "threat": t["threat"],
             "best3": best3, "strong": strong, "hit": hit,
+            "mult": round(mult, 4),
             # 有针对性的（hit ≥ -0.10）额外加权，提示「对手在为他清路」
             "targeted": hit >= -0.10,
-            "score": t["p_use"] * max(strong, 0.0) + t["threat"] * 0.5
+            "score": t["p_use"] * max(strong, 0.0) + t["threat"] * 0.5 * mult
                      + (0.15 if hit >= -0.10 else 0.0),
         })
 
@@ -233,7 +263,7 @@ def infer_hunter_intent(eng, team, player, banned_survivors, topn=6,
 # 单个 ban 组合的完整报告
 # ═══════════════════════════════════════════════════════════════
 def one_combo(eng, team, player, game, bans, verbose_steps=True, emit=True,
-              gone_surv=None, gone_hunt=None):
+              gone_surv=None, gone_hunt=None, map_name=None):
     """针对一组 ① ban 生成四问报告。
 
     计算与展示分离：先把结果组装成 dict，再（可选）打印。
@@ -242,7 +272,13 @@ def one_combo(eng, team, player, game, bans, verbose_steps=True, emit=True,
     gone_surv / gone_hunt 是本场之前已被用掉的求生 / 监管（全局禁选）。
     求生被用掉只封锁我方，监管被用掉只封锁对方，所以分开传。
     两者都直接进 lban —— 被 ban 的角色既不能被选，也不会出现在候选里。
+
+    map_name：本局地图。这里必须写进 eng.map_name，因为后面调的
+    _leaf / _shallow / ban_candidates_response 都从引擎读它；
+    显式传参的那几处（ban_hunter_candidates / pick_candidates /
+    infer_hunter_intent）也一并传，保证口径一致。
     """
+    eng.map_name = map_name or ""
     stages = eng._stages(game)
     lban = set(bans) | set(gone_surv or ()) | set(gone_hunt or ())
     idx1 = next(i for i, s in enumerate(stages) if s[0] == "①")
@@ -256,13 +292,16 @@ def one_combo(eng, team, player, game, bans, verbose_steps=True, emit=True,
 
     say("\n" + "=" * 74)
     say(f"对手 ① ban：{'、'.join(bans)}")
+    if map_name:
+        say(f"地图：{map_name}")
     say("=" * 74)
 
     # ── 问题 1：反推对手想打的监管 ──
     say("\n1. 对手可能想打哪些监管")
     say("-" * 74)
     rows = infer_hunter_intent(eng, team, player, bans,
-                               gone_surv=gone_surv, gone_hunt=gone_hunt)
+                               gone_surv=gone_surv, gone_hunt=gone_hunt,
+                               map_name=map_name)
     intent = []
     for r in rows[:6]:
         intent.append({
@@ -273,12 +312,19 @@ def one_combo(eng, team, player, game, bans, verbose_steps=True, emit=True,
             "strong": round(r["strong"], 4),
             "hit": round(r["hit"], 4),
             "threat": round(r["threat"], 4),
+            "mult": r.get("mult", 1.0),
         })
-    say(f"   {'监管':<11}{'使用率':>7}{'强度':>7}{'对剩余最优三人':>13}{'压制':>7}{'针对度':>8}  威胁")
+    if map_name:
+        say(f"   {'监管':<11}{'使用率':>7}{'强度':>7}{'对剩余最优三人':>13}"
+            f"{'压制':>7}{'针对度':>8}{'该图倍数':>9}  威胁")
+    else:
+        say(f"   {'监管':<11}{'使用率':>7}{'强度':>7}{'对剩余最优三人':>13}"
+            f"{'压制':>7}{'针对度':>8}  威胁")
     for d in intent:
         hit = f"+{d['hit']:.2f}" if d["hit"] > 0.02 else f"{d['hit']:.2f}"
+        tail = f"{d['mult']:>9.2f}" if map_name else ""
         say(f"   {d['char']:<11}{d['p_use']*100:>6.1f}%{d['strength']:>7.2f}"
-            f"{d['best3']:>13.3f}{d['strong']:>7.2f}{hit:>8}  {d['threat']:.3f}")
+            f"{d['best3']:>13.3f}{d['strong']:>7.2f}{hit:>8}{tail}  {d['threat']:.3f}")
 
     intent_note = ""
     if intent:
@@ -313,7 +359,7 @@ def one_combo(eng, team, player, game, bans, verbose_steps=True, emit=True,
         ban_note = "第 1 局没有 ban 监管的名额"
     else:
         cands = ban_hunter_candidates(eng, player, st2, topn=5,
-                                      gone_hunt=gone_hunt)
+                                      gone_hunt=gone_hunt, map_name=map_name)
         rr = []
         for c in cands:
             v, _ = value_after(eng, team, player, game, st2, c)
@@ -357,7 +403,8 @@ def one_combo(eng, team, player, game, bans, verbose_steps=True, emit=True,
     lban3 = set(lban) | set(chosen_ban)
     st3 = {"idx": idx3, "taken": 0, "kind": "surv_pick",
            "lban": lban3, "lpick": set(), "spicks": set()}
-    first = pick_candidates(eng, team, player, st3, topn=6)
+    first = pick_candidates(eng, team, player, st3, topn=6,
+                            map_name=map_name)
     r1 = []
     for c in first:
         v, nxt = value_after(eng, team, player, game, st3, c)
@@ -380,7 +427,8 @@ def one_combo(eng, team, player, game, bans, verbose_steps=True, emit=True,
     st3b = {"idx": nidx2, "taken": ntaken2,
             "kind": stages[nidx2][1] if nidx2 < len(stages) else "surv_pick",
             "lban": set(nb2), "lpick": set(np2), "spicks": set(ns2)}
-    second = pick_candidates(eng, team, player, st3b, topn=6)
+    second = pick_candidates(eng, team, player, st3b, topn=6,
+                             map_name=map_name)
     r2 = []
     for c in second:
         v, nxt = value_after(eng, team, player, game, st3b, c)
@@ -430,10 +478,12 @@ def one_combo(eng, team, player, game, bans, verbose_steps=True, emit=True,
                 is_max = False
             elif kind == "surv_ban":
                 cs = ban_hunter_candidates(eng, player, st, topn=3,
-                                          gone_hunt=gone_hunt)
+                                          gone_hunt=gone_hunt,
+                                          map_name=map_name)
                 is_max = True
             else:
-                cs = pick_candidates(eng, team, player, st, topn=3)
+                cs = pick_candidates(eng, team, player, st, topn=3,
+                                     map_name=map_name)
                 is_max = True
             if st["chosen"] not in cs:
                 cs = [st["chosen"]] + cs[:2]
@@ -475,6 +525,7 @@ def one_combo(eng, team, player, game, bans, verbose_steps=True, emit=True,
 
     return {
         "bans": list(bans),
+        "map": map_name or "",
         "intent": intent,
         "intent_note": intent_note,
         "ban_quota": quota,
@@ -505,6 +556,11 @@ def main():
     topk = 4
     out_json = None
     quiet = False
+    map_name = None
+    if "--map" in argv:
+        i = argv.index("--map")
+        map_name = argv[i + 1] if i + 1 < len(argv) else ""
+        argv = argv[:i] + argv[i + 2:]
     if "--ban" in argv:
         i = argv.index("--ban")
         manual = [canon(a) for a in argv[i + 1:i + 3]]
@@ -526,7 +582,7 @@ def main():
 
     if len(args) < 3:
         print("用法：python scripts/bp_coach_report.py <战队> <监管选手> <局次> "
-              "[--topk N] [--ban A B] [--json 输出路径]")
+              "[--topk N] [--ban A B] [--map 地图名] [--json 输出路径]")
         return
     team, player, game = args[0], args[1], int(args[2])
     eng = Engine()
@@ -540,7 +596,8 @@ def main():
     t0 = time.time()
     if not quiet:
         print("=" * 74)
-        print(f"求生方教练报告 · {team}  vs  {player}（监管） · 第 {game} 局")
+        print(f"求生方教练报告 · {team}  vs  {player}（监管） · 第 {game} 局"
+              + (f" · {map_name}" if map_name else ""))
         print("=" * 74)
 
     if manual:
@@ -557,7 +614,8 @@ def main():
     for bans in combos:
         if quiet:
             print(f"  计算 {'、'.join(bans)} ...", end="\r", flush=True)
-        r = one_combo(eng, team, player, game, list(bans), emit=not quiet)
+        r = one_combo(eng, team, player, game, list(bans), emit=not quiet,
+                      map_name=map_name)
         if r:
             results.append(r)
 
@@ -582,6 +640,7 @@ def main():
                 "team": team,
                 "player": player,
                 "game": game,
+                "map": map_name or "",
                 "generated_at": time.strftime("%Y-%m-%d %H:%M"),
                 "elapsed_s": round(time.time() - t0, 1),
                 "candidates": [c for c in

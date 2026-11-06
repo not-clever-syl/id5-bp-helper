@@ -79,13 +79,15 @@ def print(*a, **k):  # noqa: A001
 # ② 监管方可能考虑的监管前 N（原 bp_intent_report.enumerate_hunters，
 #    已内联 —— 该模块其余部分废弃，不再作为依赖保留）
 # ═══════════════════════════════════════════════════════════════
-def enumerate_hunters(eng, player, n=4, exclude=None):
+def enumerate_hunters(eng, player, n=4, exclude=None, map_name=None):
     """对手可能想打的 n 个监管，按（使用率 × 强度 + 威胁）排序。
 
     这一步不看求生 ban——因为后面要用 ban 位来反推，
     如果这里先把 bans 算进去就成了循环论证。
 
     exclude：对方本场之前已经用掉的监管，不可能再拿，直接排除。
+    map_name：本局地图。给了就把威胁那一项乘上地图倍数 ——
+    「这张图上他更可能拿谁」和「他整体爱用谁」不是一回事。
     """
     gone = set(exclude or ())
     info = eng.players[player]
@@ -94,12 +96,14 @@ def enumerate_hunters(eng, player, n=4, exclude=None):
         h = t["char"]
         if t["p_use"] <= 0 or h in gone:
             continue
+        mult = eng.map_mult(map_name, h) if map_name else 1.0
         rows.append({
             "char": h,
             "p_use": t["p_use"],
             "threat": t["threat"],
+            "mult": round(mult, 4),
             "strength": eng.strength.get(h, 0.0),
-            "score": t["p_use"] * eng.strength.get(h, 0.0) + t["threat"] * 0.5,
+            "score": t["p_use"] * eng.strength.get(h, 0.0) + t["threat"] * 0.5 * mult,
         })
     rows.sort(key=lambda r: -r["score"])
     return rows[:n]
@@ -175,7 +179,7 @@ def candidate_bans(eng, team, player, n_hunters=4, bantop=5, top=8,
 def compute(eng, team, player, game, n_hunters=4, bantop=5, n_combos=8,
             global_ban=None, global_ban_surv=None, global_ban_hunt=None,
             our_pool=None, scores_source=None, roster_source=None,
-            verbose=False):
+            verbose=False, map_name=None):
     """算出以「对手 ban 组合」为轴的整份报告。
 
     全局禁选分两边（规则：本方用过的角色只封锁本方）：
@@ -185,20 +189,24 @@ def compute(eng, team, player, game, n_hunters=4, bantop=5, n_combos=8,
     our_pool：报告页要展示的我方求生角色池；不传就从引擎读。
     n_hunters / bantop 在新版 candidate_bans 里不再参与打分
     （打分走 ban_intel 的指纹+PMI+热门度），保留只为兼容 serve.py 的调用。
+    map_name：本局地图。影响对手监管候选的排序、我方 ban 监管的候选、
+    我方选人的候选排序。不改任何分数格。
     """
     t0 = time.time()
+    eng.map_name = map_name or ""
     quota = ban_quota(game)
     gone_s = set(global_ban_surv or ()) | set(global_ban or ())
     gone_h = set(global_ban_hunt or ()) | set(global_ban or ())
 
     # ② 监管方可能考虑的监管前 N（与用户选哪个 ban 组合无关）
     hunters = enumerate_hunters(eng, player, n=n_hunters,
-                                exclude=gone_h)
+                                exclude=gone_h, map_name=map_name)
     hunter_rows = [{
         "char": h["char"],
         "p_use": round(h["p_use"], 4),
         "strength": round(h["strength"], 4),
         "threat": round(h["threat"], 4),
+        "mult": h.get("mult", 1.0),
         "score": round(h["score"], 4),
     } for h in hunters]
 
@@ -212,12 +220,14 @@ def compute(eng, team, player, game, n_hunters=4, bantop=5, n_combos=8,
         if verbose:
             print(f"[{i+1}/{len(cands)}] 对手 ban：{'、'.join(bans)} …", flush=True)
         r = one_combo(eng, team, player, game, bans, verbose_steps=True,
-                      emit=False, gone_surv=gone_s, gone_hunt=gone_h)
+                      emit=False, gone_surv=gone_s, gone_hunt=gone_h,
+                      map_name=map_name)
         if not r:
             continue
         combos.append({
             "bans": bans,
             "label": " + ".join(bans),
+            "map": map_name or "",
             "weight": c["weight"],
             "rank": c["rank"],
             "hunters": c["hunters"],
@@ -260,6 +270,7 @@ def compute(eng, team, player, game, n_hunters=4, bantop=5, n_combos=8,
         "team": team,
         "player": player,
         "game": game,
+        "map": map_name or "",
         "generated_at": time.strftime("%Y-%m-%d %H:%M"),
         "elapsed_s": round(time.time() - t0, 1),
         "ban_quota": quota,
@@ -354,13 +365,15 @@ def main():
     ap.add_argument("--hunters", type=int, default=4)
     ap.add_argument("--bantop", type=int, default=5)
     ap.add_argument("--combos", type=int, default=8)
+    ap.add_argument("--map", default="")
     ap.add_argument("--json", default="")
     args = ap.parse_args()
 
     eng = Engine()
     data = compute(eng, args.team, args.player, args.game,
                    n_hunters=args.hunters, bantop=args.bantop,
-                   n_combos=args.combos, verbose=True)
+                   n_combos=args.combos, verbose=True,
+                   map_name=args.map or None)
     print(f"\n共 {len(data['combos'])} 个组合，耗时 {data['meta']['elapsed_s']}s")
     if args.json:
         p = Path(args.json)

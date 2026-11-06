@@ -319,6 +319,7 @@ function renderNew() {
      </div>
      <div class="verdict"><b>当前选择：${bansHtml(C.bans)}</b></div>
      ${C.intent_note ? `<div class="meta" style="margin-top:8px">${esc(C.intent_note)}</div>` : ''}
+     ${mapIntentTable(C)}
      <div class="tablewrap" style="margin-top:10px"><table>
        <thead><tr><th style="width:24%">对手的 ban</th><th style="width:44%">最可能指向的监管（前 3）</th>
          <th class="num">可能性</th></tr></thead>
@@ -444,8 +445,37 @@ function renderNew() {
   if (sel) sel.onchange = () => { COMBO = +sel.value; renderNew(); };
 }
 
-/** 本次生成用的设置：监管数据来源、求生角色池、全局禁选。 */
-function settingsCard() {
+/** 地图对「对手会拿谁」的影响：把该图的倍数和通用威胁度并列出来。
+ *  只有指定了地图才显示；倍数 1.0 = 与全联盟平均持平。
+ */
+function mapIntentTable(C) {
+  const m = REP.meta || {};
+  const rows = (C.intent || []).filter(x => x.mult != null);
+  if (!m.map || !rows.length) return '';
+  const cells = rows.map(x => {
+    const v = Number(x.mult);
+    // 倍数偏离 1 越远颜色越明显：偏多绿、偏少红
+    const a = Math.min(0.5, Math.abs(v - 1) * 0.45);
+    const bg = Math.abs(v - 1) < 0.05 ? 'transparent'
+      : (v > 1 ? `rgba(109,196,160,${a.toFixed(3)})`
+               : `rgba(212,100,92,${a.toFixed(3)})`);
+    return `<tr>
+      <td>${Char.chip(x.char, {size: 22})}</td>
+      <td class="num dim">${f2(x.threat)}</td>
+      <td class="num" style="background:${bg}">×${v.toFixed(2)}</td></tr>`;
+  }).join('');
+  return `<div style="margin-top:12px">
+    <div class="meta"><b>${esc(m.map)}</b> 这张图上的监管倾向
+      （×倍数 = 该图出场份额 ÷ 全联盟份额，1.00 表示与平均持平）。
+      倍数高的会被排到候选前面。</div>
+    <div class="tablewrap" style="margin-top:6px"><table>
+      <thead><tr><th style="width:50%">监管</th>
+        <th class="num">通用威胁度</th><th class="num">该图倍数</th></tr></thead>
+      <tbody>${cells}</tbody></table></div>
+  </div>`;
+}
+
+/** 本次生成用的设置：监管数据来源、求生角色池、全局禁选。 */function settingsCard() {
   const m = REP.meta || {};
   const gs = m.global_ban_surv || [];
   const gh = m.global_ban_hunt || [];
@@ -467,6 +497,9 @@ function settingsCard() {
     <div class="two">
       <div>
         ${kv('对局', `${esc(m.team)}（求生） vs ${esc(m.player)}（监管） · 第 ${m.game} 局`)}
+        ${kv('地图', m.map
+          ? `<b>${esc(m.map)}</b>（只影响候选排序与加权，不改任何分数格）`
+          : '<span class="dim">未指定（按全联盟口径）</span>')}
         ${kv('我方 ban 名额', `${m.ban_quota ?? 0} 个（第 1 局 0、第 2 局 1、第 3 局起 2）`)}
         ${kv('搜索范围', `监管前 ${m.hunters ?? '—'} · ban 组合前 ${m.bantop ?? '—'}`)}
         ${kv('可选 ban 组合', `${m.combo_count ?? '—'} 组（第 ① 段可切换）`)}
