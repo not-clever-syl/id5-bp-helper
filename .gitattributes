@@ -1,4 +1,4 @@
 # 启动.bat 是 GBK 编码的 Windows 批处理文件。
-# binary 保证内容原样存取（不被换行符转换破坏编码），
-# eol=crlf 保证检出时是 CRLF 行尾 —— cmd 对 LF-only 的 bat 兼容性不好。
-*.bat binary eol=crlf
+# 固定 CRLF 行尾 —— cmd 对 LF-only 的 bat 兼容性不好。
+# 注意：不能同时写 binary，它会覆盖 eol 设置。
+*.bat text eol=crlf
