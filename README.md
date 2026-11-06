@@ -4,6 +4,15 @@
 
 纯 Python 标准库实现（3.10+），无第三方依赖，前端为原生 HTML/JS/CSS，无需构建。
 
+## 获取代码
+
+```bash
+git clone https://github.com/not-clever-syl/id5-bp-helper.git
+cd id5-bp-helper
+```
+
+仓库已包含全部预编辑数据（分数表、BP 决策树、监管选手与角色池配置），克隆后无需额外下载或构建即可运行。
+
 ## 快速开始
 
 ```bash
@@ -11,6 +20,12 @@ python scripts/serve.py 8766
 ```
 
 打开浏览器访问 <http://localhost:8766/web/index.html> 即可。
+
+后续更新代码时：
+
+```bash
+git pull
+```
 
 ## 使用方法
 
