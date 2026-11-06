@@ -728,7 +728,13 @@ class Engine:
         if idx >= depth:
             return self._shallow(team, player, spicks, lban), []
 
-        key = (idx, taken, frozenset(lban), frozenset(lpick), frozenset(spicks))
+        # memo 的 key 必须带地图：同一个 Engine 实例换图重算时，
+        # 如果 key 里没有 map_name，上一张图的最优值和线路会被当成
+        # 这张图的结果直接返回（实测月亮河拿到红教堂的结论）。
+        # team/player/game 在单次会话内恒定，但它们也一并进来 ——
+        # 代价只是 key 长一点，换来跨场次复用也安全。
+        key = (team, player, game, self.map_name, idx, taken,
+               frozenset(lban), frozenset(lpick), frozenset(spicks))
         full_window = alpha <= -1e8 and beta >= 1e8
         if full_window:
             hit = self._memo.get(key)
