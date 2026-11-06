@@ -506,12 +506,23 @@ def main():
 
     # 自动打开浏览器（延迟一点，等服务真正开始监听）
     if "--no-browser" not in sys.argv:
-        threading.Timer(0.8, lambda: webbrowser.open(url)).start()
+        threading.Timer(0.8, lambda: _open_browser(url)).start()
 
     try:
         srv.serve_forever()
     except KeyboardInterrupt:
         print("\n已停止")
+
+
+def _open_browser(url: str) -> None:
+    """打开浏览器。无桌面环境（SSH / Docker / 无 GUI 的 Linux）下会失败，
+    这属于正常情况 —— 打印网址让用户自己复制即可，不该抛错中断服务。"""
+    try:
+        ok = webbrowser.open(url)
+    except Exception:
+        ok = False
+    if not ok:
+        print(f"未能自动打开浏览器，请手动访问：{url}", flush=True)
 
 
 if __name__ == "__main__":
