@@ -22,6 +22,8 @@
     求生角色池  <队伍名>_<数字>.json
     报告        <监管id>_<版本>_vs_<队伍名>_<版本>_game<局数>_<时间戳>.json
 """
+from __future__ import annotations
+
 import json
 import re
 from pathlib import Path

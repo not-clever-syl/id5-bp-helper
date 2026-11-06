@@ -2,31 +2,55 @@
 
 《第五人格》IVL 2026 秋季赛的求生方 BP 辅助工具，基于 260 个半局的官方战报数据做统计与推演，供备赛时参考。所有分数和推荐都只是历史数据的归纳，不构成决策依据，最终判断请以教练和选手的实际经验为准。
 
-纯 Python 标准库实现（3.10+），无第三方依赖，前端为原生 HTML/JS/CSS，无需构建。
+纯 Python 标准库实现（3.9+），无第三方依赖，前端为原生 HTML/JS/CSS，无需构建。
 
-## 零基础上手（三步）
+## 快速开始
 
-### 第 1 步：装 Python（只需一次）
+### Windows
 
-去 <https://www.python.org/downloads/> 下载 Python 3.10 或更高版本。
-
-安装时**务必勾选 `Add Python to PATH`**（在安装界面最下方），否则系统认不出 Python 命令。
-
-### 第 2 步：下载代码
-
-在 GitHub 仓库页面点右上角 <kbd>Code</kbd> → <kbd>Download ZIP</kbd>，下载后解压。
-
-解压后目录里应该能看到 `启动.bat`、`scripts`、`web`、`data` 这几项。
-
-### 第 3 步：双击 `启动.bat`
-
-双击 `启动.bat`，黑窗口出现「正在启动服务」后，**浏览器会自动打开工具首页**。
-
-- 想换端口：右键 `启动.bat` → 编辑，把 `8766` 改成别的数字
-- 端口被占用时会自动往后顺延（8766 → 8767 → …），不会报错
-- **关闭那个黑窗口就等于停止服务**
+1. **装 Python**（只需一次）：去 <https://www.python.org/downloads/> 下载 Python 3.9 或更高版本。安装时**务必勾选 `Add Python to PATH`**（安装界面最下方），否则系统认不出 Python 命令。
+2. **下载代码**：在仓库页面点 <kbd>Code</kbd> → <kbd>Download ZIP</kbd>，解压。
+3. **双击 `启动.bat`**：黑窗口出现「正在启动服务」后，**浏览器会自动打开工具首页**。关闭那个黑窗口就等于停止服务。
 
 > 第一次运行时 Windows 可能弹出「是否允许运行 Python」，选「允许」即可。
+
+### macOS / Linux
+
+1. **装 Python**：
+   - macOS：`brew install python3`（或从 python.org 下载）
+   - Debian / Ubuntu：`sudo apt install python3`
+   - Fedora / RHEL：`sudo dnf install python3`
+2. **下载代码**：
+   ```bash
+   git clone https://github.com/not-clever-syl/id5-bp-helper.git
+   cd id5-bp-helper
+   ```
+   或在仓库页面下载 ZIP 后解压。
+3. **启动**：
+   ```bash
+   chmod +x 启动.sh    # 只需第一次
+   ./启动.sh
+   ```
+   浏览器会自动打开首页。按 `Ctrl+C` 停止服务。
+
+### 通用命令（任何平台）
+
+```bash
+python scripts/serve.py 8766
+```
+
+浏览器访问 <http://localhost:8766/web/index.html>
+
+可选参数：
+
+```bash
+python scripts/serve.py 8080                # 换端口
+python scripts/serve.py 8766 --no-browser   # 不自动打开浏览器
+```
+
+- 端口被占用时会自动往后顺延（8766 → 8767 → …），不会报错
+- 仓库已包含全部预编辑数据（分数表、BP 决策树、监管选手与角色池配置），克隆后无需额外下载或构建即可运行
+- 后续更新代码：`git pull`
 
 ## 使用方法
 
@@ -98,7 +122,8 @@ git pull
 ### 目录结构
 
 ```
-├── 启动.bat              # Windows 双击启动（零基础入口）
+├── 启动.bat              # Windows 双击启动
+├── 启动.sh               # Linux / macOS 启动（chmod +x 后执行）
 ├── scripts/              # 后端（Python 标准库，无第三方依赖）
 │   ├── serve.py          # 本地 HTTP 服务 + 全部 API 入口
 │   ├── bp_search_engine.py # 核心 BP 搜索引擎（α-β 剪枝 + 阵容聚合评分）

@@ -33,6 +33,8 @@
 分数单位是「局均逃脱人数」，值域 0~4，2.00 为平局线。
 求生方最大化，监管方最小化。
 """
+from __future__ import annotations
+
 import json
 import sys
 from functools import lru_cache
