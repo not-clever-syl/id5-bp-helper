@@ -28,9 +28,11 @@
    或在仓库页面下载 ZIP 后解压。
 3. **启动**：
    ```bash
-   chmod +x 启动.sh    # 只需第一次
    ./启动.sh
    ```
+   若提示 `Permission denied`，先执行一次 `chmod +x 启动.sh`；
+   也可以直接用 `sh 启动.sh`，无需设置执行权限。
+
    浏览器会自动打开首页。按 `Ctrl+C` 停止服务。
 
 ### 通用命令（任何平台）
@@ -123,7 +125,7 @@ git pull
 
 ```
 ├── 启动.bat              # Windows 双击启动
-├── 启动.sh               # Linux / macOS 启动（chmod +x 后执行）
+├── 启动.sh               # Linux / macOS 启动（./启动.sh 或 sh 启动.sh）
 ├── scripts/              # 后端（Python 标准库，无第三方依赖）
 │   ├── serve.py          # 本地 HTTP 服务 + 全部 API 入口
 │   ├── bp_search_engine.py # 核心 BP 搜索引擎（α-β 剪枝 + 阵容聚合评分）
