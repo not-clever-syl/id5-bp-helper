@@ -191,8 +191,22 @@ class Handler(SimpleHTTPRequestHandler):
         except Exception as e:
             return self._json(400, {"ok": False, "error": f"bad json: {e}"})
         try:
-            res = file_api.write_json(data.get("path"), data.get("data"),
-                                      overwrite=bool(data.get("overwrite")))
+            overwrite = bool(data.get("overwrite"))
+            # 覆盖已有版本：path 就是列表里那个文件的完整相对路径。
+            # 新建版本：只给 prefix + dir，文件名由服务端按规范生成，
+            # 页面无法自己决定存成什么名字。
+            if overwrite:
+                res = file_api.write_json(data.get("path"), data.get("data"),
+                                          overwrite=True)
+            else:
+                prefix = data.get("prefix")
+                sub = data.get("dir")
+                if not prefix or not sub:
+                    return self._json(400, {"ok": False,
+                                            "error": "缺少 prefix 或 dir"})
+                name = file_api.next_name(prefix, sub)
+                res = file_api.write_json(f"{sub.rstrip('/')}/{name}",
+                                          data.get("data"), overwrite=False)
             self._json(200, {"ok": True, **res})
         except FileExistsError as e:
             self._json(409, {"ok": False, "error": str(e)})
@@ -414,6 +428,9 @@ class Handler(SimpleHTTPRequestHandler):
             "survivor_counts": custom_data.survivor_counts(),
             "maps": map_rows,
             "roster": {"base": base_roster},
+            # data/hunter/ 下现有的监管配置，按文件名排序。
+            # 生成页启动时默认载入第一份，省得每次都手动导入。
+            "hunter_files": self._hunter_files(),
             "scores": {
                 "base": base_cells,
                 "player_cells": player_cells,
@@ -421,6 +438,15 @@ class Handler(SimpleHTTPRequestHandler):
             },
             "reports": reports,
         })
+
+    def _hunter_files(self):
+        """data/hunter/ 下的监管配置清单，按文件名排序。"""
+        try:
+            res = file_api.list_files("export", dirs=[file_api.DIR_HUNTER])
+        except Exception:
+            return []
+        return [{"path": f["path"], "name": f["name"]}
+                for f in res.get("files") or []]
 
     def _api_generate(self):
         """生成一份报告。算完按规范命名存进 data/reports/。"""

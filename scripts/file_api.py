@@ -230,15 +230,15 @@ def write_json(rel: str, obj, overwrite: bool = False) -> dict:
         1. 目标必须落在三个导出目录（data/hunter、data/survivor、data/reports）
            里 —— 预制数据所在的 data/ 根本不在允许范围，写不进去。
         2. 默认不覆盖已存在的文件；要覆盖必须显式 overwrite=True。
-        3. 版本号 1 的文件是预制数据（由 build_preset_configs.py 生成），
-           永远不允许被页面导出覆盖 —— 改动只能存成更高版本。
+        3. 版本号 1 的文件是随项目带来的配置，永远不允许被页面导出覆盖
+           —— 改动只能存成更高版本。
     """
     p = _safe(rel, EXPORT_DIRS)
     if p.parent.resolve() == (ROOT / PRESET_DIR).resolve():
         raise ValueError("不能写入预制数据目录")
-    # 版本 1 = 预制数据，禁止覆盖
+    # 版本 1 = 随项目带来的配置，禁止覆盖
     if overwrite and ver_of(p.name) == 1:
-        raise ValueError(f"{p.name} 是预制数据（版本 1），不允许覆盖；请另存为新版本")
+        raise ValueError(f"{p.name} 是随项目带来的配置（版本 1），不允许覆盖；请另存为新版本")
     if p.exists() and not overwrite:
         raise FileExistsError(f"文件已存在：{rel}（换个名字，或勾选覆盖）")
     p.parent.mkdir(parents=True, exist_ok=True)
@@ -246,6 +246,26 @@ def write_json(rel: str, obj, overwrite: bool = False) -> dict:
     p.write_text(text, encoding="utf-8")
     return {"path": p.relative_to(ROOT).as_posix(),
             "bytes": len(text.encode("utf-8"))}
+
+
+def save_version(rel: str, obj, overwrite: bool = False) -> dict:
+    """按「前缀_序号」规则写配置，文件名一律由服务端生成。
+
+    页面只给「前缀 + 目标目录」，最终文件名在这里定：
+        不覆盖 → next_name(prefix, dir) 取下一个序号
+        覆盖    → 只允许覆盖 rel 指向的那个已有版本
+
+    这样即便有人在浏览器里改了输入框，也存不出系统规范之外的文件名。
+    """
+    target = _safe(rel, EXPORT_DIRS)
+    if not overwrite:
+        base = target.parent.relative_to(ROOT).as_posix()
+        stem = re.sub(r"_\d+\.json$", "", target.name, flags=re.I)
+        name = next_name(stem, base)
+        target = target.parent / name
+        return write_json(target.relative_to(ROOT).as_posix(), obj,
+                          overwrite=False)
+    return write_json(rel, obj, overwrite=True)
 
 
 def next_name(prefix: str, subdir: str = DIR_HUNTER) -> str:

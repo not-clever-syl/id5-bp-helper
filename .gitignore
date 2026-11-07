@@ -8,6 +8,13 @@ AGENTS.md
 # 本地生成的测试报告（含预制报告，都是本机测试产物）
 data/reports/
 
+# 监管选手配置 / 求生角色池：只有随项目带来的版本 1 入库。
+# 页面上导出的 _2、_3… 是本机产物，不提交。
+data/hunter/*.json
+!data/hunter/*_1.json
+data/survivor/*.json
+!data/survivor/*_1.json
+
 # Python
 __pycache__/
 *.py[cod]

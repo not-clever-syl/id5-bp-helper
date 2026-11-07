@@ -191,9 +191,9 @@ button.danger{border-color:#5c3330;color:#e0a09a}
         <span class="tag" id="s1Tag"></span></h2>
       <p class="lead">
         这就是数据页那张「求生 × 监管」的折合分表，单位局均逃脱，2.00 为居中值。
-        默认用预编辑的基准表；要用某位监管选手的实测折合分，就从
-        <code>data/hunter/</code> 里导入对应配置。表格可直接改，
-        页面上改的内容只在本次生成里生效。
+        打开页面时自动载入 <code>data/hunter/</code> 里文件名排第一的那份监管配置
+        —— 它同时也决定了第 4 步的对手是谁。要换选手就点「导入配置」。
+        表格可直接改，页面上改的内容只在本次生成里生效。
       </p>
       <div class="row">
         <button id="s1ImpBtn">导入配置</button>
@@ -213,9 +213,9 @@ button.danger{border-color:#5c3330;color:#e0a09a}
       <h2><span class="num">2</span>求生方角色池
         <span class="tag" id="s2Tag"></span></h2>
       <p class="lead">
-        我方战队由导入的角色池配置自动识别（文件名里的队伍名），不再手选。
-        默认用预编辑的基准角色池；要换成别的配置，从
-        <code>data/survivor/</code> 里导入。页面上改的内容只在本次生成里生效。
+        必须先导入一份求生角色池配置（<code>data/survivor/</code> 里选），
+        我方战队由文件名里的队伍名自动识别，不在页面上手选。
+        导入后可以直接增减角色，页面上改的内容只在本次生成里生效。
       </p>
       <div class="row">
         <label class="lb">我方战队</label>
@@ -265,7 +265,7 @@ button.danger{border-color:#5c3330;color:#e0a09a}
   <section class="panel" id="p4">
     <div class="card">
       <h2><span class="num">4</span>确认后生成</h2>
-      <p class="lead">核对下面全部设置，确认无误再开跑。生成过程通常 1~3 分钟。</p>
+      <p class="lead">核对下面全部设置，确认无误再开跑。第 1 局约十秒，第 3 局起要两三分钟。</p>
 
       <div class="row">
         <label class="lb">对手监管选手</label>
@@ -275,10 +275,6 @@ button.danger{border-color:#5c3330;color:#e0a09a}
           style="color:var(--dim);font-size:12px"></span>
       </div>
       <div class="row">
-        <label class="lb">瞄准监管前</label>
-        <input type="number" id="s4Hunters" min="1" max="12" value="4" style="width:72px">
-        <label class="lb">ban 组合前</label>
-        <input type="number" id="s4Bantop" min="2" max="10" value="5" style="width:72px">
         <label class="lb">可选 ban 组合</label>
         <input type="number" id="s4Combos" min="1" max="16" value="8" style="width:72px">
       </div>
@@ -287,11 +283,8 @@ button.danger{border-color:#5c3330;color:#e0a09a}
         padding:9px 14px;font-size:12.5px;margin-bottom:12px">
         <b>对手监管选手</b>：由第 1 步导入的监管数据配置决定 —— 那份配置就是
         哪位选手的数据，引擎就按他的英雄池、使用习惯和熟练度去推演他会拿什么监管。<br>
-        <b>瞄准监管前 / ban 组合前 / 可选 ban 组合</b>：决定搜索的广度。
-        「瞄准监管前 N」= 只把最可能出现的 N 个监管展开细算，N 越大越准也越慢；
-        「ban 组合前 M」= 每个监管只看对手最可能的 M 组 ban 位；
-        「可选 ban 组合 K」= 报告第 ① 段里给用户切换的 ban 组合数量。
-        默认 4 / 5 / 8 是精度与耗时的平衡点；想快就调小，想更全就调大。
+        <b>可选 ban 组合 K</b>：报告第 ① 段里给用户切换的 ban 组合数量。
+        调小能明显缩短生成时间；调大只影响多列几组备选，不改变每组的结论。
       </div>
 
       <div class="sum" id="sumBox"></div>
@@ -325,8 +318,6 @@ const ST = {
   game: 1,           // 第 3 步
   map: '',           // 第 3 步：本局地图（'' = 不指定，按全联盟口径）
   player: null,
-  hunters: 4,
-  bantop: 5,
   combos: 8,          // 第 4 步：报告里给用户切换的 ban 组合数
   gbSurv: new Set(), // 已用掉的求生（封锁我方）
   gbHunt: new Set(), // 已用掉的监管（封锁对方）
@@ -397,6 +388,10 @@ function goto(n) {
 /** 离开某一步时的校验：不通过就拦住，返回 false。 */
 function leaveStep(k) {
   if (k === 2) {
+    if (!ST.rosterSource) {
+      setMsg('#s2Msg', '还没导入求生角色池配置，先点「导入配置」选一份', 'err');
+      return false;
+    }
     const arr = ST.roster || [];
     if (arr.length < 4) {
       setMsg('#s2Msg', `${ST.team || '本队'} 的角色池不足 4 人，先补齐再下一步`, 'err');
@@ -481,8 +476,8 @@ function renderScores() {
     el.onchange = () => {
       const c = el.dataset.c, h = el.dataset.h;
       const v = parseFloat(el.value);
-      if (!isFinite(v) || v < 0 || v > 5) {
-        setMsg('#s1Msg', `${c} / ${h} 的分数必须在 0~5`, 'err');
+      if (!isFinite(v) || v < 0 || v > 4) {
+        setMsg('#s1Msg', `${c} / ${h} 的分数必须在 0~4`, 'err');
         const old = (ST.scores[c] || {})[h];
         if (old !== undefined) el.value = f2(typeof old === 'number' ? old : old.score);
         return;
@@ -538,15 +533,6 @@ function syncPlayerInfo() {
     : (p ? '本季出场记录很少，结论的可信度会下降' : '在第 1 步导入监管数据配置');
 }
 
-/** 「瞄准监管前 N」的上限不超过这位选手本季实际用过的监管数。 */
-function syncHunters() {
-  const p = opponent();
-  const n = ((META.scores.player_hunters || {})[p] || []).length;
-  const el = $('#s4Hunters');
-  if (!el) return;
-  if (n) { el.max = Math.max(1, Math.min(12, n)); el.value = Math.min(+el.value || 4, el.max); }
-}
-
 /**
  * 第 1 步导入的监管配置就是某位选手的数据，
  * 所以第 4 步的「对手监管选手」要跟着换成他 —— 换了张表但对手不变，
@@ -562,62 +548,89 @@ function syncOpponentFromScores() {
   if (!known.has(meta.player)) return '';
   ST.player = meta.player;
   syncPlayerInfo();
-  syncHunters();
   renderSummary();
   return meta.player;
 }
 
 // 第 1 步的导入导出：走模态子窗口，不用浏览器原生文件选择框
+/**
+ * 把一份监管配置读进第 1 步的分数表。
+ *
+ * silent=true 时用于页面启动自动载入：不写提示语，只把来源标出来。
+ * 返回 { ok, bad, synced }，没有可用格子时返回 null。
+ */
+function applyHunterConfig(obj, fileName, silent) {
+  let src;
+  if (obj && obj.cells && typeof obj.cells === 'object') src = obj.cells;
+  else if (obj && typeof obj === 'object') src = obj;
+  if (!src || typeof src !== 'object') {
+    if (!silent) {
+      setMsg('#s1Msg', '导入失败：文件结构无法识别（需要 {"cells": {...}}）', 'err');
+    }
+    return null;
+  }
+  const knownC = new Set(META.all_survivors), knownH = new Set(META.all_hunters);
+  let ok = 0, bad = [];
+  const cells = {};
+  for (const [c, hs] of Object.entries(src)) {
+    if (String(c).startsWith('_') || !knownC.has(c)) { bad.push(`未知求生「${c}」`); continue; }
+    if (!hs || typeof hs !== 'object') continue;
+    for (const [h, v] of Object.entries(hs)) {
+      if (!knownH.has(h)) { bad.push(`未知监管「${h}」`); continue; }
+      const num = Number((typeof v === 'number') ? v : (v && v.score));
+      if (!isFinite(num) || num < 0 || num > 4) { bad.push(`${c}/${h} 不是 0~4`); continue; }
+      cells[c] = cells[c] || {};
+      cells[c][h] = { score: num, n: (v && typeof v === 'object' && v.n) || 0 };
+      ok++;
+    }
+  }
+  if (!ok) {
+    if (!silent) {
+      setMsg('#s1Msg', '导入失败：没有一格是有效的 0~4 分'
+        + (bad.length ? `（${bad[0]}）` : ''), 'err');
+    }
+    return null;
+  }
+  // 导入的是一整份配置，直接替换当前表（而不是往基准表上叠加）
+  ST.scores = cells;
+  // 载入的文件已经是一份独立的配置表，不算「在基准上手改」
+  ST.scoresDirty = false;
+  ST.scoresSource = fileName || '导入的配置';
+  // 配置文件里带着是哪位监管选手的数据 —— 有的话，第 4 步的
+  // 「对手监管选手」就跟着换成他（这本来就是同一份数据）。
+  const fname = fileName || '';
+  const fromName = fname.replace(/\.json$/i, '').replace(/_(\d+)$/, '');
+  const player = (obj && obj.player) || fromName;
+  ST.scoresMeta = {
+    player: player,
+    hunters: (obj && Array.isArray(obj.hunters)) ? obj.hunters.slice() : [],
+  };
+  renderScores();
+  const synced = syncOpponentFromScores();
+  if (!silent) {
+    setMsg('#s1Msg', bad.length
+      ? `导入 ${ok} 格，${bad.length} 项被跳过（${bad[0]}）`
+      : `已导入 ${ok} 格，本次生成直接生效`
+        + (synced ? `，对手监管已同步为 ${synced}` : ''), bad.length ? 'warn' : 'ok');
+  }
+  return { ok: ok, bad: bad, synced: synced };
+}
+
 $('#s1ImpBtn').onclick = () => {
   FileModal.pick({
     title: '导入监管数据配置',
     dir: 'data/hunter',
-    onPick: (obj, file) => {
-      let src;
-      if (obj && obj.cells && typeof obj.cells === 'object') src = obj.cells;
-      else if (obj && typeof obj === 'object') src = obj;
-      if (!src || typeof src !== 'object') {
-        setMsg('#s1Msg', '导入失败：文件结构无法识别（需要 {"cells": {...}}）', 'err');
-        return;
-      }
-      const knownC = new Set(META.all_survivors), knownH = new Set(META.all_hunters);
-      let ok = 0, bad = [];
-      const cells = {};
-      for (const [c, hs] of Object.entries(src)) {
-        if (String(c).startsWith('_') || !knownC.has(c)) { bad.push(`未知求生「${c}」`); continue; }
-        if (!hs || typeof hs !== 'object') continue;
-        for (const [h, v] of Object.entries(hs)) {
-          if (!knownH.has(h)) { bad.push(`未知监管「${h}」`); continue; }
-          const num = Number((typeof v === 'number') ? v : (v && v.score));
-          if (!isFinite(num) || num < 0 || num > 4) { bad.push(`${c}/${h} 不是 0~4`); continue; }
-          cells[c] = cells[c] || {};
-          cells[c][h] = { score: num, n: (v && typeof v === 'object' && v.n) || 0 };
-          ok++;
-        }
-      }
-      // 导入的是一整份配置，直接替换当前表（而不是往基准表上叠加）
-      ST.scores = cells;
-      ST.scoresDirty = true;
-      ST.scoresSource = (file && file.name) || '导入的配置';
-      // 配置文件里带着是哪位监管选手的数据 —— 有的话，第 4 步的
-      // 「对手监管选手」就跟着换成他（这本来就是同一份数据）。
-      const fname = (file && file.name) || '';
-      const fromName = fname.replace(/\.json$/i, '').replace(/_(\d+)$/, '');
-      const player = (obj && obj.player) || fromName;
-      ST.scoresMeta = {
-        player: player,
-        hunters: (obj && Array.isArray(obj.hunters)) ? obj.hunters.slice() : [],
-      };
-      renderScores();
-      const synced = syncOpponentFromScores();
-      setMsg('#s1Msg', bad.length
-        ? `导入 ${ok} 格，${bad.length} 项被跳过（${bad[0]}）`
-        : `已导入 ${ok} 格，本次生成直接生效`
-          + (synced ? `，对手监管已同步为 ${synced}` : ''), bad.length ? 'warn' : 'ok');
-    },
+    onPick: (obj, file) => applyHunterConfig(obj, (file && file.name) || '', false),
   });
 };
 $('#s1ExpBtn').onclick = () => {
+  // 导出的文件名前缀取自选手名，所以必须先有一份载入的监管配置。
+  // 否则会生成一个叫「监管数据_1.json」的文件，之后按版本 1 的规则被锁死，
+  // 而它并不是预制数据 —— 这种文件不该被造出来。
+  if (!opponent()) {
+    setMsg('#s1Msg', '还没有载入监管配置，先点「导入配置」选一份再导出', 'err');
+    return;
+  }
   const out = {};
   for (const [c, hs] of Object.entries(ST.scores)) {
     out[c] = {};
@@ -631,7 +644,7 @@ $('#s1ExpBtn').onclick = () => {
   const srcBase = (ST.scoresSource || '').replace(/\.json$/i, '').replace(/_\d+$/, '');
   FileModal.save({
     title: '导出监管数据配置',
-    prefix: srcBase || '监管数据',
+    prefix: srcBase || opponent(),
     dir: 'data/hunter',
     data: {
       season: 'IVL 2026 秋季赛',
@@ -673,13 +686,15 @@ function renderRoster() {
 function renderS2Stat() {
   const all = META.all_survivors.length;
   const arr = ST.roster;
-  $('#s2TeamName').textContent = ST.team || '（未识别）';
+  $('#s2TeamName').textContent = ST.team || '（还没导入）';
   $('#s2Cnt').textContent = `${arr.length} / ${all} 个角色`;
   const src = ST.rosterSource;
-  $('#s2Tag').textContent = (src ? `导入 · ${src}` : '预编辑 · 基准');
-  $('#s2Tag').className = 'tag ' + (src ? 'custom' : 'base');
-  if (ST.rosterDirty) {
-    $('#s2Tag').textContent += '（已改，本次生成生效）';
+  if (src) {
+    $('#s2Tag').textContent = `导入 · ${src}` + (ST.rosterDirty ? '（已改，本次生成生效）' : '');
+    $('#s2Tag').className = 'tag custom';
+  } else {
+    $('#s2Tag').textContent = '未导入';
+    $('#s2Tag').className = 'tag base';
   }
   if (arr.length < 4) $('#s2Cnt').style.color = 'var(--danger)';
   else $('#s2Cnt').style.color = '';
@@ -722,7 +737,7 @@ $('#s2ImpBtn').onclick = () => {
       // 导入的是一整份配置，直接替换当前角色池
       ST.roster = roster[team].slice();
       ST.team = team;
-      ST.rosterDirty = true;
+      ST.rosterDirty = false;   // 刚载入的配置本身不算「手改」
       ST.rosterSource = fname || '导入的配置';
       renderRoster();
       setMsg('#s2Msg', `已识别我方战队「${team}」，导入 ${ST.roster.length} 个角色，本次生成直接生效`
@@ -731,9 +746,13 @@ $('#s2ImpBtn').onclick = () => {
   });
 };
 $('#s2ExpBtn').onclick = () => {
+  if (!ST.rosterSource || !ST.team) {
+    setMsg('#s2Msg', '还没导入角色池配置，先点「导入配置」选一份再导出', 'err');
+    return;
+  }
   FileModal.save({
     title: '导出求生角色池配置',
-    prefix: ST.team || '角色池',
+    prefix: ST.team,
     dir: 'data/survivor',
     data: { teams: { [ST.team]: ST.roster } },
     onDone: j => setMsg('#s2Msg', `已导出到 ${j.path}`, 'ok'),
@@ -776,7 +795,11 @@ function renderQuotaHint() {
   const gotS = ST.gbSurv.size, gotH = ST.gbHunt.size;
   const okS = gotS === needS, okH = gotH === needH;
   $('#s3Hint').innerHTML =
-    `第 <b>${ST.game}</b> 局：我方 <b>②</b> 阶段 ban 监管名额 <b>${q}</b> 个`
+    (ST.game >= 4
+      ? `<span style="color:var(--warn)">本季没打到第 ${ST.game} 局，这一局没有任何实测样本，`
+        + `结论只能按前几局的规律外推，仅供参考。</span><br>`
+      : '')
+    + `第 <b>${ST.game}</b> 局：我方 <b>②</b> 阶段 ban 监管名额 <b>${q}</b> 个`
     + (q === 0 ? '（第 1 局没有 ban 名额，只需看对手先 ban 谁）'
                : `（从对手威胁最高的几个监管里挑 ${q} 个）`)
     + `<br><b>全局禁选：第 ${ST.game} 局会禁用恰好 ${needS} 个求生、${needH} 个监管</b>`
@@ -798,7 +821,7 @@ function renderQuotaHint() {
 
 $('#s3Game').onchange = renderQuotaHint;
 
-/** 地图下拉与说明。地图只影响候选排序与加权，不改任何分数格。 */
+/** 地图下拉与说明。地图影响候选排序与评估值，不改分数格本身。 */
 function renderMapPick() {
   const sel = $('#s3Map');
   if (!sel) return;
@@ -840,8 +863,6 @@ function chipsOf(arr, cls) {
 }
 
 function renderSummary() {
-  ST.hunters = +$('#s4Hunters').value || 4;
-  ST.bantop = +$('#s4Bantop').value || 5;
   ST.combos = +$('#s4Combos').value || 8;
   const q = banQuota(ST.game);
   const pool = ST.roster || [];
@@ -858,9 +879,9 @@ function renderSummary() {
       <div class="kv"><span class="k">对手选手</span><span class="v">${esc(opponent())}</span></div>
       <div class="kv"><span class="k">局次</span><span class="v">第 ${ST.game} 局 · 我方 ban 名额 ${q} 个</span></div>
       <div class="kv"><span class="k">地图</span><span class="v">${
-        ST.map ? esc(ST.map) + '（只影响候选排序，不改分数格）'
+        ST.map ? esc(ST.map) + '（影响候选排序与评估值，不改分数格）'
                : '不指定（按全联盟口径）'}</span></div>
-      <div class="kv"><span class="k">搜索范围</span><span class="v">监管前 ${ST.hunters} · ban 组合前 ${ST.bantop} · 可选组合 ${ST.combos}</span></div>
+      <div class="kv"><span class="k">可选 ban 组合</span><span class="v">${ST.combos} 组</span></div>
     </div>
 
     <div class="box">
@@ -870,7 +891,9 @@ function renderSummary() {
         scSrc ? '导入 ' + esc(scSrc) : '预编辑基准表'}</span></div>
       <div class="kv"><span class="k">覆盖</span><span class="v">求生 ${Object.keys(ST.scores).length} 个 × 监管 ${META.all_hunters.length} 个 · ${nCells} 格</span></div>
       <div class="kv"><span class="k">单位</span><span class="v">局均逃脱，2.00 居中，范围 0~4</span></div>
-      <div class="kv"><span class="k">本次使用</span><span class="v">页面上正在编辑的这张表（${ST.scoresDirty ? '已改动，本次生成生效' : '与基准一致'}）</span></div>
+      <div class="kv"><span class="k">本次使用</span><span class="v">页面上正在编辑的这张表（${
+        ST.scoresDirty ? '已改动，本次生成生效'
+                       : (scSrc ? '与导入的配置一致' : '与基准一致')}）</span></div>
     </div>
 
     <div class="box">
@@ -903,8 +926,6 @@ function renderSummary() {
 async function startGenerate() {
   if (BUSY) return;
   // 直接从控件读一遍，避免页面上的值没同步进 ST
-  ST.hunters = +$('#s4Hunters').value || 4;
-  ST.bantop = +$('#s4Bantop').value || 5;
   ST.combos = +$('#s4Combos').value || 8;
   ST.game = +$('#s3Game').value || 1;
   ST.map = ($('#s3Map') && $('#s3Map').value) || '';
@@ -930,7 +951,7 @@ async function startGenerate() {
   prog.classList.remove('done');
   const bar = prog.querySelector('i');
   bar.style.width = '0%';
-  setMsg('#genMsg', '正在推演，通常 1~3 分钟，别关页面…', 'warn');
+  setMsg('#genMsg', '正在推演，第 1 局约十秒，第 3 局起要两三分钟，别关页面…', 'warn');
 
   // 后端没有细粒度进度，按经验耗时做一条缓动估算条
   const tick = setInterval(() => {
@@ -945,7 +966,7 @@ async function startGenerate() {
       body: JSON.stringify({
         team: ST.team, player: ST.player, game: ST.game,
         map: ST.map || '',
-        hunters: ST.hunters, bantop: ST.bantop, combos: ST.combos,
+        combos: ST.combos,
         global_ban_surv: [...ST.gbSurv],
         global_ban_hunt: [...ST.gbHunt],
         // 第 1 步的最终分数表：导入的配置 + 页面上的手工修改。
@@ -994,17 +1015,34 @@ async function boot() {
   META = await api('/api/generate/meta');
   $('#sub').textContent = `IVL 2026 秋季赛 · 已有 ${META.reports.length} 份报告`;
 
-  // 第 1 步：默认用预编辑基准表，要换配置就点「导入配置」
-  ST.scores = baseScores();
-  ST.scoresDirty = false;
-  ST.scoresSource = '';
-  renderScores();
+  // 第 1 步：默认载入 data/hunter/ 里文件名排第一的那份监管配置。
+  // 对手选手、分数表都从这份配置来，所以没有「不选选手」的状态。
+  const firstFile = (META.hunter_files || [])[0];
+  let loaded = false;
+  if (firstFile) {
+    try {
+      const j = await api('/api/files/read', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ path: firstFile.path }),
+      });
+      loaded = !!applyHunterConfig(j.data, firstFile.name, true);
+    } catch (e) {
+      loaded = false;
+    }
+  }
+  if (!loaded) {
+    setMsg('#s1Msg', '没有读到监管配置，请点「导入配置」选一份再继续', 'err');
+    ST.scores = baseScores();
+    ST.scoresDirty = false;
+    ST.scoresSource = '';
+    renderScores();
+  }
+  renderS1Stat();
 
-  // 第 2 步：默认战队取预编辑基准里的第一支；要换队伍就导入对应的角色池配置，
-  // 战队名由配置文件名自动识别。
-  const teams = META.teams.slice().sort(byName);
-  ST.team = teams[0];
-  ST.roster = (META.roster.base[ST.team] || []).slice();
+  // 第 2 步：不预设战队，必须自己导入一份求生角色池配置。
+  // 战队名由配置文件名自动识别，所以页面不提供「手选队伍」。
+  ST.team = '';
+  ST.roster = [];
   ST.rosterDirty = false;
   ST.rosterSource = '';
   renderRoster();
@@ -1013,17 +1051,11 @@ async function boot() {
   $('#s3Game').innerHTML = GAMES.map(g =>
     `<option value="${g}">第 ${g} 局</option>`).join('');
   $('#s3Game').value = 1;
-  // 对手不是页面上手选的 —— 它由第 1 步导入的监管配置决定。
-  // 没导入配置之前，对手就是「还不知道」。
-  ST.player = '';
-  ST.hunters = +$('#s4Hunters').value || 4;
-  ST.bantop = +$('#s4Bantop').value || 5;
+  // 对手不是页面上手选的 —— 它由第 1 步那份监管配置决定，
+  // ST.player 已经在上面载入配置时同步好了，这里不要再清空。
   ST.combos = +$('#s4Combos').value || 8;
-  $('#s4Hunters').onchange = renderSummary;
-  $('#s4Bantop').onchange = renderSummary;
   $('#s4Combos').onchange = renderSummary;
   syncPlayerInfo();
-  syncHunters();
   renderGban();
   renderMapPick();
   renderQuotaHint();
