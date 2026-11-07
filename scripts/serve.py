@@ -217,8 +217,9 @@ class Handler(SimpleHTTPRequestHandler):
         """地图统计：每张图的局数、实测逃脱、监管出场、求生职能倾向。
 
         只读，由 bp_core.json 的 map 字段即时算出（不落盘）。
-        多张图的倍数表是给页面看「这张图谁更可能上场」的，
-        参数 ?map=图名 只返回那一张。
+        多张图的倍数表是给页面看「这张图谁更可能上场」的。
+        参数 ?map=图名 只把 stats 收窄到那一张，maps 仍是全量列表
+        （页面下拉需要完整的候选）；未知地图会得到空的 stats。
         """
         try:
             from bp_search_engine import Engine

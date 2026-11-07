@@ -652,6 +652,8 @@ def main():
             "combos": results,
         }
         p = Path(out_json)
+        if not p.is_absolute():
+            p = ROOT / p
         p.parent.mkdir(parents=True, exist_ok=True)
         p.write_text(json.dumps(payload, ensure_ascii=False, indent=1), encoding="utf-8")
         print(f"已写入 {p}（{len(results)} 组，耗时 {time.time() - t0:.1f}s）")
