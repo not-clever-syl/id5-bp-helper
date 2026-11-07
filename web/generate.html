@@ -213,8 +213,8 @@ button.danger{border-color:#5c3330;color:#e0a09a}
       <h2><span class="num">2</span>求生方角色池
         <span class="tag" id="s2Tag"></span></h2>
       <p class="lead">
-        必须先导入一份求生角色池配置（<code>data/survivor/</code> 里选），
-        我方战队由文件名里的队伍名自动识别，不在页面上手选。
+        打开页面时自动载入 <code>data/survivor/ACT_1.json</code> 作为我方角色池，
+        战队由文件名里的队伍名识别，不在页面上手选。要换队伍就点「导入配置」。
         导入后可以直接增减角色，页面上改的内容只在本次生成里生效。
       </p>
       <div class="row">
@@ -265,7 +265,7 @@ button.danger{border-color:#5c3330;color:#e0a09a}
   <section class="panel" id="p4">
     <div class="card">
       <h2><span class="num">4</span>确认后生成</h2>
-      <p class="lead">核对下面全部设置，确认无误再开跑。第 1 局约十秒，第 3 局起要两三分钟。</p>
+      <p class="lead">核对下面全部设置，确认无误再开跑。耗时由局次和组合数共同决定，下面的汇总里给了估算。</p>
 
       <div class="row">
         <label class="lb">对手监管选手</label>
@@ -276,15 +276,21 @@ button.danger{border-color:#5c3330;color:#e0a09a}
       </div>
       <div class="row">
         <label class="lb">可选 ban 组合</label>
-        <input type="number" id="s4Combos" min="1" max="16" value="8" style="width:72px">
+        <input type="number" id="s4Combos" min="1" max="16" value="8" style="width:72px"
+          title="1~16 组：组数越多耗时越长，第 1 组结论不受影响">
+        <span class="stat" id="s4CombosHint"
+          style="font-size:12px;color:var(--dim);margin-left:8px"></span>
       </div>
       <div class="hintbar" style="background:var(--panel2);
         border-left:3px solid var(--accent);border-radius:0 8px 8px 0;
         padding:9px 14px;font-size:12.5px;margin-bottom:12px">
         <b>对手监管选手</b>：由第 1 步导入的监管数据配置决定 —— 那份配置就是
         哪位选手的数据，引擎就按他的英雄池、使用习惯和熟练度去推演他会拿什么监管。<br>
-        <b>可选 ban 组合 K</b>：报告第 ① 段里给用户切换的 ban 组合数量。
-        调小能明显缩短生成时间；调大只影响多列几组备选，不改变每组的结论。
+        <b>可选 ban 组合 K</b>：报告第 ① 段里能切换的 ban 组合数量，按对手可能性从高到低取前 K 组。
+        第 1 组永远是可能性最高的那组，K 调大不会改变它的结论，只是多算几组备选。<br>
+        <b>耗时随 K 线性增长，最多 16 组</b>：第 1 局一组约 0.8 秒、第 2 局约 2.8 秒、第 3 局约 0.4 秒。
+        例如第 2 局 8 组约 20 秒，16 组约 45 秒。局次越靠后 ban 名额越多，
+        候选可能凑不满 K 组，生成的报告里显示的是实际算出的组数。
       </div>
 
       <div class="sum" id="sumBox"></div>
@@ -700,49 +706,64 @@ function renderS2Stat() {
   else $('#s2Cnt').style.color = '';
 }
 
+/**
+ * 把一份求生角色池配置读进第 2 步。
+ *
+ * silent=true 时用于页面启动自动载入：不写提示语，只把来源标出来。
+ * 返回 { team, n, bad }，没有可用战队时返回 null。
+ */
+function applyRosterConfig(obj, fileName, silent) {
+  const src = (obj && obj.teams && typeof obj.teams === 'object') ? obj.teams : obj;
+  if (!src || typeof src !== 'object') {
+    if (!silent) {
+      setMsg('#s2Msg', '导入失败：文件结构无法识别（需要 {"teams": {...}}）', 'err');
+    }
+    return null;
+  }
+  const knownC = new Set(META.all_survivors), knownT = new Set(META.teams);
+  let teams = 0, bad = [];
+  const roster = {};
+  for (const [t, cs] of Object.entries(src)) {
+    if (String(t).startsWith('_')) continue;
+    if (!knownT.has(t)) { bad.push(`未知战队「${t}」`); continue; }
+    if (!Array.isArray(cs)) { bad.push(`${t} 的值必须是数组`); continue; }
+    const clean = [...new Set(cs.map(String).filter(c => knownC.has(c)))];
+    if (clean.length < 4) { bad.push(`${t} 只有 ${clean.length} 个有效角色`); continue; }
+    roster[t] = clean;
+    teams++;
+  }
+  if (!teams) {
+    if (!silent) {
+      setMsg('#s2Msg', '没有可导入的战队数据' + (bad.length ? `（${bad[0]}）` : ''), 'err');
+    }
+    return null;
+  }
+  // 战队自动识别：优先用配置文件名里的队伍名（<队伍名>_<数字>.json），
+  // 名字对不上就退回文件里唯一的那支队伍。
+  const fname = fileName || '';
+  const fromName = fname.replace(/\.json$/i, '').replace(/_(\d+)$/, '');
+  const team = (fromName && roster[fromName]) ? fromName : Object.keys(roster)[0];
+  if (teams > 1 && !roster[fromName]) {
+    bad.push(`文件里有 ${teams} 支队伍，取了「${team}」`);
+  }
+  // 导入的是一整份配置，直接替换当前角色池
+  ST.roster = roster[team].slice();
+  ST.team = team;
+  ST.rosterDirty = false;   // 刚载入的配置本身不算「手改」
+  ST.rosterSource = fname || '导入的配置';
+  renderRoster();
+  if (!silent) {
+    setMsg('#s2Msg', `已识别我方战队「${team}」，导入 ${ST.roster.length} 个角色，本次生成直接生效`
+      + (bad.length ? `（${bad[0]}）` : ''), bad.length ? 'warn' : 'ok');
+  }
+  return { team: team, n: ST.roster.length, bad: bad };
+}
+
 $('#s2ImpBtn').onclick = () => {
   FileModal.pick({
     title: '导入求生角色池配置',
     dir: 'data/survivor',
-    onPick: (obj, file) => {
-      const src = (obj && obj.teams && typeof obj.teams === 'object') ? obj.teams : obj;
-      if (!src || typeof src !== 'object') {
-        setMsg('#s2Msg', '导入失败：文件结构无法识别（需要 {"teams": {...}}）', 'err');
-        return;
-      }
-      const knownC = new Set(META.all_survivors), knownT = new Set(META.teams);
-      let teams = 0, bad = [];
-      const roster = {};
-      for (const [t, cs] of Object.entries(src)) {
-        if (String(t).startsWith('_')) continue;
-        if (!knownT.has(t)) { bad.push(`未知战队「${t}」`); continue; }
-        if (!Array.isArray(cs)) { bad.push(`${t} 的值必须是数组`); continue; }
-        const clean = [...new Set(cs.map(String).filter(c => knownC.has(c)))];
-        if (clean.length < 4) { bad.push(`${t} 只有 ${clean.length} 个有效角色`); continue; }
-        roster[t] = clean;
-        teams++;
-      }
-      if (!teams) {
-        setMsg('#s2Msg', '没有可导入的战队数据' + (bad.length ? `（${bad[0]}）` : ''), 'err');
-        return;
-      }
-      // 战队自动识别：优先用配置文件名里的队伍名（<队伍名>_<数字>.json），
-      // 名字对不上就退回文件里唯一的那支队伍。
-      const fname = (file && file.name) || '';
-      const fromName = fname.replace(/\.json$/i, '').replace(/_(\d+)$/, '');
-      let team = (fromName && roster[fromName]) ? fromName : Object.keys(roster)[0];
-      if (teams > 1 && !roster[fromName]) {
-        bad.push(`文件里有 ${teams} 支队伍，取了「${team}」`);
-      }
-      // 导入的是一整份配置，直接替换当前角色池
-      ST.roster = roster[team].slice();
-      ST.team = team;
-      ST.rosterDirty = false;   // 刚载入的配置本身不算「手改」
-      ST.rosterSource = fname || '导入的配置';
-      renderRoster();
-      setMsg('#s2Msg', `已识别我方战队「${team}」，导入 ${ST.roster.length} 个角色，本次生成直接生效`
-        + (bad.length ? `（${bad[0]}）` : ''), bad.length ? 'warn' : 'ok');
-    },
+    onPick: (obj, file) => applyRosterConfig(obj, (file && file.name) || '', false),
   });
 };
 $('#s2ExpBtn').onclick = () => {
@@ -795,11 +816,7 @@ function renderQuotaHint() {
   const gotS = ST.gbSurv.size, gotH = ST.gbHunt.size;
   const okS = gotS === needS, okH = gotH === needH;
   $('#s3Hint').innerHTML =
-    (ST.game >= 4
-      ? `<span style="color:var(--warn)">本季没打到第 ${ST.game} 局，这一局没有任何实测样本，`
-        + `结论只能按前几局的规律外推，仅供参考。</span><br>`
-      : '')
-    + `第 <b>${ST.game}</b> 局：我方 <b>②</b> 阶段 ban 监管名额 <b>${q}</b> 个`
+    `第 <b>${ST.game}</b> 局：我方 <b>②</b> 阶段 ban 监管名额 <b>${q}</b> 个`
     + (q === 0 ? '（第 1 局没有 ban 名额，只需看对手先 ban 谁）'
                : `（从对手威胁最高的几个监管里挑 ${q} 个）`)
     + `<br><b>全局禁选：第 ${ST.game} 局会禁用恰好 ${needS} 个求生、${needH} 个监管</b>`
@@ -814,6 +831,7 @@ function renderQuotaHint() {
     + '</span>';
   // 数量不对就不让生成
   const ok = okS && okH;
+  renderCombosHint();  // 局次变了，单组耗时跟着变
   renderNavRow();
   if (!ok) $('#navNext').title = '全局禁选数量必须与局数吻合';
   else $('#navNext').title = '';
@@ -862,8 +880,41 @@ function chipsOf(arr, cls) {
   ).join('') || '<span style="color:var(--dim)">无</span>';
 }
 
+function renderCombosHint() {
+  const box = $('#s4Combos');
+  if (!box.value) {  // 正在清空重输，先不钳位
+    ST.combos = 8;
+    return;
+  }
+  let k = Math.round(+box.value) || 8;
+  if (k < 1) k = 1;
+  if (k > 16) k = 16;
+  if (+box.value !== k) box.value = k;
+  ST.combos = k;
+  const hint = $('#s4CombosHint');
+  if (!hint) return;
+  const per = perComboSec(ST.game);
+  if (!per) {
+    hint.textContent = `第 ${ST.game} 局暂无耗时参考`;
+    return;
+  }
+  hint.textContent = k === 1
+    ? '只算可能性最高的那一组'
+    : `预计约 ${fmtSec(k * per)}`;
+}
+
+/** 实测单组耗时（秒）：第 1 局约 0.8、第 2 局约 2.8、第 3 局约 0.45。 */
+function perComboSec(game) {
+  return game === 1 ? 0.8 : game === 2 ? 2.8 : game === 3 ? 0.45 : 0;
+}
+
+function fmtSec(s) {
+  return s < 60 ? Math.round(s) + ' 秒' : (s / 60).toFixed(1) + ' 分钟';
+}
+
 function renderSummary() {
-  ST.combos = +$('#s4Combos').value || 8;
+  renderCombosHint();
+  const k = ST.combos;
   const q = banQuota(ST.game);
   const pool = ST.roster || [];
   const gs = [...ST.gbSurv], gh = [...ST.gbHunt];
@@ -881,7 +932,9 @@ function renderSummary() {
       <div class="kv"><span class="k">地图</span><span class="v">${
         ST.map ? esc(ST.map) + '（影响候选排序与评估值，不改分数格）'
                : '不指定（按全联盟口径）'}</span></div>
-      <div class="kv"><span class="k">可选 ban 组合</span><span class="v">${ST.combos} 组</span></div>
+      <div class="kv"><span class="k">可选 ban 组合</span><span class="v">${k} 组${
+        perComboSec(ST.game) ? '（预计约 ' + fmtSec(perComboSec(ST.game) * k) + '）' : ''
+      }</span></div>
     </div>
 
     <div class="box">
@@ -926,9 +979,9 @@ function renderSummary() {
 async function startGenerate() {
   if (BUSY) return;
   // 直接从控件读一遍，避免页面上的值没同步进 ST
-  ST.combos = +$('#s4Combos').value || 8;
   ST.game = +$('#s3Game').value || 1;
   ST.map = ($('#s3Map') && $('#s3Map').value) || '';
+  renderCombosHint();  // 这一步会把 K 钳到 1~16 并写回 ST.combos
   if (!opponent()) { setMsg('#navMsg', '第 1 步还没导入监管数据配置，不知道对手是谁', 'err'); return; }
   // 全局禁选数量必须与局数吻合，否则拒绝生成
   const needS = (ST.game - 1) * 4, needH = ST.game - 1;
@@ -951,12 +1004,16 @@ async function startGenerate() {
   prog.classList.remove('done');
   const bar = prog.querySelector('i');
   bar.style.width = '0%';
-  setMsg('#genMsg', '正在推演，第 1 局约十秒，第 3 局起要两三分钟，别关页面…', 'warn');
+  const est = perComboSec(ST.game) * ST.combos;
+  setMsg('#genMsg',
+    `正在推演 ${ST.combos} 组 ban 组合，预计约 ${est ? fmtSec(est) : '几分钟'}`
+    + '，别关页面…', 'warn');
 
   // 后端没有细粒度进度，按经验耗时做一条缓动估算条
+  const scale = Math.max(10, est || 60) / 3;
   const tick = setInterval(() => {
     const s = (Date.now() - t0) / 1000;
-    bar.style.width = Math.min(92, 100 * (1 - Math.exp(-s / 75))).toFixed(1) + '%';
+    bar.style.width = Math.min(92, 100 * (1 - Math.exp(-s / scale))).toFixed(1) + '%';
     $('#timer').textContent = `已用 ${s.toFixed(0)}s`;
   }, 500);
 
@@ -1039,13 +1096,31 @@ async function boot() {
   }
   renderS1Stat();
 
-  // 第 2 步：不预设战队，必须自己导入一份求生角色池配置。
-  // 战队名由配置文件名自动识别，所以页面不提供「手选队伍」。
+  // 第 2 步：默认载入 ACT 的角色池配置。战队名由文件名自动识别，
+  // 所以页面不提供「手选队伍」；要换队伍点「导入配置」。
   ST.team = '';
   ST.roster = [];
   ST.rosterDirty = false;
   ST.rosterSource = '';
   renderRoster();
+
+  let rosterLoaded = false;
+  const actFile = (META.roster_files || []).find(
+    f => f.name.replace(/\.json$/i, '').replace(/_(\d+)$/, '') === 'ACT');
+  if (actFile) {
+    try {
+      const j = await api('/api/files/read', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ path: actFile.path }),
+      });
+      rosterLoaded = !!applyRosterConfig(j.data, actFile.name, true);
+    } catch (e) {
+      rosterLoaded = false;
+    }
+  }
+  if (!rosterLoaded) {
+    setMsg('#s2Msg', '没有读到 ACT 的角色池配置，请点「导入配置」选一份再继续', 'err');
+  }
 
   // 第 3 步
   $('#s3Game').innerHTML = GAMES.map(g =>
@@ -1053,8 +1128,8 @@ async function boot() {
   $('#s3Game').value = 1;
   // 对手不是页面上手选的 —— 它由第 1 步那份监管配置决定，
   // ST.player 已经在上面载入配置时同步好了，这里不要再清空。
-  ST.combos = +$('#s4Combos').value || 8;
-  $('#s4Combos').onchange = renderSummary;
+  // 组合数上限 16：输入时即时钳位并刷新预计耗时
+  $('#s4Combos').oninput = renderCombosHint;
   syncPlayerInfo();
   renderGban();
   renderMapPick();

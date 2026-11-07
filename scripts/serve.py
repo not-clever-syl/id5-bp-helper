@@ -44,6 +44,18 @@ import file_api  # noqa: E402
 ROOT = Path(__file__).resolve().parent.parent
 
 
+def _combos_arg(raw) -> int:
+    """「可选 ban 组合」数量：钳在 1~16，非法值退回 8。
+
+    16 组是耗时与信息量的折中（实测第 2 局单组约 2.8 秒）。
+    """
+    try:
+        n = int(raw)
+    except (TypeError, ValueError):
+        return 8
+    return max(1, min(16, n))
+
+
 def _list_reports() -> list:
     """列出 data/reports/ 下已有的报告（只取 meta，够生成页显示数量了）。
 
@@ -431,6 +443,9 @@ class Handler(SimpleHTTPRequestHandler):
             # data/hunter/ 下现有的监管配置，按文件名排序。
             # 生成页启动时默认载入第一份，省得每次都手动导入。
             "hunter_files": self._hunter_files(),
+            # data/survivor/ 下现有的角色池配置，按文件名排序。
+            # 生成页启动时默认挑 ACT 那一份。
+            "roster_files": self._roster_files(),
             "scores": {
                 "base": base_cells,
                 "player_cells": player_cells,
@@ -443,6 +458,15 @@ class Handler(SimpleHTTPRequestHandler):
         """data/hunter/ 下的监管配置清单，按文件名排序。"""
         try:
             res = file_api.list_files("export", dirs=[file_api.DIR_HUNTER])
+        except Exception:
+            return []
+        return [{"path": f["path"], "name": f["name"]}
+                for f in res.get("files") or []]
+
+    def _roster_files(self):
+        """data/survivor/ 下的角色池配置清单，按文件名排序。"""
+        try:
+            res = file_api.list_files("export", dirs=[file_api.DIR_SURVIVOR])
         except Exception:
             return []
         return [{"path": f["path"], "name": f["name"]}
@@ -540,7 +564,7 @@ class Handler(SimpleHTTPRequestHandler):
                 return self._json(400, {"ok": False,
                                         "error": f"未知地图 {map_name}"})
             res = bp_compute(eng, team, player, game, n_hunters, bantop,
-                             n_combos=int(data.get("combos") or 8),
+                             n_combos=_combos_arg(data.get("combos")),
                              global_ban_surv=gban_s, global_ban_hunt=gban_h,
                              our_pool=pool,
                              scores_source=data.get("scores_source"),
@@ -612,7 +636,7 @@ class Handler(SimpleHTTPRequestHandler):
                                  int(data.get("game") or 3),
                                  int(data.get("hunters") or 4),
                                  int(data.get("bantop") or 4),
-                                 int(data.get("combos") or 8),
+                                 _combos_arg(data.get("combos")),
                                  map_name=map_name or None)
                 return self._json(200, {"ok": True, "result": res})
             return self._json(400, {"ok": False, "error": f"未知的计算类型 {kind}"})
