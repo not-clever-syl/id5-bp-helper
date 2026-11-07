@@ -255,8 +255,13 @@ def next_name(prefix: str, subdir: str = DIR_HUNTER) -> str:
         求生角色池  <队伍名>_<数字>.json
 
     序号取同前缀下已存在的最大序号 +1，保证不覆盖已有文件。
+
+    前缀里如果已经带着版本号（导入时常常把整个文件名传进来，
+    比如 "CyanX_1"），先把尾部那个数字去掉，否则会继续叠成
+    "CyanX_1_1.json"，越存越长。
     """
     prefix = str(prefix or "export").strip()
+    prefix = re.sub(r"_\d+$", "", prefix).strip()
     prefix = re.sub(r'[\\/:*?"<>|]+', "_", prefix)[:60] or "export"
     base = ROOT / subdir
     mx = 0

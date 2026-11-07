@@ -625,9 +625,13 @@ $('#s1ExpBtn').onclick = () => {
   }
   // 连同「这份表是谁的数据」一起导出，导入时才能自动对上对手。
   const meta = ST.scoresMeta || {};
+  // 前缀只留选手名：导入的是 CyanX_1.json，就按 CyanX 算下一版是 CyanX_2。
+  // 不去掉这个版本号，会叠成 CyanX_1_1.json，而且按它过滤列表时
+  // 连 CyanX_2.json 都列不出来。
+  const srcBase = (ST.scoresSource || '').replace(/\.json$/i, '').replace(/_\d+$/, '');
   FileModal.save({
     title: '导出监管数据配置',
-    prefix: ST.scoresSource ? ST.scoresSource.replace(/\.json$/i, '') : '监管数据',
+    prefix: srcBase || '监管数据',
     dir: 'data/hunter',
     data: {
       season: 'IVL 2026 秋季赛',
