@@ -3,7 +3,7 @@
  * 页面不再调用浏览器原生文件选择框（<input type="file">），
  * 而是弹出这个子窗口：候选文件由服务器列出，点一下就完成。
  *
- * 导入：列出服务器上的 json（预制数据 + 三个导出目录），点一个即读入。
+ * 导入：列出服务器上的 json（三个配置目录），点一个即读入。
  * 导出：一律落到对应的导出目录，文件名由系统按规范生成，
  *       用户不能自己起名；子窗口里可点已有版本覆盖，或新建版本。
  *
@@ -244,7 +244,7 @@
     open(opts.title || '选择要导入的配置文件',
       '<p class="lead">' + (table
         ? '点击一行即可打开那份报告。按生成时间倒序排列。'
-        : '从服务器上的配置文件里挑一个点开即可。预制数据只读不改，导入的是它的内容。')
+        : '从服务器上的配置文件里挑一个点开即可。点开只是把内容读进来用，不会改动文件本身。')
       + '</p>'
       + `<div class="${table ? '' : 'flist'}" id="fmlist">`
       + '<div class="fempty">正在读取…</div></div>',
@@ -332,8 +332,9 @@
       '<p class="lead">版本文件名由系统按规范生成（<code>' + rule
       + '</code>），不能自己起名。<br>'
       + '点下面已有的版本可以覆盖它，也可以新建一个版本。'
-      + '<b style="color:#e2c07a">版本 1（<code>*_1.json</code>）是预制数据，不可覆盖</b>，改动请新建版本。'
-      + '所有导出结果都存在 <code>' + esc(dir) + '/</code>，预制数据不会被改动。</p>'      + '<div class="frow"><label style="flex:none">新建版本</label>'
+      + '<b style="color:#e2c07a">版本 1（<code>*_1.json</code>）是随项目带来的配置，灰色不可选，改动请新建版本</b>。'
+      + '所有导出结果都存在 <code>' + esc(dir) + '/</code>，这些文件不会被改动。</p>'
+      + '<div class="frow"><label style="flex:none">新建版本</label>'
       + `<input type="text" id="fmName" value="${esc(suggested)}" readonly>`
       + '<span style="color:var(--dim);font-size:11.5px">（序号自动递增）</span></div>'
       + '<div class="flist" id="fmlist">'
@@ -356,7 +357,7 @@
     document.getElementById('fmCancel').onclick = () => close();
 
     // 点已有版本 = 选中它，按钮变成「覆盖此版本」
-    // 版本 1 是预制数据（*_1.json），不允许被覆盖 —— 不可点选，样式上置灰。
+    // 版本 1 是随项目带来的配置（*_1.json），不允许被覆盖 —— 不可点选，样式上置灰。
     let target = null;
     const list = document.getElementById('fmlist');
     list.querySelectorAll('.fitem').forEach(el => {
@@ -364,7 +365,7 @@
       if (verOf(f.name) === 1) {
         el.style.opacity = '.45';
         el.style.cursor = 'not-allowed';
-        el.title = '版本 1 是预制数据，不允许覆盖；请新建版本';
+        el.title = '版本 1 是随项目带来的配置，不允许覆盖；请新建版本';
         return;
       }
       el.onclick = () => {
@@ -377,16 +378,17 @@
     });
 
     saveBtn.onclick = () => {
-      const path = dir + '/' + nameEl.value.trim();
       saveBtn.disabled = true;
       setMsg('正在保存…');
+      // 新建版本时不传文件名：只给前缀和目标目录，序号由服务端定，
+      // 保证存出来的名字一定是系统规范里的那种。
+      // 覆盖已有版本时才把那一份的完整路径传上去。
+      const body = target
+        ? { path: target.path, data: opts.data, overwrite: true }
+        : { prefix: prefix, dir: dir, data: opts.data, overwrite: false };
       api('/api/files/write', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          path,
-          data: opts.data,
-          overwrite: !!target,     // 覆盖已有版本才允许 overwrite
-        }),
+        body: JSON.stringify(body),
       }).then(j => {
         close();
         if (opts.onDone) opts.onDone(j);

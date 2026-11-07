@@ -99,16 +99,17 @@ footer code{background:var(--panel2);padding:1px 6px;border-radius:4px;
         <div class="t"><span class="ico">📄</span>BP 报告<span class="arrow">→</span></div>
         <div class="d">
           查看已生成的教练报告。按「前两个 ban 位 → 对手可能的监管 → 我方 ban
-          → 我方前两手 → 后面博弈树」的顺序给出整条路线，支持导入和导出。
+          → 我方前两手 → 后面博弈树」的顺序给出整条路线，报告可导入查看。
         </div>
-        <div class="tags"><span class="tag">五段路线</span><span class="tag">导入导出</span></div>
+        <div class="tags"><span class="tag">五段路线</span><span class="tag">导入</span></div>
       </a>
 
       <a class="card" href="generate.html">
         <div class="t"><span class="ico">⚙️</span>报告生成<span class="arrow">→</span></div>
         <div class="d">
-          选战队、监管选手、局次，按局数自动给出 ban 名额与全局禁选提示，
-          一键生成报告并登记到报告页。预编辑数据只读，自定义数据可改。
+          导入一份监管选手的配置，按局数自动给出 ban 名额与全局禁选提示，
+          一键生成报告并存入 <code>data/reports/</code>。页面上改的分数和角色池
+          只在本次生成里生效，不会写回任何文件。
         </div>
         <div class="tags"><span class="tag">全局禁选</span><span class="tag g">一键生成</span></div>
       </a>

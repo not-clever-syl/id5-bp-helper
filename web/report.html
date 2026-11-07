@@ -499,10 +499,9 @@ function mapIntentTable(C) {
       <div>
         ${kv('对局', `${esc(m.team)}（求生） vs ${esc(m.player)}（监管） · 第 ${m.game} 局`)}
         ${kv('地图', m.map
-          ? `<b>${esc(m.map)}</b>（只影响候选排序与加权，不改任何分数格）`
+          ? `<b>${esc(m.map)}</b>（影响候选排序与评估值，不改任何分数格）`
           : '<span class="dim">未指定（按全联盟口径）</span>')}
         ${kv('我方 ban 名额', `${m.ban_quota ?? 0} 个（第 1 局 0、第 2 局 1、第 3 局起 2）`)}
-        ${kv('搜索范围', `监管前 ${m.hunters ?? '—'} · ban 组合前 ${m.bantop ?? '—'}`)}
         ${kv('可选 ban 组合', `${m.combo_count ?? '—'} 组（第 ① 段可切换）`)}
         ${kv('监管数据', src)}
         ${kv('求生角色池', `${rosterSrc} · ${esc(m.team)} 共 ${pool.length} 个`)}
