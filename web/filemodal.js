@@ -27,6 +27,7 @@
 .fmodal{background:var(--panel);border:1px solid var(--border);border-radius:12px;
   width:min(680px,100%);max-height:min(78vh,720px);display:flex;flex-direction:column;
   box-shadow:0 18px 60px rgba(0,0,0,.5)}
+.fmodal.wide{width:min(1060px,100%);max-height:min(84vh,780px)}
 .fmodal h3{margin:0;padding:13px 18px;font-size:14.5px;font-weight:600;
   border-bottom:1px solid var(--border);display:flex;align-items:center;gap:9px}
 .fmodal h3 .x{margin-left:auto;cursor:pointer;color:var(--dim);font-size:16px;
@@ -54,6 +55,21 @@
 .fmodal .fitem .fs{color:var(--dim);font-size:11px;flex:none;
   font-family:Consolas,monospace}
 .fmodal .fempty{color:var(--dim);text-align:center;padding:22px 0;font-size:12px}
+/* 报告导入用表格：一行一份，给人读 */
+.fmodal .ftable{width:100%;border-collapse:collapse;font-size:12px;table-layout:auto}
+.fmodal .ftable th{position:sticky;top:0;z-index:1;text-align:left;font-weight:500;
+  color:var(--dim);font-size:11px;padding:6px 8px;background:var(--panel2);
+  border-bottom:1px solid var(--border);white-space:nowrap}
+.fmodal .ftable td{padding:7px 8px;border-bottom:1px solid rgba(255,255,255,.05);
+  white-space:nowrap;overflow:visible;text-overflow:clip}
+.fmodal .ftable tbody tr{cursor:pointer}
+.fmodal .ftable tbody tr:hover td{background:var(--panel)}
+.fmodal .ftable tbody tr:last-child td{border-bottom:none}
+.fmodal .ftable .num{font-family:Consolas,monospace}
+.fmodal .ftable .muted{color:var(--dim)}
+.fmodal .ftable .ver{font-family:Consolas,monospace;font-size:11.5px;color:var(--text)}
+.fmodal .fwrap{border:1px solid var(--border);border-radius:9px;overflow:auto;
+  max-height:380px;background:var(--panel2)}
 .fmodal .ffoot{padding:11px 18px;border-top:1px solid var(--border);
   display:flex;align-items:center;gap:9px}
 .fmodal .ffoot .grow{flex:1}
@@ -160,8 +176,14 @@
     mask.classList.add('on');
     onCloseCb = onClose || null;
     setMsg('');
+    setWide(false);
     const first = body.querySelector('input,button,select');
     if (first) setTimeout(() => first.focus(), 30);
+  }
+
+  /** 表格模式用宽一点的窗口：列多，窄了会挤成两行。 */
+  function setWide(on) {
+    mask.querySelector('.fmodal').classList.toggle('wide', !!on);
   }
 
   /* ── 导入：列出服务器上的文件供点选 ──
@@ -171,17 +193,63 @@
    *     data/survivor   求生角色池配置
    *     data/reports    报告配置
    * 不传就列三个目录。
+   *
+   * table：把列表渲染成一行一份的表格（报告用），列由 cols 指定，
+   *        数据取自每份报告自己的 meta。
    */
+
+  /** 报告表格的列。取值函数返回 {text, cls, title}。 */
+  const REPORT_COLS = [
+    { key: 'player', label: '监管选手', get: m => m.player },
+    { key: 'team', label: '我方战队', get: m => m.team },
+    { key: 'game', label: '局次', cls: 'num', get: m => m.game ? '第 ' + m.game + ' 局' : '' },
+    { key: 'map', label: '地图', get: m => m.map, empty: '不指定' },
+    {
+      key: 'scores', label: '监管数据', cls: 'ver',
+      get: m => m.scores_source, empty: '预编辑基准',
+    },
+    {
+      key: 'roster', label: '求生数据', cls: 'ver',
+      get: m => m.roster_source, empty: '预编辑基准',
+    },
+    { key: 'time', label: '生成时间', cls: 'num', get: m => m.generated_at, empty: '—' },
+  ];
+
+  function cellHtml(col, meta) {
+    const v = meta ? col.get(meta) : null;
+    const missing = v === null || v === undefined || v === '';
+    const text = missing ? (col.empty || '—') : v;
+    const cls = [col.cls || '', missing ? 'muted' : ''].filter(Boolean).join(' ');
+    return `<td${cls ? ' class="' + cls + '"' : ''}>${esc(text)}</td>`;
+  }
+
+  function reportTable(files) {
+    const head = REPORT_COLS.map(c => `<th>${esc(c.label)}</th>`).join('');
+    const rows = files.map((f, i) => {
+      const m = f.meta || null;
+      return `<tr data-i="${i}" title="${esc(f.path)}">`
+        + REPORT_COLS.map(c => cellHtml(c, m)).join('') + '</tr>';
+    }).join('');
+    return `<div class="fwrap"><table class="ftable">
+      <thead><tr>${head}</tr></thead><tbody>${rows}</tbody>
+    </table></div>`;
+  }
+
   async function pick(opts) {
     opts = opts || {};
     const dirs = opts.dir
       ? String(opts.dir).replace(/\/+$/, '')
       : '';
+    const table = !!opts.table;
     open(opts.title || '选择要导入的配置文件',
-      '<p class="lead">从服务器上的配置文件里挑一个点开即可。'
-      + '预制数据只读不改，导入的是它的内容。</p>'
-      + '<div class="flist" id="fmlist"><div class="fempty">正在读取…</div></div>',
+      '<p class="lead">' + (table
+        ? '点击一行即可打开那份报告。按生成时间倒序排列。'
+        : '从服务器上的配置文件里挑一个点开即可。预制数据只读不改，导入的是它的内容。')
+      + '</p>'
+      + `<div class="${table ? '' : 'flist'}" id="fmlist">`
+      + '<div class="fempty">正在读取…</div></div>',
       '<button id="fmCancel">取消</button>', () => {});
+    setWide(table);
 
     const list = document.getElementById('fmlist');
     document.getElementById('fmCancel').onclick = () => close();
@@ -189,7 +257,8 @@
     let files = [];
     try {
       const url = '/api/files/list?kind=import'
-        + (dirs ? '&dir=' + encodeURIComponent(dirs) : '');
+        + (dirs ? '&dir=' + encodeURIComponent(dirs) : '')
+        + (table ? '&meta=1' : '');
       const j = await api(url);
       files = j.files || [];
     } catch (e) {
@@ -200,6 +269,13 @@
       list.innerHTML = `<div class="fempty">${dirs ? esc(dirs) + '/' : ''}下没有可导入的配置文件</div>`;
       return;
     }
+    if (table) {
+      list.innerHTML = reportTable(files);
+      list.querySelectorAll('tr[data-i]').forEach(el => {
+        el.onclick = () => openFile(files[+el.dataset.i]);
+      });
+      return;
+    }
     list.innerHTML = files.map((f, i) => `
       <div class="fitem" data-i="${i}">
         <span class="fn" title="${esc(f.path)}">${esc(f.name)}</span>
@@ -208,18 +284,19 @@
         <span class="fs">${fmtTime(f.mtime)}</span>
       </div>`).join('');
     list.querySelectorAll('.fitem').forEach(el => {
-      el.onclick = () => {
-        const f = files[+el.dataset.i];
-        setMsg(`正在读取 ${f.name}…`);
-        api('/api/files/read', {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ path: f.path }),
-        }).then(j => {
-          close();
-          if (opts.onPick) opts.onPick(j.data, f);
-        }).catch(e => setMsg('读取失败：' + e.message, 'err'));
-      };
+      el.onclick = () => openFile(files[+el.dataset.i]);
     });
+
+    function openFile(f) {
+      setMsg(`正在读取 ${f.name}…`);
+      api('/api/files/read', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ path: f.path }),
+      }).then(j => {
+        close();
+        if (opts.onPick) opts.onPick(j.data, f);
+      }).catch(e => setMsg('读取失败：' + e.message, 'err'));
+    }
   }
 
   /* ── 另存为版本 ──

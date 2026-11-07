@@ -126,8 +126,27 @@ def _safe(rel: str, allowed: list) -> Path:
     return p
 
 
+# 列表里附带 meta 时只取这几个字段：够页面排成一行给人看，
+# 不用把整份报告（几十 KB）塞进列表接口。
+_META_KEYS = ("team", "player", "game", "map", "generated_at",
+              "scores_source", "roster_source", "ban_quota")
+
+
+def _read_meta(path: Path):
+    """读一个报告文件的 meta，只留可读字段。读不出来就返回 None。"""
+    try:
+        d = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    m = d.get("meta") if isinstance(d, dict) else None
+    if not isinstance(m, dict):
+        return None
+    return {k: m.get(k) for k in _META_KEYS}
+
+
 def list_files(kind: str = "import", prefix: str = "",
-               pattern: str = "", dirs: list | None = None) -> dict:
+               pattern: str = "", dirs: list | None = None,
+               with_meta: bool = False) -> dict:
     """列出候选文件。
 
     kind="import"：三个配置目录（data/hunter、data/survivor、data/reports）
@@ -137,6 +156,7 @@ def list_files(kind: str = "import", prefix: str = "",
     dirs：显式指定要列的目录（相对项目根，如 "data/reports"）。
     prefix：只看文件名以此开头的（用于「这个监管/这个队伍的版本」）。
     pattern：额外的正则过滤（只允许安全的正则字符）。
+    with_meta：给每项附上报告 meta，并按生成时间倒序排。
     """
     if dirs:
         dirs = [d for d in dirs if d in EXPORT_DIRS] or list(EXPORT_DIRS)
@@ -171,13 +191,22 @@ def list_files(kind: str = "import", prefix: str = "",
                 mtime = f.stat().st_mtime
             except OSError:
                 size, mtime = 0, 0
-            items.append({
+            item = {
                 "path": rel,
                 "name": f.name,
                 "dir": d,
                 "size": size,
                 "mtime": mtime,
-            })
+            }
+            if with_meta:
+                item["meta"] = _read_meta(f)
+            items.append(item)
+    if with_meta:
+        # 新的在前。generated_at 是「YYYY-MM-DD HH:MM」，可直接按字符串比；
+        # 没有这个字段的退回文件修改时间，仍然能排到合理位置。
+        items.sort(key=lambda x: (((x.get("meta") or {}).get("generated_at") or ""),
+                                  x.get("mtime") or 0), reverse=True)
+        return {"files": items, "dirs": dirs}
     # 导出目录里的排前面
     items.sort(key=lambda x: (0 if x["dir"] in EXPORT_DIRS else 1, x["path"]))
     return {"files": items, "dirs": dirs}
