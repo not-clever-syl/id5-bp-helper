@@ -3,6 +3,9 @@
 GET  /api/roster       —— 各队求生角色池（只读，基准数据）
 GET  /api/scores       —— 监管 × 求生 分数总榜（只读，基准数据）
 GET  /api/player_scores—— 选手榜（每个监管选手 × 求生 × 他用过的监管）
+GET  /api/maps         —— 各图局数、实测逃脱、监管出场与倍数
+GET  /api/map_scores   —— 某张图的实测表（只含该图出场过的角色）
+GET  /api/halves       —— 按地图/角色/选手筛出的半局明细
 POST /api/recompute    —— 「重新搜索」：新建引擎，用当前数据重算
 GET  /api/generate/meta—— 报告生成页的元数据（战队、监管选手、选手折合分、角色池）
 POST /api/generate     —— 生成一份 BP 报告并存进 data/reports/
@@ -103,6 +106,10 @@ class Handler(SimpleHTTPRequestHandler):
             return self._api_maps()
         if self.path.startswith("/api/map_pick"):
             return self._api_map_pick()
+        if self.path.startswith("/api/map_scores"):
+            return self._api_map_scores()
+        if self.path.startswith("/api/halves"):
+            return self._api_halves()
         if self.path.startswith("/api/expect/meta"):
             return self._api_expect_meta()
         if self.path.startswith("/api/generate/meta"):
@@ -245,6 +252,49 @@ class Handler(SimpleHTTPRequestHandler):
                 "stats": data,
                 "hunter_prior": {k: round(v, 4) for k, v in eng._map_prior.items()},
             })
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            self._json(500, {"ok": False, "error": f"{type(e).__name__}: {e}"})
+
+    def _api_map_scores(self):
+        """某张图的实测表：只含这张图上出场过的角色。
+
+        ?map=图名 必填。
+        """
+        try:
+            import map_scores
+            name = ""
+            if "?" in self.path:
+                q = self.path.split("?", 1)[1]
+                for kv in q.split("&"):
+                    if kv.startswith("map="):
+                        name = urllib.parse.unquote(kv[4:])
+            if not name:
+                return self._json(400, {"ok": False, "error": "缺少 map 参数"})
+            self._json(200, {"ok": True, **map_scores.table(name)})
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            self._json(500, {"ok": False, "error": f"{type(e).__name__}: {e}"})
+
+    def _api_halves(self):
+        """符合筛选条件的半局明细，按赛季时间顺序。
+
+        ?map= ?survivor= ?hunter= ?player= 全部可选，同时给就是取交集。
+        """
+        try:
+            import map_scores
+            args = {"map": "", "survivor": "", "hunter": "", "player": ""}
+            if "?" in self.path:
+                q = self.path.split("?", 1)[1]
+                for kv in q.split("&"):
+                    k, _, v = kv.partition("=")
+                    if k in args:
+                        args[k] = urllib.parse.unquote(v)
+            self._json(200, {"ok": True, "filter": args,
+                             **map_scores.halves(args["map"], args["survivor"],
+                                                 args["hunter"], args["player"])})
         except Exception as e:
             import traceback
             traceback.print_exc()

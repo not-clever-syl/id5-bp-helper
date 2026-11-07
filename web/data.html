@@ -68,23 +68,30 @@ code{background:var(--panel2);padding:1px 5px;border-radius:4px;
 table{border-collapse:separate;border-spacing:0;width:100%;max-width:100%;
   table-layout:fixed;font-size:12px}
 thead th.hhead{position:relative;padding-top:2px}
-thead th.hhead .hcnt{display:block;font:8.5px Consolas,monospace;
-  color:#5b6373;line-height:1}
+thead th.hhead .hcnt{display:block;font:11px Consolas,monospace;
+  color:#8a93a6;line-height:1.15}
 th,td{padding:0 3px;border-bottom:1px solid var(--border);white-space:nowrap;
   overflow:hidden;text-overflow:ellipsis}
 thead th{background:var(--panel2);font-weight:600;color:var(--dim);font-size:10.5px;
-  height:46px}
-thead th.hhead .char-chip{flex-direction:row;gap:3px;font-size:10.5px;
-  justify-content:center;overflow:hidden;height:42px}
-thead th.hhead .char-avatar{width:42px;height:42px}
-/* 列太窄时只留角色名，避免头像把名字挤成一个字 */
-table.tight thead th.hhead .char-avatar{display:none}
+  height:84px}
+/* 表头：头像在上、角色名在下，出场次数再往下。
+   竖排列比横排更省宽度——列窄时不用把头像整个藏掉。 */
+thead th.hhead .char-chip{flex-direction:column;gap:2px;font-size:10.5px;
+  justify-content:center;align-items:center;height:auto;overflow:visible}
+/* 名字允许折行：4 个汉字的角色名在窄列里折成两行，
+   总比截成「跛脚」「歌唱」这种半截名好 */
+thead th.hhead .char-chip .char-name{display:block;line-height:1.12;
+  max-width:100%;white-space:normal;word-break:break-all;text-align:center}
+thead th.hhead .char-avatar{width:40px;height:40px}
+/* 列极窄时仍然竖排，只把头像缩小，不整个藏掉 */
+table.tight thead th.hhead .char-avatar{width:26px;height:26px}
 table.tight thead th.hhead .char-chip{font-size:9.5px}
+table.tight thead th.hhead .char-name{line-height:1.1}
 tbody th{background:var(--panel2);text-align:left;font-weight:500;
   padding-left:6px}
 /* 求生行首的出场次数，与表头监管的次数样式保持一致 */
-tbody th.shead .hcnt{float:right;padding-right:5px;font:9px Consolas,monospace;
-  color:#5b6373}
+tbody th.shead .hcnt{float:right;padding-right:5px;font:11px Consolas,monospace;
+  color:#8a93a6}
 tbody th .char-chip{font-size:11px}
 /* 首列角色名优先完整显示，宁可挤一点其他列 */
 tbody th .char-name{overflow:visible}
@@ -109,6 +116,57 @@ td .sc{font-family:Consolas,monospace}
 .legend{font-size:11px;color:var(--dim);line-height:1.6;margin-bottom:6px;
   flex:none}
 .legend b{color:var(--text)}
+
+/* ── 可点开的格子 ── */
+td.click{cursor:pointer}
+td.click:hover{outline:1px solid var(--accent);outline-offset:-1px}
+td.v .subx{display:block;font:10px Consolas,monospace;color:#8a93a6;
+  line-height:1;margin-top:-1px}
+
+/* ── 半局明细弹窗 ── */
+#dtMask{position:fixed;inset:0;background:rgba(0,0,0,.62);z-index:50;
+  display:none;align-items:center;justify-content:center;padding:12px}
+#dtMask.on{display:flex}
+#dtBox{background:var(--panel);border:1px solid var(--border);
+  border-radius:12px;width:min(1400px,100%);max-height:min(88vh,880px);
+  display:flex;flex-direction:column;box-shadow:0 20px 70px rgba(0,0,0,.55)}
+#dtBox h3{margin:0;padding:11px 16px;font-size:14px;font-weight:600;
+  border-bottom:1px solid var(--border);display:flex;align-items:baseline;
+  gap:10px;flex-wrap:wrap}
+#dtBox h3 .cnt{color:var(--accent);font-size:13px;font-weight:600}
+#dtBox h3 .flt{color:var(--dim);font-size:12px;font-weight:400}
+#dtBox h3 .x{margin-left:auto;cursor:pointer;color:var(--dim);font-size:16px;
+  padding:0 4px;line-height:1}
+#dtBox h3 .x:hover{color:var(--text)}
+#dtWrap{overflow:auto;padding:0 0 4px;flex:1}
+#dtTable{width:100%;border-collapse:separate;border-spacing:0;font-size:12px;
+  table-layout:auto}
+#dtTable thead th{position:sticky;top:0;z-index:2;background:var(--panel2);
+  text-align:left;font-weight:500;color:var(--dim);font-size:11px;
+  padding:7px 7px;border-bottom:1px solid var(--border);white-space:nowrap}
+#dtTable tbody td{padding:6px 7px;border-bottom:1px solid rgba(255,255,255,.05);
+  vertical-align:middle}
+#dtTable tbody tr:hover td{background:rgba(255,255,255,.03)}
+#dtTable tbody tr:last-child td{border-bottom:none}
+#dtTable td.mono{font-family:Consolas,monospace;white-space:nowrap}
+#dtTable td.map{color:var(--text);white-space:nowrap}
+#dtTable td.team{white-space:nowrap}
+/* 角色列允许换行：一局最多 4 个求生 + 2 个 ban，一行放不下就折成两行，
+   否则表格会被撑到比弹窗还宽，右边的结果和局次被挤出视野。 */
+#dtTable .chiprow{display:flex;gap:3px 5px;flex-wrap:wrap;max-width:210px}
+#dtTable .chiprow .char-chip{gap:3px;font-size:11px;white-space:nowrap}
+#dtTable .chiprow .char-avatar{width:19px;height:19px}
+#dtTable .bans .chiprow{max-width:150px}
+#dtTable .bans .char-chip{opacity:.66}
+#dtTable td.none{color:#3d4353}
+#dtTable .res{font-family:Consolas,monospace;font-size:12.5px}
+#dtTable .res b{font-size:13.5px}
+#dtTable .res .sep{color:var(--dim);margin:0 6px}
+#dtTable .tb{font-size:10px;padding:0 5px;border-radius:8px;
+  background:rgba(216,178,95,.18);color:var(--warn);margin-left:4px}
+#dtFoot{padding:8px 16px;border-top:1px solid var(--border);color:var(--dim);
+  font-size:11.5px;display:flex;gap:14px;flex-wrap:wrap}
+#dtBox .empty{color:var(--dim);text-align:center;padding:30px 0;font-size:12.5px}
 </style>
 </head>
 <body>
@@ -140,6 +198,19 @@ td .sc{font-family:Consolas,monospace}
   </div>
 </main>
 
+<div id="dtMask">
+  <div id="dtBox">
+    <h3>
+      <span id="dtHead">半局明细</span>
+      <span class="cnt" id="dtCnt"></span>
+      <span class="flt" id="dtFlt"></span>
+      <span class="x" id="dtClose" title="关闭">✕</span>
+    </h3>
+    <div id="dtWrap"><table id="dtTable"></table></div>
+    <div id="dtFoot"></div>
+  </div>
+</div>
+
 <script src="char.js"></script>
 <script>
 const $ = s => document.querySelector(s);
@@ -149,6 +220,7 @@ let PS = null;              // 选手榜数据
 let CUR_P = null;           // 当前查看的选手
 let MAPDATA = null;         // 地图统计（/api/maps）
 let CUR_MAP = '';           // 当前筛的地图（'' = 全部）
+let MAPSCORES = null;       // 当前地图的实测表（/api/map_scores）
 
 /** 分数统一显示两位小数（1.5 → 1.50，0.9167 → 0.92） */
 function f2(v) {
@@ -215,9 +287,10 @@ function fitTable(tbl) {
   tbl.style.fontSize = fs + 'px';
   const head = tbl.tHead ? tbl.tHead.rows[0] : null;
   if (head) {
-    // 表头要放下头像 + 2~4 个字的角色名，放不下就把头像藏掉只留名字
-    const nameW = restW - 22;
-    tbl.classList.toggle('tight', nameW < 30);
+    // 表头是「头像 / 名字 / 次数」竖着摞三层，列宽至少要放得下 3 个字。
+    // 放不下就进 tight 模式：头像缩小、名字允许折行，但不隐藏任何信息。
+    const nameW = restW - 6;
+    tbl.classList.toggle('tight', nameW < 34);
   }
 }
 
@@ -246,75 +319,94 @@ async function loadScores() {
 }
 
 /** 表头：头像 + 角色名 + 出场次数
- *  未选地图时显示全季出场次数；选了地图时改成「该图倍数」。
- *  倍数是收缩后的份额之比，该图只出场 1~2 次的角色会被放大到 ×4 以上，
- *  这类倍数不可信，所以用 `*` 单独标出来（详细场次写在 title 里）。
+ *  未选地图时显示全季出场次数；选了地图时显示该图出场次数。
+ *  次数统一放大到 11px —— 原来 8.5px 根本看不清。
  */
 function hunterHead(h) {
   const n = (SCORES.hunter_counts || {})[h];
   let extra = n ? `<span class="hcnt">${n}</span>` : '';
   let tip = `${h}（本季出场 ${n ?? 0} 次）`;
-  if (CUR_MAP && MAPDATA) {
-    const st = (MAPDATA.stats || {})[CUR_MAP];
-    const row = st && (st.hunters || []).find(x => x.char === h);
-    const v = row ? Number(row.mult) : 0;
+  if (CUR_MAP && MAPSCORES) {
+    const row = (MAPSCORES.hunters || []).find(x => x.char === h);
     const cnt = row ? Number(row.n) : 0;
-    const col = v >= 1.5 ? 'var(--high)' : (v <= 0.5 ? 'var(--low)' : '#5b6373');
-    // 该图不足 3 场的倍数不稳定，加 * 并压暗
-    const few = cnt < 3;
-    extra = `<span class="hcnt" style="color:${few ? '#4a5160' : col}">`
-      + `×${v.toFixed(2)}${cnt > 0 && few ? '<span style="color:var(--warn)">*</span>' : ''}</span>`;
-    tip = `${h} · ${CUR_MAP}：出场 ${cnt} 次 / 该图共 ${st ? st.halves : 0} 局`
-      + ` · 倍数 ×${v.toFixed(2)}（收缩后份额 ÷ 全联盟份额）`
-      + (few ? ' · 样本不足 3 场，倍数仅供参考' : '');
+    extra = cnt ? `<span class="hcnt">${cnt}</span>` : '';
+    tip = `${h} · ${CUR_MAP}：出场 ${cnt} 次 / 该图共 ${MAPSCORES.halves || 0} 局`;
   }
   return `<th class="hhead" title="${Char.esc(tip)}">`
     + Char.chip(h, {size: 42}) + extra + '</th>';
 }
 
-/** 选了地图时，监管列按该图出场场次重排（该图常用的排前面）。
- *  不用倍数排序：低频角色（全局只出场几次）的收缩倍数会被放大到 4 倍以上，
- *  按它排会让「该图只上过 3 场」的角色顶到最前，误导教练。
- *  倍数只作为表头标注，用来读「相对全联盟偏多还是偏少」。
+/** 选了地图时，监管列只留这张图上出场过的，按该图出场次数降序。
+ *  没出场过的角色在这张图上没有任何半局，列着只会是整列空白。
  */
 function orderedHunters() {
-  if (!CUR_MAP || !MAPDATA) return HUNTERS;
-  const st = (MAPDATA.stats || {})[CUR_MAP];
-  if (!st) return HUNTERS;
-  const cnt = new Map();
-  (st.hunters || []).forEach(x => cnt.set(x.char, Number(x.n) || 0));
-  return HUNTERS.slice().sort((a, b) => (cnt.get(b) || 0) - (cnt.get(a) || 0));
+  if (!CUR_MAP || !MAPSCORES) return HUNTERS;
+  return (MAPSCORES.hunters || []).map(x => x.char);
 }
 
-/** 总榜表格：只读展示，格子染成红绿表示难度 */
-function renderScores() {
-  // 求生行按本季总出场次数降序，出现最多的排最前
+/** 求生行：未选地图时是全联盟全部角色；选了地图时只留该图出场过的。 */
+function orderedSurvivors() {
   const cnt = SCORES.survivor_counts || {};
-  const chars = (SCORES.all_survivors || []).slice().sort(
+  if (CUR_MAP && MAPSCORES) {
+    // 行首显示的是该图次数，就按该图次数排，数字才是降序的
+    return (MAPSCORES.survivors || []).map(x => x.char)
+      .sort((a, b) => survivorCount(b) - survivorCount(a) || byName(a, b));
+  }
+  return (SCORES.all_survivors || []).slice().sort(
     (a, b) => (cnt[b] || 0) - (cnt[a] || 0) || byName(a, b));
+}
+
+/** 行首右上角的小字：未选地图是全季次数，选了地图是该图次数。 */
+function survivorCount(c) {
+  if (CUR_MAP && MAPSCORES) {
+    const row = (MAPSCORES.survivors || []).find(x => x.char === c);
+    return row ? Number(row.n) : 0;
+  }
+  return (SCORES.survivor_counts || {})[c] || 0;
+}
+
+/** 总榜表格：只读展示，格子染成红绿表示难度。
+ *  选了地图后整表换成该图的实测均值，每格标出样本局数。
+ */
+function renderScores() {
+  const chars = orderedSurvivors();
   const cols = orderedHunters();
+  const mapMode = !!(CUR_MAP && MAPSCORES);
   const head = '<thead><tr><th>求生 \\ 监管</th>' +
     cols.map(hunterHead).join('') + '</tr></thead>';
   const body = chars.map(c => {
-    const row = SCORES.cells[c] || {};
+    const row = mapMode ? ((MAPSCORES.cells || {})[c] || {}) : (SCORES.cells[c] || {});
     const tds = cols.map(h => {
       const v = row[h];
-      if (v === undefined) return '<td class="na">—</td>';
+      if (v === undefined) {
+        return `<td class="na click" data-s="${Char.esc(c)}" data-h="${Char.esc(h)}">—</td>`;
+      }
       const sc = (typeof v === 'number') ? v : v.score;
+      const n = (typeof v === 'number') ? 0 : (v.n || 0);
       // 底色表达「这套阵容好不好打」：偏红 = 求生方吃亏，偏绿 = 占便宜
-      return `<td class="v" style="background:${scoreBg(sc)}">`
-        + `<span class="sc" style="color:${scoreColor(sc)}">${f2(sc)}</span></td>`;
+      const sub = mapMode && n ? `<span class="subx">${n} 局</span>` : '';
+      return `<td class="v click" data-s="${Char.esc(c)}" data-h="${Char.esc(h)}" `
+        + `style="background:${scoreBg(sc)}">`
+        + `<span class="sc" style="color:${scoreColor(sc)}">${f2(sc)}</span>${sub}</td>`;
     }).join('');
-    return `<tr><th class="shead" title="${Char.esc(c)}（本季出场 ${cnt[c] || 0} 次）">`
+    const n = survivorCount(c);
+    return `<tr><th class="shead" title="${Char.esc(c)}（${CUR_MAP || '本季'}出场 ${n} 次）">`
       + Char.chip(c, {size: 25})
-      + (cnt[c] ? `<span class="hcnt">${cnt[c]}</span>` : '') + '</th>' + tds + '</tr>';
+      + (n ? `<span class="hcnt">${n}</span>` : '') + '</th>' + tds + '</tr>';
   }).join('');
   $('#pTable').innerHTML = head + '<tbody>' + body + '</tbody>';
+  bindCells();
   updateScoreStat();
   relayout();
 }
 
 function updateScoreStat() {
+  if (CUR_MAP && MAPSCORES) {
+    let n = 0;
+    Object.values(MAPSCORES.cells || {}).forEach(r => { n += Object.keys(r).length; });
+    $('#sStat').innerHTML = `求生 <b>${(MAPSCORES.survivors || []).length}</b> 个 · 监管 <b>${(MAPSCORES.hunters || []).length}</b> 个 · 格子 <b>${n}</b> 个 · 该图 <b>${MAPSCORES.halves}</b> 局`;
+    return;
+  }
   const chars = Object.keys(SCORES.cells || {});
   const n = chars.reduce((a, c) => a + Object.keys(SCORES.cells[c]).length, 0);
   $('#sStat').innerHTML = `求生 <b>${chars.length}</b> 个 · 监管 <b>${HUNTERS.length}</b> 个 · 格子 <b>${n}</b> 个`;
@@ -352,21 +444,21 @@ function showView(p) {
 
   // 地图筛选只在总榜有意义（选手视图列的是他用过的监管，不做该图筛选）
   toggleMapPick(!p);
-
   if (!p) {
     // ── 总榜：全联盟全局值，列是全部监管 ──
     $('#pTitle').innerHTML =
       `总榜（全联盟）${CUR_MAP ? ' · ' + Char.esc(CUR_MAP) : ''} <span class="badge ${SCORES.status === 'custom' ? 'custom' : 'base'}">${SCORES.status === 'custom' ? '自定义' : '默认'}</span>`;
-    $('#pSub').textContent = `${(SCORES.all_survivors || []).length} 个求生 × ${HUNTERS.length} 个监管`;
+    $('#pSub').textContent = CUR_MAP && MAPSCORES
+      ? `${(MAPSCORES.survivors || []).length} 个求生 × ${(MAPSCORES.hunters || []).length} 个监管（仅这张图出场过的）`
+      : `${(SCORES.all_survivors || []).length} 个求生 × ${HUNTERS.length} 个监管`;
     $('#pLegend').innerHTML = CUR_MAP
-      ? `每个求生角色面对每个监管的局均逃脱（0~4，2.00 为居中值）。
-         红＝求生方难打，绿＝好打。表头下方 <b>×倍数</b> = 该监管在
-         <b>${Char.esc(CUR_MAP)}</b> 的出场份额 ÷ 全联盟份额（1.00 = 持平），
-         列按该图出场场次重排。带 <span style="color:var(--warn)">*</span>
-         表示该图不足 3 场、倍数不稳定，别当强倾向用。分数本身跨地图，
-         不受这里筛选影响。`
+      ? `只统计 <b>${Char.esc(CUR_MAP)}</b> 上的 ${MAPSCORES ? MAPSCORES.halves : 0} 个半局：
+         行与列都只留这张图出场过的角色，每格是该图上这些半局的平均逃生人数
+         （0~4，2.00 为居中值），下方灰色小字是样本局数。
+         红＝求生方难打，绿＝好打。<b>点任意一格</b>能看到组成它的全部半局。`
       : `每个求生角色面对每个监管的局均逃脱（0~4，2.00 为居中值）。
-         红＝求生方难打，绿＝好打。要看某位选手的表现，在上方下拉里选他。`;
+         红＝求生方难打，绿＝好打。要看某位选手的表现，在上方下拉里选他。
+         <b>点任意一格</b>能看到组成它的全部半局。`;
     renderScores();
     return;
   }
@@ -382,16 +474,19 @@ function showView(p) {
   $('#pLegend').innerHTML =
     `每格三行：<b>实测</b>（这位选手打的局均逃脱，下标为样本数）·
      <b>全局</b>（全联盟同格）· <b style="color:var(--ok)">折算</b>
-     = w×实测 + (1-w)×全局，w = n/(n+${PS.meta.k_shrink})。`;
-
+     = w×实测 + (1-w)×全局，w = n/(n+${PS.meta.k_shrink})。
+     <b>点任意一格</b>能看到组成它的全部半局。`;
   const head = '<thead><tr><th>求生 \\ 监管</th>' +
     hs.map(h => `<th class="hhead">${Char.chip(h, {size: 42})}</th>`).join('') +
     '</tr></thead>';
   const body = chars.map(c => {
     const tds = hs.map(h => {
       const v = (data[c] || {})[h];
-      if (!v) return '<td class="na">—</td>';
-      return `<td style="background:${scoreBg(v.score)}"><div class="cellbox">
+      if (!v) {
+        return `<td class="na click" data-s="${Char.esc(c)}" data-h="${Char.esc(h)}">—</td>`;
+      }
+      return `<td class="click" data-s="${Char.esc(c)}" data-h="${Char.esc(h)}" `
+        + `style="background:${scoreBg(v.score)}"><div class="cellbox">
         <i class="gap">${f2(v.own)}<sub style="font-size:9px">${v.n}</sub></i>
         <i class="gap">/ ${f2(v.global)}</i>
         <i class="sc" style="color:${scoreColor(v.score)}">${f2(v.score)}</i></div></td>`;
@@ -399,10 +494,11 @@ function showView(p) {
     return `<tr><th>${Char.chip(c, {size: 25})}</th>${tds}</tr>`;
   }).join('');
   $('#pTable').innerHTML = head + '<tbody>' + body + '</tbody>';
+  bindCells();
   relayout();
 }
 
-// ══════════ 地图筛选（仅影响列顺序与倍数标注，不改分数） ══════════
+// ══════════ 地图筛选（选了地图就整表换成该图实测） ══════════
 async function loadMaps() {
   try {
     MAPDATA = await api('/api/maps');
@@ -417,9 +513,116 @@ async function loadMaps() {
     }).join('');
   sel.onchange = () => {
     CUR_MAP = sel.value;
-    showView(CUR_P || '');
+    reloadView();
   };
 }
+
+/** 换地图后要重新拉该图的实测表，再重渲染。 */
+async function reloadView() {
+  MAPSCORES = null;
+  if (CUR_MAP) {
+    try {
+      MAPSCORES = await api('/api/map_scores?map=' + encodeURIComponent(CUR_MAP));
+    } catch (e) {
+      MAPSCORES = null;
+      $('#pLegend').textContent = '该地图数据加载失败：' + e.message;
+      return;
+    }
+  }
+  showView(CUR_P || '');
+}
+
+// ══════════ 半局明细弹窗（点格子看组成这一格的局） ══════════
+/** 给表格里每个格子绑上点击：打开组成这一格的半局列表。 */
+function bindCells() {
+  const rows = $('#pTable').querySelectorAll('td[data-s]');
+  rows.forEach(td => {
+    td.onclick = () => openDetail(td.dataset.s, td.dataset.h);
+  });
+}
+
+/** 局次文字：加时按第四局算，但要单独标出来。 */
+function gameText(h) {
+  return h.tiebreak ? '第 4 局（加时）' : `第 ${h.game} 局`;
+}
+
+function detailRow(h) {
+  const surv = (h.survivors || []).map(c => Char.chip(c, {size: 20})).join('');
+  const banS = (h.bans_survivor || []).map(c => Char.chip(c, {size: 20})).join('')
+    || '<span class="none">—</span>';
+  const banH = (h.bans_hunter || []).map(c => Char.chip(c, {size: 20})).join('')
+    || '<span class="none">—</span>';
+  return `<tr>
+    <td class="map">${h.map ? Char.esc(h.map) : '—'}</td>
+    <td class="mono">${Char.esc(h.hunter_player || '—')}</td>
+    <td>${h.hunter ? Char.chip(h.hunter, {size: 20}) : '—'}</td>
+    <td class="team">${Char.esc(h.survivor_team || '—')}</td>
+    <td><div class="chiprow">${surv}</div></td>
+    <td class="bans"><div class="chiprow">${banS}</div></td>
+    <td class="bans"><div class="chiprow">${banH}</div></td>
+    <td class="res">逃生 <b>${h.escape}</b> 人<span class="sep">·</span>${Char.esc(h.score || '—')}</td>
+    <td class="mono">${Char.esc(gameText(h))}</td>
+  </tr>`;
+}
+
+async function openDetail(survivor, hunter) {
+  // 地图下拉只在总榜显示，选手视图里它被藏起来了，就不该偷偷带上图的条件
+  const mapName = CUR_P ? '' : (CUR_MAP || '');
+  const player = CUR_P || '';
+  const mask = $('#dtMask');
+  $('#dtHead').textContent = `${survivor} × ${hunter}`;
+  $('#dtCnt').textContent = '符合条件的有 … 局';
+  $('#dtFlt').textContent = [
+    mapName ? `地图：${mapName}` : '全部地图',
+    player ? `选手：${player}` : '',
+  ].filter(Boolean).join(' · ');
+  $('#dtWrap').innerHTML = '<table id="dtTable"><tbody>'
+    + '<tr><td class="empty">正在读取…</td></tr></tbody></table>';
+  $('#dtFoot').textContent = '';
+  mask.classList.add('on');
+
+  const qs = new URLSearchParams({ survivor, hunter });
+  if (mapName) qs.set('map', mapName);
+  if (player) qs.set('player', player);
+
+  let d;
+  try {
+    d = await api('/api/halves?' + qs.toString());
+  } catch (e) {
+    $('#dtCnt').textContent = '';
+    $('#dtWrap').innerHTML = `<table><tbody><tr><td class="empty">`
+      + `读取失败：${Char.esc(e.message)}</td></tr></tbody></table>`;
+    return;
+  }
+
+  const list = d.halves || [];
+  $('#dtCnt').textContent = `符合条件的有 ${d.count} 局`;
+  if (!list.length) {
+    $('#dtWrap').innerHTML = '<table><tbody><tr><td class="empty">'
+      + '这个组合没有半局记录。</td></tr></tbody></table>';
+    return;
+  }
+
+  // 底部只放一句口径说明，局数已经在标题行
+  $('#dtFoot').textContent = '按赛季时间顺序排列。加时赛按第四局算，图权与第四局一致（客队）。';
+
+  const head = '<thead><tr>'
+    + ['地图', '监管选手', '监管角色', '求生队伍', '求生角色',
+       '被 ban 的求生', '被 ban 的监管', '结果', '局次']
+      .map(t => `<th>${t}</th>`).join('')
+    + '</tr></thead>';
+  $('#dtWrap').innerHTML = `<table id="dtTable">${head}<tbody>`
+    + list.map(detailRow).join('') + '</tbody></table>';
+}
+
+function closeDetail() {
+  $('#dtMask').classList.remove('on');
+}
+$('#dtClose').onclick = closeDetail;
+$('#dtMask').onclick = e => { if (e.target.id === 'dtMask') closeDetail(); };
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeDetail();
+});
 
 // ══════════ 启动 ══════════
 (async () => {
