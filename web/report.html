@@ -154,10 +154,11 @@ function regCls(v) {
   return v === '常规' ? 'good' : v === '接近常规' ? 'warn' : 'danger';
 }
 
-/** 报告页只靠导入：进来时是空的，导入了才渲染。
+/** 报告页进来就显示最新的一份；也可以用 ?file=<文件名> 指定某一份。
  *
  *  从生成页跳过来时带 ?file=<文件名>，直接读那一份出来显示 ——
  *  相当于「刚生成的报告自动打开」。
+ *  没带参数时按生成时间取 data/reports/ 里最新的一份。
  */
 async function boot() {
   $('#body').innerHTML = `<div class="empty">
@@ -168,7 +169,20 @@ async function boot() {
   $('#sub').textContent = '导入一份报告查看';
 
   const q = new URLSearchParams(location.search);
-  const file = q.get('file');
+  let file = q.get('file');
+  let autoPicked = false;
+  if (!file) {
+    // 没指定就看最新的那份：列表接口在 meta=1 时按生成时间倒序。
+    try {
+      const r = await fetch('/api/files/list?kind=import&dir='
+        + encodeURIComponent('data/reports') + '&meta=1');
+      if (r.ok) {
+        const j = await r.json();
+        const first = (j.files || [])[0];
+        if (first) { file = first.name; autoPicked = true; }
+      }
+    } catch (e) { /* 拿不到就停在空状态 */ }
+  }
   if (!file) return;
   try {
     const r = await fetch('/api/files/read', {
@@ -182,7 +196,7 @@ async function boot() {
     const rep = Array.isArray(d) ? d[0] : (d && d.meta ? d : (d.reports || [])[0]);
     if (!rep) throw new Error('文件里没有报告');
     showReport(rep);
-    setIo('已打开刚生成的报告', 'ok');
+    setIo(autoPicked ? `已自动打开最新一份：${file}` : '已打开刚生成的报告', 'ok');
   } catch (e) {
     setIo('打开失败：' + e.message, 'err');
   }
