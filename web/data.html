@@ -127,7 +127,7 @@ td .sc{font-family:Consolas,monospace}
         <select id="pViewPick">
           <option value="">总榜（全联盟）</option>
         </select>
-        <label class="lbl" style="margin-left:12px">地图</label>
+        <label class="lbl" id="mapLbl" style="margin-left:12px">地图</label>
         <select id="mapPick">
           <option value="">全部地图</option>
         </select>
@@ -340,9 +340,18 @@ async function loadPlayers() {
   if (CUR_P) showView(CUR_P);
 }
 
+/** 地图下拉只在总榜视图里显示：选手视图筛地图没有意义（列本来就只是他用过的监管） */
+function toggleMapPick(show) {
+  $('#mapLbl').style.display = show ? '' : 'none';
+  $('#mapPick').style.display = show ? '' : 'none';
+}
+
 /** 渲染当前视图。p 为空表示总榜，否则是某位选手。全部只读。 */
 function showView(p) {
   CUR_P = p || null;
+
+  // 地图筛选只在总榜有意义（选手视图列的是他用过的监管，不做该图筛选）
+  toggleMapPick(!p);
 
   if (!p) {
     // ── 总榜：全联盟全局值，列是全部监管 ──
@@ -376,22 +385,7 @@ function showView(p) {
      = w×实测 + (1-w)×全局，w = n/(n+${PS.meta.k_shrink})。`;
 
   const head = '<thead><tr><th>求生 \\ 监管</th>' +
-    hs.map(h => {
-      // 选了地图就在列头标出该图倍数（列序不动：这里只列他用过的监管，
-      // 顺序本来就无意义；倍数用来看「这张图他还会不会拿」）
-      if (!CUR_MAP || !MAPDATA) {
-        return `<th class="hhead">${Char.chip(h, {size: 42})}</th>`;
-      }
-      const st = (MAPDATA.stats || {})[CUR_MAP] || {};
-      const row = (st.hunters || []).find(x => x.char === h);
-      const v = row ? Number(row.mult) : 0;
-      const cnt = row ? Number(row.n) : 0;
-      const few = cnt < 3;
-      const col = v >= 1.5 ? 'var(--high)' : (v <= 0.5 ? 'var(--low)' : '#5b6373');
-      return `<th class="hhead" title="${Char.esc(`${h} · ${CUR_MAP}：该图共出场 ${cnt} 次，倍数 ×${v.toFixed(2)}${few ? '（样本不足 3 场，仅供参考）' : ''}`)}">`
-        + Char.chip(h, {size: 42})
-        + `<span class="hcnt" style="color:${few ? '#4a5160' : col}">×${v.toFixed(2)}</span></th>`;
-    }).join('') +
+    hs.map(h => `<th class="hhead">${Char.chip(h, {size: 42})}</th>`).join('') +
     '</tr></thead>';
   const body = chars.map(c => {
     const tds = hs.map(h => {
@@ -436,7 +430,7 @@ async function loadMaps() {
   } catch (e) {
     document.body.insertAdjacentHTML('beforeend',
       `<div style="padding:20px;color:var(--err)">加载失败：${e.message}
-       <br>请确认用 <code>python scripts/serve.py 8766</code> 启动服务后访问。</div>`);
+       <br>请确认用 <code>python scripts/serve.py 8766</code>（macOS / Linux 用 <code>python3</code>）启动服务后访问。</div>`);
   }
 })();</script>
 </body>

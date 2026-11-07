@@ -201,6 +201,7 @@ $('#impBtn').onclick = () => {
   FileModal.pick({
     title: '导入报告',
     dir: 'data/reports',
+    table: true,
     onPick: obj => {
       // 兼容三种输入：单份报告、报告数组、旧的索引结构
       const incoming = Array.isArray(obj) ? obj

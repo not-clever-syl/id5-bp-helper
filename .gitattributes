@@ -3,5 +3,5 @@
 # 注意：不能同时写 binary，它会覆盖 eol 设置。
 *.bat text eol=crlf
 
-# 启动.sh 是 Linux/macOS 脚本，必须 LF 行尾，CRLF 会导致 "bad interpreter" 报错。
+# start.sh 是 Linux/macOS 脚本，必须 LF 行尾，CRLF 会导致 "bad interpreter" 报错。
 *.sh text eol=lf

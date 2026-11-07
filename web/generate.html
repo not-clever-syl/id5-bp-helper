@@ -1031,7 +1031,7 @@ boot().catch(e => {
   $('#sub').textContent = '加载失败：' + e.message;
   document.querySelector('main').insertAdjacentHTML('afterbegin',
     `<div class="card"><div class="msg err">加载失败：${esc(e.message)}
-     <br>请确认用 <code>python scripts/serve.py 8766</code> 启动服务后访问。</div></div>`);
+     <br>请确认用 <code>python scripts/serve.py 8766</code>（macOS / Linux 用 <code>python3</code>）启动服务后访问。</div></div>`);
 });
 </script>
 </body>

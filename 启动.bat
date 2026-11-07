@@ -15,7 +15,7 @@ if not defined PY where python >nul 2>&1 && set "PY=python"
 if not defined PY (
     echo   [X] 没有检测到 Python
     echo.
-    echo   请先安装 Python 3.10 或更高版本：
+    echo   请先安装 Python 3.8 或更高版本：
     echo       https://www.python.org/downloads/
     echo.
     echo   安装时务必勾选 "Add Python to PATH"
@@ -25,8 +25,8 @@ if not defined PY (
     exit /b 1
 )
 
-%PY% -c "import sys; sys.exit(0 if sys.version_info>=(3,10) else 1)" >nul 2>&1
-if errorlevel 1 echo   [!] Python 版本低于 3.10，可能有兼容问题
+%PY% -c "import sys; sys.exit(0 if sys.version_info>=(3,8) else 1)" >nul 2>&1
+if errorlevel 1 echo   [!] Python 版本低于 3.8，可能有兼容问题
 echo.
 
 echo   正在启动服务，浏览器会自动打开...

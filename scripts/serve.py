@@ -101,6 +101,8 @@ class Handler(SimpleHTTPRequestHandler):
             return self._api_scores_get()
         if self.path.startswith("/api/maps"):
             return self._api_maps()
+        if self.path.startswith("/api/map_pick"):
+            return self._api_map_pick()
         if self.path.startswith("/api/expect/meta"):
             return self._api_expect_meta()
         if self.path.startswith("/api/generate/meta"):
@@ -123,6 +125,7 @@ class Handler(SimpleHTTPRequestHandler):
         player = team = ""
         game = ""
         dirs = []
+        with_meta = False
         if "?" in self.path:
             q = self.path.split("?", 1)[1]
             for kv in q.split("&"):
@@ -141,6 +144,8 @@ class Handler(SimpleHTTPRequestHandler):
                 elif kv.startswith("dir="):
                     dirs = [urllib.parse.unquote(v)
                             for v in kv[4:].split(",") if v]
+                elif kv == "meta=1":
+                    with_meta = True
         try:
             # 报告版本：<监管id>_<数字>_vs_<队伍名>_game<局数>.json
             if player and team:
@@ -152,7 +157,7 @@ class Handler(SimpleHTTPRequestHandler):
                 self._json(200, {"ok": True, **res})
                 return
             res = file_api.list_files(kind, prefix=prefix, pattern=pattern,
-                                      dirs=dirs or None)
+                                      dirs=dirs or None, with_meta=with_meta)
             if prefix and not pattern:
                 sub = (dirs[0] if dirs else file_api.DIR_HUNTER)
                 res["suggested"] = file_api.next_name(prefix, sub)
@@ -243,6 +248,29 @@ class Handler(SimpleHTTPRequestHandler):
         except Exception as e:
             import traceback
             traceback.print_exc()
+            self._json(500, {"ok": False, "error": f"{type(e).__name__}: {e}"})
+
+    def _api_map_pick(self):
+        """地图选择偏好：某队在各局次选了什么图。
+
+        ?team=队名 返回单队视图；不传则返回全部队伍。
+        图权按局次轮转，主客队不同，所以这里的统计必须先定主队。
+        """
+        try:
+            import map_pick
+            team = ""
+            if "?" in self.path:
+                q = self.path.split("?", 1)[1]
+                for kv in q.split("&"):
+                    if kv.startswith("team="):
+                        team = urllib.parse.unquote(kv[5:])
+            if team:
+                self._json(200, {"ok": True, **map_pick.one(team)})
+            else:
+                self._json(200, {"ok": True, **map_pick.stats()})
+        except KeyError as e:
+            self._json(404, {"ok": False, "error": str(e)})
+        except Exception as e:
             self._json(500, {"ok": False, "error": f"{type(e).__name__}: {e}"})
 
     def _api_player_scores(self):
