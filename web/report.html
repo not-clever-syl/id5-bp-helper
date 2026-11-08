@@ -134,54 +134,46 @@ footer b{color:var(--text)}
 /* ① 段里的地图区块：块标题与说明 */
 .rankcols .col > .meta{margin:0 0 6px;line-height:1.6}
 .rankcols .col > .meta b{color:var(--text)}
-/* ── ⑤ 博弈树：节点是一条竖线串起来的可点条目 ── */
+/* ── ⑤ 博弈树：每层一排备选，展开的分支向下缩进 ── */
 .tbar{color:var(--dim);font-size:12px;margin:2px 0 10px;
   display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .tbar.warn{color:var(--warn)}
 button.mini{background:transparent;border:1px solid var(--border);color:var(--dim);
   border-radius:6px;padding:2px 9px;font-size:11.5px;cursor:pointer}
 button.mini:hover{border-color:var(--accent);color:var(--text)}
-.tree{position:relative;padding-left:16px}
-.tree:before{content:"";position:absolute;left:5px;top:8px;bottom:26px;
-  width:1px;background:var(--border)}
-.tstep{position:relative}
-.tstep:before{content:"";position:absolute;left:-13px;top:15px;width:9px;height:1px;
-  background:var(--border)}
-.tstep.stale{opacity:.42}
-.tn{display:flex;align-items:center;gap:9px;padding:6px 10px;margin-bottom:3px;
+.tree{position:relative}
+.tblock{margin:0}
+.tlayer{margin:10px 0 5px}
+.tlayer .tl{color:var(--dim);font-size:11.5px;letter-spacing:.02em}
+.tlayer .tl b{color:var(--text);font-weight:500}
+.tgrid{display:flex;flex-wrap:wrap;gap:6px}
+.tn{display:flex;align-items:center;gap:8px;padding:5px 10px;margin-bottom:3px;
   border-radius:7px;background:var(--panel2);border:1px solid var(--border);
   cursor:pointer;font-size:12.5px;transition:border-color .12s,background .12s}
 .tn:hover{border-color:var(--accent);background:#252a36}
-/* 不可点的节点（换手之后的下游）：鼠标不显示手型，也不做 hover 高亮 */
-.tn:not([data-stage]){cursor:default}
-.tn:not([data-stage]):hover{border-color:var(--border);background:var(--panel2)}
 .tn.ban{border-left:3px solid var(--ban)}
 .tn.pick{border-left:3px solid var(--accent)}
-.tn.open{border-color:var(--accent);background:#252a36}
-.tn.changed{box-shadow:inset 0 0 0 1px var(--warn)}
+.tn.main{border-color:var(--accent);background:#2a3f6e;color:#cfe0ff}
+.tn.leaf{cursor:default}
+.tn.leaf:hover{border-color:var(--border);background:var(--panel2)}
 .tn .st{flex:none;width:18px;color:var(--dim);font:11px Consolas,monospace}
-.tn .nm{flex:none;width:112px;color:var(--dim);font-size:12px;
-  overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-.tn .ch{flex:none;width:110px;display:flex;align-items:center;gap:5px;
+.tn .ch{flex:none;width:100px;display:flex;align-items:center;gap:5px;
   font-weight:600;overflow:hidden;white-space:nowrap}
 .tn .ch span{overflow:hidden;text-overflow:ellipsis}
 .tn .vv{flex:none;width:44px;text-align:right;
   font:12.5px Consolas,monospace}
-.tn .tg{margin-left:auto;color:var(--dim);font-size:11.5px;flex:none}
-.tn.open .tg{color:var(--accent)}
-/* 展开的备选行 */
-.tops{display:flex;flex-wrap:wrap;gap:6px;padding:4px 0 8px 26px}
-.opt{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;
-  border-radius:7px;border:1px solid var(--border);background:var(--panel);
-  font-size:12px;cursor:pointer;transition:border-color .12s,background .12s}
-.opt:hover{border-color:var(--accent);background:#252a36}
-.opt.on{border-color:var(--accent);background:#2a3f6e;color:#cfe0ff}
-.opt.better:not(.on){border-color:#3d6b57}
-.opt .ov{color:var(--dim);font:11px Consolas,monospace}
-.opt.on .ov{color:#cfe0ff}
-.opt .od{font:10.5px Consolas,monospace}
-.opt .od.good{color:var(--good)}
-.opt .od.danger{color:var(--danger)}
+.tn .dv{flex:none;width:38px;text-align:right;font:11px Consolas,monospace}
+.tn .dv.good{color:var(--good)}
+.tn .dv.danger{color:var(--danger)}
+.tn .tg{margin-left:auto;color:var(--dim);font-size:11px;flex:none}
+.tn.main .tg{color:var(--accent)}
+/* 展开后的分支：左侧一条竖线 + 一行「选了谁」 */
+.tkid{margin:4px 0 2px 14px;padding-left:14px;
+  border-left:1px solid var(--border)}
+.tsel{color:var(--dim);font-size:11.5px;margin:2px 0 0;
+  display:flex;align-items:center;gap:5px}
+.tsel b{color:var(--text);font-weight:500}
+.tmore{margin:2px 0 8px}
 .tend{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px;
   padding:8px 12px;border-radius:8px;background:var(--panel2);
   border-left:3px solid var(--good);font-size:12.5px}
@@ -432,39 +424,30 @@ function renderNew() {
   }
   const c3 = card(2, `我方应 ban 的监管（配额 ${quota} 个）`, null, inner3);
 
-  // ── ④ 我方前两手 ──
-  const fRows = (C.first_options || []).map(x => `<tr class="${x.char === C.first_pick ? 'hl' : ''}">
-      <td title="${esc(x.char)}">${Char.chip(x.char, {size: 22})}</td>
-      <td class="num">${f2(x.value)}</td>
-      <td class="dim">${esc((x.pos || []).join('/') || '—')}</td></tr>`).join('');
-  const sRows = (C.second_options || []).map(x => `<tr class="${x.char === C.second_pick ? 'hl' : ''}">
-      <td title="${esc(x.char)}">${Char.chip(x.char, {size: 22})}</td>
-      <td class="num">${f2(x.value)}</td>
-      <td class="dim">${esc((x.pos || []).join('/') || '—')}</td></tr>`).join('');
+  // ── ③ 我方前两手：只给结论，不列备选 ──
+  // 前两手是确定的（③ 是我方连选两手，直接取最优解），
+  // 列一堆备选只会让人以为还要挑，也白跑十几次子树搜索。
+  const detail = C.picks_detail || [];
+  const pickRows = detail.map(d => `<tr>
+      <td><span class="dim">第 ${d.order} 手</span></td>
+      <td title="${esc(d.char)}">${Char.chip(d.char, {size: 22})}</td>
+      <td class="num">${f2(d.value)}</td>
+      <td class="dim">${esc((d.pos || []).join('/') || '—')}${
+        d.solid ? ' · 稳救' : ''}</td></tr>`).join('');
   const c4 = card(3, '我方前两手怎么选',
-    `第一手和第二手分开评：每行的「评估」是选他之后双方把后面走完的结果。`,
+    `两手的顺序已经定好。「评估」是选下这一手之后，双方把后面走完的结果。`,
     `<div class="verdict"><b>前两手：${chips(C.picks)}</b>
        <span class="dim">（救人位 ${C.solid_n ?? 0} 个）</span></div>
-     <div class="two" style="margin-top:10px">
-       <div>
-         <div class="meta">第一手</div>
-         <div class="tablewrap"><table>
-           <thead><tr><th style="width:46%">角色</th><th class="num">评估</th><th>定位</th></tr></thead>
-           <tbody>${fRows}</tbody></table></div>
-       </div>
-       <div>
-         <div class="meta">第二手（第一手定下之后）</div>
-         <div class="tablewrap"><table>
-           <thead><tr><th style="width:46%">角色</th><th class="num">评估</th><th>定位</th></tr></thead>
-           <tbody>${sRows}</tbody></table></div>
-       </div>
-     </div>`);
+     ${pickRows ? `<div class="tablewrap" style="margin-top:10px"><table>
+       <thead><tr><th style="width:18%">顺序</th><th style="width:40%">角色</th>
+         <th class="num">评估</th><th>定位</th></tr></thead>
+       <tbody>${pickRows}</tbody></table></div>` : ''}`);
 
   // ── ⑤ 后面博弈树 ──
   const c5 = card(4, '后面博弈树怎么选',
-    `默认只显示主变线路。点任意一手可以展开它的关键备选，`
-    + `再点某个备选就按「如果换成他」显示这一步的值 —— `
-    + `换过之后的分支这份报告没有继续往下算，后面几步会变灰。`,
+    `深色那一手是主变线路，默认一路铺到底；每一层还有哪些备选也一并列出。`
+    + `点某个备选就展开它下面那一层，再点收起 —— 展开的每一层都带着`
+    + `「选了它之后」重新推演的值。`,
     `<div id="treeBox">${gameTree(C)}</div>`);
 
   // 对位情报已移到独立页面（web/matchup.html）：那张表只看角色池、
@@ -478,40 +461,90 @@ function renderNew() {
   const sel = $('#comboSel');
   if (sel) sel.onchange = () => {
     COMBO = +sel.value;
-    TREE = { open: '', alt: {} };  // 换组合就重置树的交互状态
+    TREE = { open: {}, more: {}, cache: {}, reg: {}, seq: 0, touched: false,
+             auto: [], tried: {} };  // 换组合就重置树的交互状态
     renderNew();
   };
   wireTree();
 }
 
-/** ⑤ 段的事件绑定：点节点展开备选，点备选换人，点按钮恢复主线。 */
+/** ⑤ 段的事件绑定：点备选展开／收起它下面那一层、展开全部、按需加载深层、恢复主线。 */
 function wireTree() {
   const box = $('#treeBox');
   if (!box) return;
-  box.querySelectorAll('.tn[data-stage]').forEach(el => {
+  const rerender = () => { box.innerHTML = gameTree(curCombo()); wireTree(); };
+
+  // 点某一手：展开／收起它下面那一层
+  box.querySelectorAll('.tn[data-key]').forEach(el => {
+    const info = TREE.reg[el.dataset.key];
+    if (!info || !info.canOpen) return;
     el.onclick = () => {
-      const st = el.dataset.stage;
-      TREE.open = (TREE.open === st) ? '' : st;
-      box.innerHTML = gameTree(curCombo());
-      wireTree();
+      // 更深的层还没加载过：直接去要这一层，不用再点一次
+      if (!info.open && !info.hasNext) {
+        loadDeeper(el, info);
+        return;
+      }
+      TREE.open[nodeKey(info.path)] = !info.open;
+      TREE.touched = true;
+      rerender();
     };
   });
-  box.querySelectorAll('.opt').forEach(el => {
+
+  const loadDeeper = (el, info) => {
+    el.classList.add('loading');
+    el.querySelector('.tg').textContent = '加载中…';
+    fetchLevel(info.state).then(() => {
+      TREE.open[nodeKey(info.path)] = true;
+      TREE.touched = true;
+      rerender();
+    }).catch(e => {
+      el.classList.remove('loading');
+      el.querySelector('.tg').textContent = '加载失败：' + e.message;
+    });
+  };
+
+  // 展开全部 / 收起
+  box.querySelectorAll('button[data-more]').forEach(el => {
     el.onclick = ev => {
       ev.stopPropagation();
-      const st = el.dataset.stage, ch = el.dataset.char;
-      if (TREE.alt[st] === ch) delete TREE.alt[st];   // 再点一次撤回
-      else TREE.alt[st] = ch;
-      box.innerHTML = gameTree(curCombo());
-      wireTree();
+      const lk = el.dataset.more;
+      TREE.more[lk] = !TREE.more[lk];
+      TREE.touched = true;
+      rerender();
     };
   });
+
+  // 深层按需加载的按钮：直接挂在展开的节点下面时用（保留兼容）
+  box.querySelectorAll('button[data-load]').forEach(el => {
+    el.onclick = ev => {
+      ev.stopPropagation();
+      const info = TREE.reg[el.dataset.load];
+      if (!info) return;
+      el.disabled = true;
+      el.textContent = '加载中…';
+      fetchLevel(info.state).then(() => {
+        TREE.open[nodeKey(info.path)] = true;
+        TREE.touched = true;
+        rerender();
+      }).catch(e => { el.disabled = false; el.textContent = '加载失败：' + e.message; });
+    };
+  });
+
   const rs = $('#treeReset');
   if (rs) rs.onclick = () => {
-    TREE = { open: '', alt: {} };
-    box.innerHTML = gameTree(curCombo());
-    wireTree();
+    TREE.open = {};
+    TREE.more = {};
+    TREE.touched = false;
+    TREE.tried = {};
+    rerender();
   };
+
+  // 主变线路超出预展开范围：自动取一层，教练不用手点
+  if (TREE.auto.length) {
+    const job = TREE.auto[0];
+    TREE.auto = [];
+    fetchLevel(job.state).then(() => rerender()).catch(() => {});
+  }
 }
 
 /** 当前选中的 combo（renderNew 里算过，交互里复用）。 */
@@ -521,76 +554,179 @@ function curCombo() {
 }
 
 /** ⑤ 段的交互状态：
- *  TREE = { open: 已展开的阶段码, alt: {阶段码: 选中的备选角色} }
- *  只影响显示，不重新计算 —— 备选的数都是生成就算好的。 */
-let TREE = { open: '', alt: {} };
-
-/** ⑤ 后面博弈树：主变线路上每一步都是一个可点的节点。
+ *  TREE = { open: {节点键: true/false}, more: {层键: true}, cache: {状态键: 层} }
  *
- *  点节点 = 展开/收起这一步的关键备选；
- *  点备选 = 把这一步换成那个角色（并标出它对求生是好是坏）；
- *  换过的分支后面几步没有数据，显示为灰。
- */
-function gameTree(C) {
-  const line = C.line || [];
-  const steps = C.steps || [];
-  if (!line.length) return '<div class="meta">这份报告没有博弈树数据。</div>';
-  const stepBy = new Map(steps.map(s => [s.stage, s]));
-  // 找到第一个换了备选的位置：它之后的分支没有继续推演
-  let divergeAt = -1;
-  line.forEach((x, i) => {
-    const use = TREE.alt[x.stage];
-    if (divergeAt < 0 && use && use !== x.char) divergeAt = i;
+ *  默认铺开主变线路，并且每一层都把并列的备选一起列出来；
+ *  备选下面不再继续铺子节点 —— 点它才展开它下面那一层。
+ *  open 记录用户手动开／关过哪些节点，覆盖默认的主变展开。 */
+let TREE = { open: {}, more: {}, cache: {}, reg: {}, seq: 0, touched: false,
+             auto: [], tried: {} };
+
+/** 节点键：从根往下选到它为止的角色序列。 */
+function nodeKey(path) { return path.join('\u0001'); }
+
+/** 层键：加前缀区分「层」与「节点」，根层的键也不会为空。 */
+function layerKey(path) { return 'L' + path.join('\u0001'); }
+
+/** 沿路径走到某一手的下一层：优先用预展开的 next，
+ *  否则查「按需加载」缓存（用户点过展开就有）。都没有就返回 null。 */
+function nextOf(state, hit, layer) {
+  if (hit.next && hit.next.nodes) return hit.next;
+  if (!hit.more) return null;
+  const after = stepState(state, hit, layer);
+  return TREE.cache[treeKey(after)] || null;
+}
+
+/** 这个节点当前是否展开：用户手动开／关过就听用户的，否则主变节点默认展开。 */
+function isOpen(npath, autoMain) {
+  const k = nodeKey(npath);
+  return (k in TREE.open) ? !!TREE.open[k] : !!autoMain;
+}
+
+/** 把一手的作用补进状态。ban 进 lban，pick 同时进 lpick 与 spicks。 */
+function stepState(st, node, layer) {
+  const kind = (layer && layer.kind) || '';
+  const out = {
+    idx: node.idx, taken: node.taken || 0,
+    lban: (st.lban || []).slice(),
+    lpick: (st.lpick || []).slice(),
+    spicks: (st.spicks || []).slice(),
+  };
+  if (kind.endsWith('ban')) {
+    if (out.lban.indexOf(node.char) < 0) out.lban.push(node.char);
+  } else if (kind !== 'hunt_pick') {
+    if (out.lpick.indexOf(node.char) < 0) out.lpick.push(node.char);
+    if (out.spicks.indexOf(node.char) < 0) out.spicks.push(node.char);
+  }
+  return out;
+}
+
+/** 按需加载的缓存键：状态由阶段 + 已 ban + 已 pick + 已选唯一确定。 */
+function treeKey(st) {
+  return [st.idx, st.taken, (st.lban || []).join(','),
+          (st.lpick || []).join(','), (st.spicks || []).join(',')].join('|');
+}
+
+/** 向后端要某一层的候选（预展开只有两层，更深的按需取）。 */
+function fetchLevel(st) {
+  const k = treeKey(st);
+  if (TREE.cache[k]) return Promise.resolve(TREE.cache[k]);
+  const m = REP.meta || {};
+  const q = new URLSearchParams({
+    team: m.team || '', player: m.player || '', game: String(m.game || 1),
+    idx: String(st.idx), taken: String(st.taken || 0),
+    map: m.map || '',
+    lban: (st.lban || []).join(','), lpick: (st.lpick || []).join(','),
+    spicks: (st.spicks || []).join(','),
+    gone_hunt: (m.global_ban_hunt || []).join(','),
+  });
+  return fetch('/api/tree?' + q.toString())
+    .then(r => r.json())
+    .then(j => {
+      if (!j.ok) throw new Error(j.error || '加载失败');
+      const layer = { stage: j.stage, kind: j.kind, name: j.name,
+                      actor: j.actor, nodes: j.nodes || [] };
+      TREE.cache[k] = layer;
+      return layer;
+    });
+}
+
+/** 单个备选。delta 是相对本层最优的差，0 就是这一层的最优解。
+ *  isMain：这一手在主变线路上（默认高亮并向下铺开）。
+ *  open：这一手下面已经铺开了，再点就收起。 */
+function treeRow(layer, n, nid, isMain, open, canOpen) {
+  const d = Number(n.delta) || 0;
+  const isBan = (layer.kind || '').endsWith('ban');
+  const cls = ['tn', isBan ? 'ban' : 'pick', isMain ? 'main' : '']
+    .filter(Boolean).join(' ');
+  const dTxt = d > 1e-9 ? `<span class="dv good">+${d.toFixed(2)}</span>`
+    : d < -1e-9 ? `<span class="dv danger">${d.toFixed(2)}</span>`
+    : '<span class="dv dim">最优</span>';
+  const tg = !canOpen ? '' : (open ? '▾ 收起' : '▸ 展开一层');
+  const cls2 = canOpen ? cls : cls + ' leaf';
+  return `<div class="${cls2}" data-key="${nid}" title="${esc(n.char)}">`
+    + `<span class="st">${esc(layer.stage || '')}</span>`
+    + `<span class="ch">${Char.icon(n.char, 20)}<span>${esc(n.char)}</span></span>`
+    + `<span class="vv">${f2(n.value)}</span>${dTxt}`
+    + `<span class="tg">${tg}</span></div>`;
+}
+
+/** 渲染一整层：一排并列的候选，展开的那些下面各接一棵子树。
+ *
+ *  autoChain：这条链还在「默认往下铺主变」的模式里。
+ *  根层是 true，主变那一手往下传 true，备选往下传 false ——
+ *  所以默认铺开整条主变线路，而点开的备选只铺一层、不再自动下钻。 */
+function treeLayerHtml(C, layer, state, path, depth, autoChain) {
+  if (!layer || !layer.nodes || !layer.nodes.length) return '';
+  const lk = layerKey(path);
+  const showAll = !!TREE.more[lk];
+  const limit = 6;
+
+  // 先把这一层的展示集合定下来：默认前 6 个，手动开／关过的节点也留着，
+  // 否则收起一个排在第 7 位以后的备选，它就跟着从列表里消失了。
+  const auto = n => autoChain && n === layer.nodes[0];   // 主变那一手默认展开
+  const touched = n => nodeKey(path.concat([n.char])) in TREE.open;
+  const keep = new Set(layer.nodes.slice(0, limit));
+  layer.nodes.forEach(n => { if (auto(n) || touched(n)) keep.add(n); });
+  const shown = layer.nodes.filter(n => showAll || keep.has(n));
+  const heads = [];
+  const kids = [];
+  shown.forEach(n => {
+    const np = path.concat([n.char]);
+    const isMain = auto(n);
+    const hasNext = !!(n.next && n.next.nodes);
+    const canOpen = hasNext || !!n.more;
+    const open = canOpen && isOpen(np, isMain);
+    const nid = 'n' + (TREE.seq++);
+    const after = stepState(state, n, layer);
+    TREE.reg[nid] = { path: np, state: after, open, canOpen, hasNext };
+    heads.push(treeRow(layer, n, nid, isMain, open, canOpen));
+    if (!open) return;
+    const child = nextOf(state, n, layer);
+    if (child) {
+      kids.push(`<div class="tkid">
+        <div class="tsel">选了 <b>${esc(n.char)}</b> 之后</div>
+        ${treeLayerHtml(C, child, after, np, depth + 1, isMain)}
+      </div>`);
+    } else if (isMain) {
+      // 主变线路还没预展开到这里：记账，wireTree 里自动补一层
+      const k = nodeKey(np);
+      if (!TREE.tried[k]) {
+        TREE.tried[k] = true;
+        TREE.auto.push({ state: after, path: np });
+      }
+      kids.push(`<div class="tkid"><div class="tsel">选了 `
+        + `<b>${esc(n.char)}</b> 之后 · 加载中…</div></div>`);
+    } else {
+      kids.push(`<div class="tkid"><div class="tmore">
+        <button class="mini" data-load="${nid}">展开 ${esc(n.char)} 之后的推演</button>
+      </div></div>`);
+    }
   });
 
-  const nodes = line.map((x, i) => {
-    const s = stepBy.get(x.stage);
-    const open = TREE.open === x.stage;
-    const use = TREE.alt[x.stage];
-    const changed = !!use && use !== x.char;
-    const char = changed ? use : x.char;
-    const stale = divergeAt >= 0 && i > divergeAt;
-    const opt = s ? (s.options || []).find(o => o.char === use) : null;
-    // 数值：没换就是主线的值；换了就用备选那个值
-    const val = opt ? opt.value : x.value;
-    // 换过之后，对求生是更好还是更差
-    let deltaHtml = '';
-    if (changed && opt) {
-      const d = Number(opt.delta) || 0;
-      deltaHtml = `<span class="${d > 1e-9 ? 'good' : d < -1e-9 ? 'danger' : 'dim'}">`
-        + `${d > 1e-9 ? '+' : ''}${d.toFixed(2)}</span>`;
-    }
-    const isBan = (x.name || '').includes('ban');
-    const cls = ['tn', isBan ? 'ban' : 'pick', changed ? 'changed' : '',
-                 stale ? 'stale' : '', open ? 'open' : ''].filter(Boolean).join(' ');
-    // 换手之后的下游没有重新推演，展开备选也没有意义，直接禁掉
-    const expandable = !!s && (s.options || []).length > 1 && !stale;
-    return `<div class="tstep${stale ? ' stale' : ''}">
-      <div class="${cls}"${expandable ? ` data-stage="${esc(x.stage)}"` : ''}${
-        stale ? ' title="换手之前的推演，换过之后这条没有重算"' : ''}>
-        <span class="st">${esc(x.stage)}</span>
-        <span class="nm">${esc(x.name)}</span>
-        <span class="ch">${Char.icon(char, 20)}<span>${esc(char)}</span></span>
-        <span class="vv">${f2(val)}</span>
-        ${deltaHtml}
-        ${expandable ? `<span class="tg">${open ? '收起' : '备选 ' + (s.options.length)}</span>`
-          : stale ? '<span class="tg">未重算</span>' : ''}
-      </div>
-      ${(open && s && !stale) ? `<div class="tops">${(s.options || []).map(o => {
-          const d = Number(o.delta) || 0;
-          const on = o.char === char;
-          return `<span class="opt${on ? ' on' : ''}${d > 1e-9 ? ' better' : ''}"
-            data-stage="${esc(x.stage)}" data-char="${esc(o.char)}"
-            title="换成他：${esc(o.char)} ${f2(o.value)}${
-              o.chosen ? '（主线主选）' : (d > 1e-9 ? '，对求生更好' : d < -1e-9 ? '，对求生更差' : '，持平')}">
-            ${Char.icon(o.char, 17)}<span>${esc(o.char)}</span>
-            <span class="ov">${f2(o.value)}</span>
-            ${d > 1e-9 ? `<span class="od good">+${d.toFixed(2)}</span>`
-              : d < -1e-9 ? `<span class="od danger">${d.toFixed(2)}</span>` : ''}
-          </span>`;
-        }).join('')}</div>` : ''}
-    </div>`;
-  }).join('');
+  let html = `<div class="tlayer"><span class="tl">第 ${depth + 1} 层 · `
+    + `<b>${esc(layer.stage || '')} ${esc(layer.name || '')}</b>`
+    + `${layer.actor ? `（${esc(layer.actor)}）` : ''}</span></div>`
+    + `<div class="tgrid">${heads.join('')}</div>`;
+  if (!showAll && layer.nodes.length > shown.length) {
+    html += `<div class="tmore"><button class="mini" data-more="${lk}">`
+      + `展开全部 ${layer.nodes.length} 个备选</button></div>`;
+  } else if (showAll && shown.length > limit) {
+    html += `<div class="tmore"><button class="mini" data-more="${lk}">收起备选</button></div>`;
+  }
+  return html + kids.join('');
+}
+
+/** ⑤ 后面博弈树：主变线路往下铺开，每一层的备选并列摆出来。 */
+function gameTree(C) {
+  const root = C.tree;
+  if (!root || !root.nodes || !root.nodes.length) {
+    return '<div class="meta">这份报告没有博弈树数据。</div>';
+  }
+  TREE.reg = {};
+  TREE.auto = [];
+  TREE.seq = 0;
+  const tree = treeLayerHtml(C, root, C.tree_state || null, [], 0, true);
 
   const endRow = `
     <div class="tend">
@@ -600,14 +736,10 @@ function gameTree(C) {
       <span class="dim">（救人位 ${C.solid_n ?? 0} 个）</span>
     </div>`;
 
-  const changedAny = Object.keys(TREE.alt).length > 0;
-  return (divergeAt >= 0
-      ? `<div class="tbar warn">已按你的选择改过某一手。换成备选之后，后面几步的分支没有继续推演，
-         所以下面的值只到换手那一步为止，再往后的数沿用原主线，仅供参考。
-         <button id="treeReset" class="mini">恢复主线</button></div>`
-      : `<div class="tbar"><span class="dim">点任一手看关键备选，点备选就换成他。</span>
-         ${changedAny ? '<button id="treeReset" class="mini">恢复主线</button>' : ''}</div>`)
-    + `<div class="tree">${nodes}${endRow}</div>`;
+  return `<div class="tbar">深色那一手是主变线，默认往下铺开；同一层的其他备选点一下就展开`
+    + `它下面那一层，再点收起。每层默认列前 6 个，可展开全部。`
+    + `${TREE.touched ? ' <button id="treeReset" class="mini">恢复主线</button>' : ''}</div>`
+    + `<div class="tree">${tree}${endRow}</div>`;
 }
 
 /** ① 段的监管倾向排名：该选手全部候选监管，按这组 ban 的指向打分从高到低。

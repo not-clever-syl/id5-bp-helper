@@ -195,6 +195,114 @@ def fmt_gap(v, base, is_max):
 
 
 # ═══════════════════════════════════════════════════════════════
+# ⑤ 交互树：每手都给全量候选，换手之后下游重新推演
+# ═══════════════════════════════════════════════════════════════
+def tree_options(eng, team, player, game, state, gone_hunt=None,
+                 map_name=None, width=None):
+    """该状态下的候选及其后续值，按「对求生从好到坏」排序。
+
+    与报告其它位置的 topn 裁剪不同：交互树要让教练能换到任意一手，
+    所以默认给全量（width=None）。成本几乎为零 —— 同一状态的后继值
+    由记忆化复用，实测全量候选只有 0.05s。
+
+    返回 [{char, value, idx, taken, kind, lban, lpick, spicks, is_max}]，
+    后面几项是「选了它之后」的状态，供递归展开子树。
+    """
+    stages = eng._stages(game)
+    idx, taken = state["idx"], state["taken"]
+    kind = state["kind"]
+    lban, lpick = set(state["lban"]), set(state["lpick"])
+    spicks = set(state["spicks"])
+
+    if kind == "hunt_ban":
+        cs = eng.ban_candidates_response(team, list(spicks), lban, lpick,
+                                         player, width or 999)
+    elif kind == "surv_ban":
+        gone = set(gone_hunt or ())
+        cs = [c for c in eng.ban_candidates_hunt(player, map_name or "")
+              if c not in gone and c not in lban and c not in lpick]
+        cs.sort(key=lambda c: eng.lineup_score(team, list(spicks), c)
+                if spicks else 0)
+        if width:
+            cs = cs[:width]
+    else:  # surv_pick
+        taken_set = lban | lpick | spicks
+        cs = [c for c in eng.pool_of(team) if c not in taken_set]
+        # 与引擎 surv_pick 的候选排序一致
+        cs.sort(key=lambda c: -eng._shallow(team, player,
+                                            frozenset(list(spicks) + [c]),
+                                            lban))
+        if width:
+            cs = cs[:width]
+
+    is_max = kind in ("surv_pick", "surv_ban")
+    count = stages[idx][2]
+    out = []
+    for c in cs:
+        nb, np_, nsp = set(lban), set(lpick), set(spicks)
+        if kind.endswith("ban"):
+            nb.add(c)
+        else:
+            np_.add(c)
+            nsp.add(c)
+        if taken + 1 >= count:
+            nidx, ntaken = idx + 1, 0
+        else:
+            nidx, ntaken = idx, taken + 1
+        v, _ = run_from(eng, team, player, game, nidx, ntaken, nb, np_, nsp)
+        out.append({"char": c, "value": v, "idx": nidx, "taken": ntaken,
+                    "lban": nb, "lpick": np_, "spicks": nsp, "is_max": is_max})
+    out.sort(key=lambda o: -o["value"] if is_max else o["value"])
+    return out
+
+
+def build_tree(eng, team, player, game, state, depth_left=3,
+               gone_hunt=None, map_name=None, width=None):
+    """递归展开后半段博弈树，返回「一层」。
+
+    结构：{stage, kind, name, actor, nodes: [{char, value, delta, idx, taken, next}]}
+    阶段码、阶段名、行动方在同一层里完全相同，提到容器上只写一次 ——
+    逐节点重复会让预展开两层的 JSON 翻一倍（实测 89KB → 55KB）。
+
+    depth_left 只决定「预展开几层」，不影响教练能点多深 ——
+    换手之后前端直接用对应分支的 next 渲染，整棵树是走得通的。
+    预展开层数的意义是控制 JSON 体积。
+    """
+    stages = eng._stages(game)
+    opts = tree_options(eng, team, player, game, state, gone_hunt,
+                        map_name, width)
+    idx = state["idx"]
+    if idx >= len(stages):
+        return None
+    code, kind, _cnt = stages[idx]
+    layer = {"stage": code, "kind": kind,
+             "name": STAGE_NAME.get(code, ""),
+             "actor": "求生者" if kind in ("surv_pick", "surv_ban") else "监管者",
+             "nodes": []}
+    if not opts:
+        return layer
+    best = opts[0]["value"]   # 已按「当前行动方的最优」排在首位
+    for o in opts:
+        # 不塞 lban/lpick/spicks：每层带 20 个角色名 × 3 份太占体积。
+        # 前端从 tree_state 出发，沿路径按 kind 累积就能还原出同样的集合。
+        node = {"char": o["char"], "value": round(o["value"], 4),
+                "delta": round(o["value"] - best, 4),
+                "idx": o["idx"], "taken": o["taken"]}
+        nidx = o["idx"]
+        deeper = (nidx < len(stages) and stages[nidx][1] != "hunt_pick")
+        if deeper and depth_left > 1:
+            node["next"] = build_tree(
+                eng, team, player, game,
+                {"idx": nidx, "taken": o["taken"], "kind": stages[nidx][1],
+                 "lban": o["lban"], "lpick": o["lpick"], "spicks": o["spicks"]},
+                depth_left - 1, gone_hunt, map_name, width)
+        elif deeper:
+            node["more"] = True
+        layer["nodes"].append(node)
+    return layer
+
+
+# ═══════════════════════════════════════════════════════════════
 # 问题 1：从「ban 了这组求生者」反推对手想打的监管
 # ═══════════════════════════════════════════════════════════════
 def infer_hunter_intent(eng, team, player, banned_survivors, topn=6,
@@ -397,64 +505,41 @@ def one_combo(eng, team, player, game, bans, verbose_steps=True, emit=True,
                 say(f"     注意：{ban_note}")
 
     # ── 问题 3：我该先选哪两个 ──
+    # ③ 是「我方连选两手」，属于最大化节点 —— 从 ③ 起点搜一次，
+    # 主变线路里相邻的两个 ③ 就是最优前两手，各自的 v 就是
+    # 「选了它之后双方把后面走完」的值。
+    # 旧做法枚举 6 个候选、每个再完整搜一遍，不但慢 12 倍，
+    # 还会因为候选被截断而漏掉真正最优的第二手（实测漏过 0.057）。
     say("\n3. 我该先选哪两个")
     say("-" * 74)
     idx3 = next(i for i, s in enumerate(stages) if s[0] == "③")
     lban3 = set(lban) | set(chosen_ban)
-    st3 = {"idx": idx3, "taken": 0, "kind": "surv_pick",
-           "lban": lban3, "lpick": set(), "spicks": set()}
-    first = pick_candidates(eng, team, player, st3, topn=6,
-                            map_name=map_name)
-    r1 = []
-    for c in first:
-        v, nxt = value_after(eng, team, player, game, st3, c)
-        r1.append((c, v, nxt))
-    r1.sort(key=lambda x: -x[1])
-    b1 = r1[0][1]
-    say(f"   第一手（数值 = 选他之后双方把后面走完）：")
-    say(f"   {'角色':<12}{'评估':>8}   {'相对最优':<14}定位")
-    first_rows = []
-    for c, v, _ in r1:
-        pos = eng.positions.get(c) or []
-        first_rows.append({"char": c, "value": round(v, 4),
-                           "pos": pos, "solid": c in SOLID})
-        say(f"   {c:<12}{v:>8.4f}   {fmt_gap(v, b1, True):<14}"
-            f"{'/'.join(pos) or '—'}{' · 稳救' if c in SOLID else ''}")
-    first_pick = r1[0][0]
-    say(f"   → 第一手推荐 {first_pick}")
+    _v3, line3 = run_from(eng, team, player, game, idx3, 0,
+                          lban3, set(), set())
+    pair = [(c, v) for code, c, v in line3 if code == "③"][:2]
+    if len(pair) < 2:
+        return None
+    first_pick, second_pick = pair[0][0], pair[1][0]
 
-    nidx2, ntaken2, nb2, np2, ns2 = r1[0][2]
-    st3b = {"idx": nidx2, "taken": ntaken2,
-            "kind": stages[nidx2][1] if nidx2 < len(stages) else "surv_pick",
-            "lban": set(nb2), "lpick": set(np2), "spicks": set(ns2)}
-    second = pick_candidates(eng, team, player, st3b, topn=6,
-                             map_name=map_name)
-    r2 = []
-    for c in second:
-        v, nxt = value_after(eng, team, player, game, st3b, c)
-        r2.append((c, v, nxt))
-    r2.sort(key=lambda x: -x[1])
-    b2 = r2[0][1]
-    say(f"   第一手 {first_pick} 之后，第二手：")
-    say(f"   {'角色':<12}{'评估':>8}   {'相对最优':<14}定位")
-    second_rows = []
-    for c, v, _ in r2:
+    picks_detail = []
+    for i, (c, v) in enumerate(pair):
         pos = eng.positions.get(c) or []
-        second_rows.append({"char": c, "value": round(v, 4),
-                            "pos": pos, "solid": c in SOLID})
-        say(f"   {c:<12}{v:>8.4f}   {fmt_gap(v, b2, True):<14}"
+        picks_detail.append({"char": c, "value": round(v, 4), "pos": pos,
+                             "solid": c in SOLID, "order": i + 1})
+        say(f"   第{i + 1}手  {c:<12}{v:>8.4f}   "
             f"{'/'.join(pos) or '—'}{' · 稳救' if c in SOLID else ''}")
-    second_pick = r2[0][0]
-    say(f"   → 第二手推荐 {second_pick}")
+
     solid_n = sum(1 for c in (first_pick, second_pick) if c in SOLID)
     note = ("正常" if solid_n == 1
             else ("⚠ 没有稳救，第三手必须补" if solid_n == 0 else "⚠ 稳救过多"))
     say(f"   → 前两手：{first_pick} + {second_pick}（稳救 {solid_n} 个，{note}）")
 
     # ── 问题 4：后续 ban-pick 怎么走 ──
-    # 从「前两手都定下之后」继续搜 —— 这样第⑤段的博弈树不含 ③，
-    # 不会和第④段报的前两手打架。
-    nidx3, ntaken3, nb3, np3, ns3 = r2[0][2]
+    # 直接从 ③ 的搜索结果里取「两手都定下之后」的状态，不用再搜一遍。
+    # 两个角色都进 lpick 与 spicks —— 它们已经是选下的阵容。
+    picked = {first_pick, second_pick}
+    nidx3, ntaken3 = idx3 + 1, 0
+    nb3, np3, ns3 = lban3, picked, picked
     v4, line4 = run_from(eng, team, player, game, nidx3, ntaken3, nb3, np3, ns3)
     say(f"   后半段整体最优结果 {v4:.4f}")
     line_rows = []
@@ -518,6 +603,27 @@ def one_combo(eng, team, player, game, bans, verbose_steps=True, emit=True,
     all_picks = [s["chosen"] for s in steps
                  if s["kind"] == "surv_pick" and s["code"] != "③"]
     lineup = [first_pick, second_pick] + all_picks
+
+    # ⑤ 交互树：从「③ 两手都定下」的状态开始，每个节点给全量候选。
+    # 只预展开 2 层：3 层会让 JSON 涨到 400KB（8 个组合就是 3MB），
+    # 而更深的层用户未必会点开 —— 前端点到深处时再向 /api/tree 要。
+    tree = []
+    tree_state = None
+    if nidx3 < len(stages) and stages[nidx3][1] != "hunt_pick":
+        # tree_state 只放「根状态的集合」，层的阶段信息在 tree 自己身上。
+        # 前端从这份状态出发，沿路径按每一手的 kind 累积出下层状态。
+        tree_state = {"idx": nidx3, "taken": ntaken3,
+                      "lban": sorted(nb3), "lpick": sorted(np3),
+                      "spicks": sorted(ns3)}
+        tree = build_tree(eng, team, player, game,
+                          {"idx": nidx3, "taken": ntaken3,
+                           "kind": stages[nidx3][1],
+                           "lban": nb3, "lpick": np3, "spicks": ns3},
+                          depth_left=2, gone_hunt=gone_hunt,
+                          map_name=map_name)
+        if not tree:
+            tree = []
+
     solid = [c for c in lineup if c in SOLID]
     kite = [c for c in lineup if c not in SOLID
             and "牵制型" in (eng.positions.get(c) or [])]
@@ -536,13 +642,14 @@ def one_combo(eng, team, player, game, bans, verbose_steps=True, emit=True,
         "ban_hunter": chosen_ban,
         "ban_note": ban_note,
         "first_pick": first_pick,
-        "first_options": first_rows,
         "second_pick": second_pick,
-        "second_options": second_rows,
+        "picks_detail": picks_detail,
         "solid_n": solid_n,
         "half_value": round(v4, 4),
         "line": line_rows,
         "steps": step_rows,
+        "tree": tree,
+        "tree_state": tree_state,
         "lineup": lineup,
         "solid": solid,
         "kite": kite,

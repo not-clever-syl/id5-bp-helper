@@ -122,6 +122,8 @@ class Handler(SimpleHTTPRequestHandler):
             return self._api_map_scores()
         if self.path.startswith("/api/matchup"):
             return self._api_matchup()
+        if self.path.startswith("/api/tree"):
+            return self._api_tree()
         if self.path.startswith("/api/halves"):
             return self._api_halves()
         if self.path.startswith("/api/expect/meta"):
@@ -352,6 +354,74 @@ class Handler(SimpleHTTPRequestHandler):
                 "halves_n": S["halves_n"],
                 "rows": rows,
             })
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            self._json(500, {"ok": False, "error": f"{type(e).__name__}: {e}"})
+
+    def _api_tree(self):
+        """交互树的下一层：给定一个搜索状态，返回该节点的全部候选。
+
+        报告里已经带了预展开的两层，更深的层按需请求 ——
+        整棵树一次性铺开会有几百 KB，而实际用到的往往只有一条路径。
+
+        ?team= ?player= ?game= ?idx= ?taken= ?kind=
+        ?map= ?lban= ?lpick= ?spicks= ?gone_hunt=    （后四项用逗号分隔）
+        """
+        try:
+            from bp_search_engine import Engine
+            import bp_coach_report as coach
+            args = {"team": "", "player": "", "game": "1", "idx": "0",
+                    "taken": "0", "kind": "", "map": "", "lban": "",
+                    "lpick": "", "spicks": "", "gone_hunt": ""}
+            if "?" in self.path:
+                q = self.path.split("?", 1)[1]
+                for kv in q.split("&"):
+                    k, _, v = kv.partition("=")
+                    if k in args:
+                        args[k] = urllib.parse.unquote(v)
+
+            def split(k):
+                raw = (args[k] or "").strip()
+                return [x for x in raw.split(",") if x] if raw else []
+
+            team, player = args["team"], args["player"]
+            if not team or not player:
+                return self._json(400, {"ok": False,
+                                        "error": "缺少 team 或 player"})
+            try:
+                game = int(args["game"])
+                idx = int(args["idx"])
+                taken = int(args["taken"])
+            except ValueError:
+                return self._json(400, {"ok": False, "error": "参数必须是整数"})
+
+            eng = Engine()
+            if player not in eng.players:
+                return self._json(400, {"ok": False,
+                                        "error": f"未知监管选手 {player}"})
+            if team not in eng.rosters:
+                return self._json(400, {"ok": False,
+                                        "error": f"未知队伍 {team}"})
+            stages = eng._stages(game)
+            if not (0 <= idx < len(stages)):
+                return self._json(400, {"ok": False, "error": "idx 超出范围"})
+            eng.map_name = args["map"] or ""
+
+            state = {"idx": idx, "taken": taken, "kind": stages[idx][1],
+                     "lban": set(split("lban")), "lpick": set(split("lpick")),
+                     "spicks": set(split("spicks"))}
+            nodes = coach.build_tree(eng, team, player, game, state,
+                                     depth_left=2,
+                                     gone_hunt=split("gone_hunt"),
+                                     map_name=eng.map_name or None)
+            layer = nodes or {}
+            self._json(200, {"ok": True,
+                             "stage": layer.get("stage", stages[idx][0]),
+                             "kind": layer.get("kind", stages[idx][1]),
+                             "name": layer.get("name", ""),
+                             "actor": layer.get("actor", ""),
+                             "nodes": layer.get("nodes", [])})
         except Exception as e:
             import traceback
             traceback.print_exc()
