@@ -150,14 +150,15 @@ def candidate_bans(eng, team, player, n_hunters=4, bantop=5, top=8,
     if not pairs:
         return []
 
-    TOP_H = 3          # 每个 ban 对记录指向最强前 3 个监管
+    TOP_H = 3          # 排序用前 3（报告里只标这几个）
     merged = {}
     for pair in pairs:
-        scored = sorted(((ban_intel.pair_score(pair, hh, S), hh) for hh in cand_h),
-                        reverse=True)
-        scored = [(round(w, 4), hh) for w, hh in scored if w > -50][:TOP_H]
-        if not scored:
+        all_scored = sorted(((ban_intel.pair_score(pair, hh, S), hh) for hh in cand_h),
+                           reverse=True)
+        all_scored = [(round(w, 4), hh) for w, hh in all_scored if w > -50]
+        if not all_scored:
             continue
+        scored = all_scored[:TOP_H]
         merged[pair] = {
             "bans": list(pair),
             # weight = 指向最强的那一个的分数（排序用）
@@ -166,6 +167,8 @@ def candidate_bans(eng, team, player, n_hunters=4, bantop=5, top=8,
             # 该监管历史上并不爱 ban 这对，热门度贡献的底数而已）
             "hunters": [hh for _, hh in scored],
             "hunter_scores": [{"char": hh, "score": w} for w, hh in scored],
+            # 该选手全部候选监管的完整打分（报告里排成全量排名用）
+            "hunter_rank": [{"char": hh, "score": w} for w, hh in all_scored],
         }
     rows = sorted(merged.values(), key=lambda r: -r["weight"])
     for i, r in enumerate(rows):
@@ -217,6 +220,11 @@ def compute(eng, team, player, game, n_hunters=4, bantop=5, n_combos=8,
     combos = []
     for i, c in enumerate(cands):
         bans = list(c["bans"])
+        # 全量排名里每个监管都补上该图倍数，报告页的地图卡直接用这份，
+        # 顺序和数量与 ① 段的排名完全一致（intent 只覆盖前几个威胁）。
+        if map_name:
+            for r in c.get("hunter_rank") or []:
+                r["mult"] = round(eng.map_mult(map_name, r["char"]), 4)
         if verbose:
             print(f"[{i+1}/{len(cands)}] 对手 ban：{'、'.join(bans)} …", flush=True)
         r = one_combo(eng, team, player, game, bans, verbose_steps=True,
@@ -233,6 +241,9 @@ def compute(eng, team, player, game, n_hunters=4, bantop=5, n_combos=8,
             "hunters": c["hunters"],
             # 指向监管前 3 及各自的可能性分数（① 段表格的百分比来源）
             "hunter_scores": c.get("hunter_scores") or [],
+            # 该选手全部候选监管的完整打分（① 段的全量排名），
+            # 指定地图时每项再带 "mult"（该图倍数）
+            "hunter_rank": c.get("hunter_rank") or [],
             # ② 这组 ban 反推出的监管意图
             "intent": r["intent"],
             "intent_note": r["intent_note"],

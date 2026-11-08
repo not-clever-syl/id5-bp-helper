@@ -463,7 +463,10 @@ def one_combo(eng, team, player, game, bans, verbose_steps=True, emit=True,
                           "char": c, "value": round(v, 4)})
         say(f"   {code:<4}{STAGE_NAME.get(code, ''):<18}{str(c):<12}{v:>8.4f}")
 
-    steps = line_state(stages, line4, nidx2, ntaken2, nb2, np2, ns2)
+    # 起点必须是「③ 两手都选完」之后的状态（nidx3/ns3）。
+    # 用 nidx2（只选完第一手）会导致第二手没进 spicks，
+    # 后面每一段都会把那个已经选下的角色当成还能被 ban 的对象。
+    steps = line_state(stages, line4, nidx3, ntaken3, nb3, np3, ns3)
 
     step_rows = []
     if verbose_steps:

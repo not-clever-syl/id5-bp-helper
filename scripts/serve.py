@@ -120,6 +120,8 @@ class Handler(SimpleHTTPRequestHandler):
             return self._api_map_pick()
         if self.path.startswith("/api/map_scores"):
             return self._api_map_scores()
+        if self.path.startswith("/api/matchup"):
+            return self._api_matchup()
         if self.path.startswith("/api/halves"):
             return self._api_halves()
         if self.path.startswith("/api/expect/meta"):
@@ -299,6 +301,57 @@ class Handler(SimpleHTTPRequestHandler):
             if not name:
                 return self._json(400, {"ok": False, "error": "缺少 map 参数"})
             self._json(200, {"ok": True, **map_scores.table(name)})
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            self._json(500, {"ok": False, "error": f"{type(e).__name__}: {e}"})
+
+    def _api_matchup(self):
+        """对位情报：互斥对（某求生面对某监管时出场率显著低于赛季平均）。
+
+        只依赖赛季行为统计与「哪支队伍、哪个对手」这两个筛选，
+        与分数表、地图、报告里的 ban 组合都无关。
+
+        ?player= 监管选手（必填）  ?team= 我方队伍（默认 ACT）
+        ?limit= 条数（默认 40，最多 200）
+        """
+        try:
+            from bp_search_engine import Engine
+            import ban_intel
+            args = {"player": "", "team": "ACT", "limit": "40"}
+            if "?" in self.path:
+                q = self.path.split("?", 1)[1]
+                for kv in q.split("&"):
+                    k, _, v = kv.partition("=")
+                    if k in args:
+                        args[k] = urllib.parse.unquote(v)
+            player = args["player"]
+            team = args["team"] or "ACT"
+            try:
+                limit = max(1, min(200, int(args["limit"] or 40)))
+            except ValueError:
+                limit = 40
+            eng = Engine()
+            if player and player not in eng.players:
+                return self._json(400, {"ok": False,
+                                        "error": f"未知监管选手 {player}"})
+            if team not in eng.rosters:
+                return self._json(400, {"ok": False, "error": f"未知队伍 {team}"})
+            rows = ban_intel.matchup_alerts(eng, team, player, top=limit)
+            S = ban_intel.stats()
+            self._json(200, {
+                "ok": True,
+                "player": player,
+                "team": team,
+                "players": sorted(eng.players),
+                "teams": sorted(eng.rosters),
+                "pool": [c for c in eng.pool_of(team)],
+                "hunter_halves": {h: S["hunter_halves"].get(h, 0)
+                                  for h in ((eng.players.get(player) or {})
+                                            .get("dist") or {})},
+                "halves_n": S["halves_n"],
+                "rows": rows,
+            })
         except Exception as e:
             import traceback
             traceback.print_exc()

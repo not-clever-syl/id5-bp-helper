@@ -176,8 +176,18 @@ class Engine:
         self._cell_cache = {}
         self._lineup_cache = {}
         self._exp_cache = {}
+        # 热路径专用的数值缓存（只存浮点，不存明细字典）
+        self._exp_val_cache = {}
+        # 该选手的监管序列（按地图口径排好序），按 (player, map) 缓存
+        self._threat_rows_cache = {}
+        # 地图倍数查表（按图缓存，进程内，不落盘）
+        self._mult_cache = {}
+        self._surv_mult_cache = {}
         # 状态记忆化：同一 (阶段, 已 ban, 已选) 状态的最优值
         self._memo = {}
+        # 每个状态的「排好序的候选表」。与路径无关，跨节点复用；
+        # 因为它依赖 self.map_name，每次 search 开始时清空。
+        self._cands_cache = {}
         # 本局地图（search 时设置，未选图时为 ""）
         self.map_name = ""
         # 先验平均：全联盟局均逃脱人数。
@@ -262,6 +272,52 @@ class Engine:
             return 1.0
         return self.map_share(map_name, hunter) / g
 
+    def _mult_table(self, map_name: str) -> dict:
+        """某张图上「每个监管的倍数」查表，首次访问时算好。
+
+        搜索里 map_mult 被调用上百万次，每次都走 canon() 的字符串处理
+        （replace × 3）是纯浪费 —— 同一张图、同一个监管的倍数在整次
+        搜索里恒定不变。这里一次算完，之后只做字典查询。
+
+        不落盘：表在 Engine 实例内按图缓存，进程结束即消失。
+        """
+        tbl = self._mult_cache.get(map_name)
+        if tbl is not None:
+            return tbl
+        if not map_name:
+            tbl = {}
+        else:
+            n = self._map_n.get(map_name, 0)
+            if n == 0:
+                tbl = {}
+            else:
+                K = MAP_SHRINK_K
+                hn = self._map_hn.get(map_name) or {}
+                tbl = {}
+                # 该图出场过的 + 全局有记录的，两边都覆盖
+                for hh in set(hn) | set(self._map_prior):
+                    g = self._map_prior.get(hh, 0.0)
+                    if g <= 0:
+                        tbl[hh] = 1.0
+                    else:
+                        cnt = hn.get(hh, 0)
+                        tbl[hh] = ((cnt + K * g) / (n + K)) / g
+        self._mult_cache[map_name] = tbl
+        return tbl
+
+    def map_mult_fast(self, map_name: str, hunter: str) -> float:
+        """map_mult 的查表版，语义完全一致，热路径专用。"""
+        if not map_name:
+            return 1.0
+        tbl = self._mult_table(map_name)
+        if not tbl:
+            return 1.0
+        v = tbl.get(hunter)
+        if v is not None:
+            return v
+        # 表里没有：可能是未 canon 的别名（如「邦邦」），退回通用实现
+        return self.map_mult(map_name, hunter)
+
     def map_stats(self, map_name: str = "") -> dict:
         """地图统计：每张图（或指定图）的监管出场与实测逃脱。
 
@@ -334,6 +390,32 @@ class Engine:
         if g <= 0:
             return 1.0
         return self.surv_map_share(map_name, char) / g
+
+    def surv_map_mult_fast(self, map_name: str, char: str) -> float:
+        """surv_map_mult 的查表版，语义一致，热路径专用。"""
+        if not map_name:
+            return 1.0
+        tbl = self._surv_mult_cache.get(map_name)
+        if tbl is None:
+            n = self._map_n.get(map_name, 0)
+            if n == 0:
+                tbl = {}
+            else:
+                K = MAP_SHRINK_K
+                sn = self._map_sn.get(map_name) or {}
+                tbl = {}
+                for c in set(sn) | set(self._surv_prior):
+                    g = self._surv_prior.get(c, 0.0)
+                    if g <= 0:
+                        tbl[c] = 1.0
+                    else:
+                        cnt = sn.get(c, 0)
+                        tbl[c] = ((cnt + K * g) / (n + K)) / g
+            self._surv_mult_cache[map_name] = tbl
+        v = tbl.get(char) if tbl else None
+        if v is not None:
+            return v
+        return self.surv_map_mult(map_name, char)
 
     def map_surv_role_mix(self, map_name: str) -> dict:
         """该图上各职能的出现比例，与全联盟比例的对比。
@@ -451,7 +533,9 @@ class Engine:
             self._cell_cache.clear()
             self._lineup_cache.clear()
             self._exp_cache.clear()
+            self._exp_val_cache.clear()
             self._memo.clear()
+            self._cands_cache.clear()
             self._score_cache.clear()
             self._top3_cache.clear()
             self._ban_hunt_cache.clear()
@@ -502,6 +586,94 @@ class Engine:
         self._lineup_cache[key] = base
         return base
 
+    def _expect_value(self, team: str, chars, player: str, exclude=None,
+                      map_name: str = None) -> float:
+        """expected_vs_player 的纯数值版，搜索热路径专用。
+
+        只返回期望值，不构造 top3 明细 —— 明细里的 round()、字典分配
+        在每秒几十万次的调用下是纯开销，而热路径只用得到这个浮点数。
+
+        口径与 expected_vs_player 完全一致（同一套候选、同一套权重），
+        两条路径共用 _expect_rows()，不存在两份实现各算各的风险。
+        """
+        # 键直接用 frozenset：集合无序，本身就等价于原实现里的
+        # tuple(sorted(...))，但不必先把元素排一遍。
+        # 热路径每秒调用几十万次，省下的就是那几百万次 sorted。
+        # 已经是 frozenset 时 frozenset() 直接返回原对象，零开销。
+        key = (team, frozenset(chars), player,
+               frozenset(exclude) if exclude else (), map_name or "")
+        hit = self._exp_val_cache.get(key)
+        if hit is not None:
+            return hit
+        chosen, tot_w, acc = self._expect_core(team, key[1], player, key[3], map_name)
+        v = acc / tot_w if tot_w else self.prior
+        self._exp_val_cache[key] = v
+        return v
+
+    def _expect_core(self, team, chars, player, exclude, map_name):
+        """算出 (入选的监管列表, 权重和, 加权分)。两条路径共用。"""
+        info = self.players[player]
+        raw = info["raw_count"]
+        skip = exclude or ()
+        rows = self._threat_rows(player, map_name)
+        if skip:
+            sk = set(skip)
+            rows = [r for r in rows if r[0] not in sk]
+        if not rows:
+            return None, 0.0, self.prior
+
+        chosen = rows[:3]
+        tot_w = 0.0
+        acc = 0.0
+        for ch, w, th, mult in chosen:
+            weff = w * mult
+            tot_w += weff
+            acc += self.lineup_score(team, chars, ch) * weff
+        return chosen, tot_w, acc
+
+    def _threat_rows(self, player: str, map_name: str = ""):
+        """该选手「有使用记录」的监管，按当前地图口径排好序。
+
+        返回 [(char, raw_count, threat, mult), ...]，直接可切片取前 3。
+
+        预处理要点：
+          · 原实现每次调用都要遍历 threats、查 raw、算 map_mult，
+            再（有地图时）排序 —— 每秒几十万次调用全部重做一遍。
+          · 排序结果只跟 (选手, 地图) 有关，与已 ban 什么无关，
+            所以按 (player, map_name) 缓存整张有序表，
+            调用方只需在表上按 exclude 过滤。
+        不落盘：缓存挂在 Engine 实例上。
+        """
+        ck = (player, map_name or "")
+        cached = self._threat_rows_cache.get(ck)
+        if cached is not None:
+            return cached
+
+        info = self.players[player]
+        raw = info["raw_count"]
+        rows = []
+        if map_name:
+            tbl = self._mult_table(map_name)
+            for t in info["threats"]:
+                ch = t["char"]
+                w = raw.get(ch, 0)
+                if w <= 0:
+                    continue
+                mult = tbl.get(ch)
+                if mult is None:
+                    mult = self.map_mult(map_name, ch)
+                rows.append((ch, w, t["threat"], mult))
+            rows.sort(key=lambda r: -(r[2] * r[3]))
+        else:
+            for t in info["threats"]:
+                ch = t["char"]
+                w = raw.get(ch, 0)
+                if w <= 0:
+                    continue
+                rows.append((ch, w, t["threat"], 1.0))
+        self._threat_rows_cache[ck] = rows
+        return rows
+
     def expected_vs_player(self, team: str, chars, player: str, exclude=None,
                            map_name: str = None) -> dict:
         """叶子评估：取威胁度最高的前 3 个监管，按选手选用次数加权。
@@ -537,40 +709,18 @@ class Engine:
         if hit is not None:
             return hit
 
-        info = self.players[player]
-        raw = info["raw_count"]
-        skip = set(exclude or ())
-        # threats 已在 build_bp_tree.py 里按威胁度降序排好
-        rows = []
-        for t in info["threats"]:
-            ch = t["char"]
-            if ch in skip:
-                continue
-            w = raw.get(ch, 0)
-            if w <= 0:
-                continue
-            mult = self.map_mult(map_name, ch) if map_name else 1.0
-            rows.append((ch, w, t["threat"], mult))
-        if not rows:
+        chosen, tot_w, acc = self._expect_core(team, chars, player, exclude, map_name)
+        if not chosen:
             res = {"expect": self.prior, "top3": []}
             self._exp_cache[key] = res
             return res
 
-        # 地图参与入选：按「威胁度 × 地图倍数」重排，再取前 3
-        if map_name:
-            rows.sort(key=lambda r: -(r[2] * r[3]))
-        chosen = rows[:3]
-
-        ws = [(ch, w * mult) for ch, w, _, mult in chosen]
-        tot_w = sum(w for _, w in ws)
         detail = []
-        acc = 0.0
-        for (ch, w, th, mult), (_, weff) in zip(chosen, ws):
-            s = self.lineup_score(team, chars, ch)
-            acc += s * weff
-            detail.append({"char": ch, "w": w, "w_map": round(weff, 4),
+        for ch, w, th, mult in chosen:
+            detail.append({"char": ch, "w": w, "w_map": round(w * mult, 4),
                            "mult": round(mult, 4),
-                           "score": round(s, 4), "threat": round(th, 4)})
+                           "score": round(self.lineup_score(team, chars, ch), 4),
+                           "threat": round(th, 4)})
         res = {"expect": acc / tot_w, "top3": detail}
         self._exp_cache[key] = res
         return res
@@ -605,7 +755,7 @@ class Engine:
         top = self._top3_hunters(player, self.map_name)
 
         def char_min_scores(c):
-            """该角色对前 3 监管的分数（缓存）。"""
+            """该角色对前 3 监管的分数（已排序，缓存）。"""
             key = (team, c, top)
             v = self._score_cache.get(key)
             if v is None:
@@ -626,11 +776,30 @@ class Engine:
 
         base = list(picked)
         cur = agg(base) if base else self.prior
+        # 「再补一个人之后的聚合分」= 已选阵容最小 3 个分数 ∪ 新角色 3 个分数
+        # 里取最小 3 个 —— 已选阵容其余分数不可能挤进前三，
+        # 所以不必每次把 12 个数重排一遍，只需排 6 个。
+        base_min = []
+        if base:
+            for c in base:
+                base_min.extend(char_min_scores(c))
+            base_min.sort()
+            base_min = base_min[:3]
         scored = []
+        picked_set = set(picked)
         for c in roster:
-            if c in lban or c in lpick:
+            # picked 必须显式排除：调用方传进来的 lpick 不一定覆盖它
+            # （教练报告从中间状态续搜时，已选角色可能只在 spicks 里）。
+            # 不排除的话，对方会「ban 掉我方已经选下的求生」，逻辑上不成立。
+            if c in lban or c in lpick or c in picked_set:
                 continue
-            gain = agg(base + [c]) - cur
+            if base_min:
+                merged = base_min + char_min_scores(c)
+                merged.sort()
+                k = min(3, len(merged))
+                gain = sum(merged[:k]) / k - cur
+            else:
+                gain = agg([c]) - cur
             prior = self.ban_surv.get(c, 0.0)
             scored.append((c, gain * 3.0 + prior * 2.0))
         scored.sort(key=lambda x: -x[1])
@@ -648,7 +817,9 @@ class Engine:
         if v is None:
             rows = list(self.players[player]["threats"])
             if map_name:
-                rows.sort(key=lambda t: -(t["threat"] * self.map_mult(map_name, t["char"])))
+                tbl = self._mult_table(map_name)
+                rows.sort(key=lambda t: -(t["threat"] * tbl.get(t["char"],
+                                                                self.map_mult(map_name, t["char"]))))
             v = tuple(t["char"] for t in rows[:3])
             self._top3_cache[key] = v
         return v
@@ -663,7 +834,9 @@ class Engine:
         if v is None:
             rows = [t for t in self.players[player]["threats"]]
             if map_name:
-                rows.sort(key=lambda t: -(t["threat"] * self.map_mult(map_name, t["char"])))
+                tbl = self._mult_table(map_name)
+                rows.sort(key=lambda t: -(t["threat"] * tbl.get(t["char"],
+                                                                self.map_mult(map_name, t["char"]))))
             v = tuple(t["char"] for t in rows[: self.cand_ban_hunt])
             self._ban_hunt_cache[key] = v
         return v
@@ -688,6 +861,7 @@ class Engine:
         self._taken_chars = {}
         # 每次搜索清空状态记忆（不同 team/player/game 之间不通用）
         self._memo = {}
+        self._cands_cache = {}
 
         result = self._dfs(
             team, player, game, stages, 0,
@@ -719,8 +893,14 @@ class Engine:
         这类一个阶段多个动作的情况，避免靠集合大小反推阶段进度。
 
         记忆化：同一个 (阶段, 已 ban, 已选, 已 pick 的求生) 状态，
-        无论从哪条路径到达，后续最优值都一样。只缓存「无窗」结果
-        （alpha=-inf, beta=+inf）保证正确性。
+        无论从哪条路径到达，后续最优值都一样，所以可以缓存整个子树结果。
+
+        两处限制保证正确性：
+          · 只缓存 taken == 0 的节点 —— taken > 0 时候选表会被
+            _taken_chars 按「上一手选了什么」截断，那是路径相关的。
+          · 只缓存返回值严格落在 (alpha0, beta0) 开区间内的节点 ——
+            落在边界上说明子树被窗口截断过，那只是「至少/至多」的
+            估计值，换个窗口再来就会算错。
         """
         self.counters["nodes"] += 1
         if idx >= len(stages):
@@ -733,13 +913,21 @@ class Engine:
         # 这张图的结果直接返回（实测月亮河拿到红教堂的结论）。
         # team/player/game 在单次会话内恒定，但它们也一并进来 ——
         # 代价只是 key 长一点，换来跨场次复用也安全。
-        key = (team, player, game, self.map_name, idx, taken,
-               frozenset(lban), frozenset(lpick), frozenset(spicks))
-        full_window = alpha <= -1e8 and beta >= 1e8
-        if full_window:
+        #
+        # key 只在真要用的时候才构造：建 frozenset 不便宜，
+        # 而绝大部分节点根本不查 memo。
+        #
+        # 只有 taken == 0 的节点可缓存：taken > 0 时候选表会被
+        # _taken_chars 按「上一手选了什么」截断，那是路径相关的，
+        # 同一个 (idx, taken, lban) 从不同路径到达时后续候选不同。
+        memo_ok = taken == 0
+        if memo_ok:
+            key = (team, player, game, self.map_name, depth, idx,
+                   lban, lpick, spicks)
             hit = self._memo.get(key)
             if hit is not None:
                 return hit[0], list(hit[1])
+        alpha0, beta0 = alpha, beta
 
         code, kind, count = stages[idx]
         is_surv_pick = kind == "surv_pick"
@@ -747,48 +935,69 @@ class Engine:
 
         # ⑩ 监管选人：叶子按「威胁前 3 加权」评估，与监管方具体选了谁无关，
         # 这一层对结果没有影响，只记录「若推进到这里，最可能选谁」供展示。
+        # 展示值必须排除 lban：我方 ban 掉的监管对方不可能拿到，
+        # 不排除的话这块会显示「对手选了我方刚 ban 的人」——
+        # 分数不受影响（分数走 _leaf，内部本来就带 exclude），但这行字是错的。
         if kind == "hunt_pick":
             v = self._leaf(team, player, spicks, lban)
             likely = None
             if spicks:
-                r = self.expected_vs_player(team, list(spicks), player,
-                                            map_name=self.map_name)
-                if r["top3"]:
-                    likely = r["top3"][0]["char"]
+                rows = self._threat_rows(player, self.map_name)
+                for r in rows:
+                    if r[0] not in lban:
+                        likely = r[0]
+                        break
             return v, [("⑩", likely, v)]
 
         # 构造候选，并按「对评估有利」排序 —— 好的排序能大幅提高 α-β 剪枝效率
-        if kind == "hunt_ban":
-            if code == "①":
-                # ① 求生方还没有任何选择，只能凭全局被 ban 率
-                cands = [c for c in self.ban_candidates_surv(team)
+        #
+        # 候选集与它们的排序只由「阶段 + 已 ban/已 picked」决定，与从哪条
+        # 路径到达无关，因此整个排好序的候选表可以按状态缓存。
+        # ⑥⑦ 的重复率高达 75%~80%（同一状态被不同路径反复压到），
+        # 不缓存的话 ⑦ 的 pick_key 要跑上百万次，每次都是整池重排。
+        #
+        # key 里必须带 map_name 与 depth：候选排序用了 _shallow / 地图倍数，
+        # 而 _cands_cache 在 run_from 之间是复用的（不像 search 每次清空），
+        # 漏掉这两项会让换图重算时拿到上一张图的候选顺序。
+        ckey = (code, idx, taken, lban, lpick, spicks,
+                self.map_name, depth)
+        cands = self._cands_cache.get(ckey)
+        if cands is None:
+            if kind == "hunt_ban":
+                if code == "①":
+                    # ① 求生方还没有任何选择，只能凭全局被 ban 率
+                    cands = [c for c in self.ban_candidates_surv(team)
+                             if c not in lban and c not in lpick]
+                    cands.sort(key=lambda c: -self.ban_surv.get(c, 0.0))
+                else:
+                    # ④⑥ 针对 ③⑤ 已选出的阵容来 ban
+                    cands = self.ban_candidates_response(
+                        team, spicks, lban, lpick, player, self.cand_ban_surv)
+            elif kind == "surv_ban":
+                cands = [c for c in self.ban_candidates_hunt(player, self.map_name)
                          if c not in lban and c not in lpick]
-                cands.sort(key=lambda c: -self.ban_surv.get(c, 0.0))
-            else:
-                # ④⑥ 针对 ③⑤ 已选出的阵容来 ban
-                cands = self.ban_candidates_response(
-                    team, spicks, lban, lpick, player, self.cand_ban_surv)
-        elif kind == "surv_ban":
-            cands = [c for c in self.ban_candidates_hunt(player, self.map_name)
-                     if c not in lban and c not in lpick]
-            # 求生方优先 ban 对阵容杀伤最大的（分数越低越该 ban）
-            cands.sort(key=lambda c: self.lineup_score(team, list(spicks), c) if spicks else 0)
-        elif kind == "surv_pick":
-            # 已选的求生角色同时排除 lpick 与 spicks：
-            # 正常从 ① 开搜时两者一致，但从中间状态续搜时 spicks 可能已有内容
-            # （教练报告就是这么用的），必须防重复选人
-            taken_set = lban | lpick | spicks
-            cands = [c for c in self.pool_of(team) if c not in taken_set]
-            # 求生方优先选能提升评估的：先试稳救，再试高分角色
-            def pick_key(c):
-                trial = list(spicks) + [c]
-                return -(self._shallow(team, player, frozenset(trial), lban))
-            cands.sort(key=pick_key)
-        else:  # hunt_pick
-            cands = [c for c in self.players[player]["dist"]
-                     if c in self.strength and c not in lban and c not in lpick]
-            # 监管方优先选最克制的（分数最低）
-            cands.sort(key=lambda c: self.lineup_score(team, list(spicks), c) if spicks else 0)
+                # 求生方优先 ban 对阵容杀伤最大的（分数越低越该 ban）
+                cands.sort(key=lambda c: self.lineup_score(team, list(spicks), c) if spicks else 0)
+            elif kind == "surv_pick":
+                # 已选的求生角色同时排除 lpick 与 spicks：
+                # 正常从 ① 开搜时两者一致，但从中间状态续搜时 spicks 可能已有内容
+                # （教练报告就是这么用的），必须防重复选人
+                taken_set = lban | lpick | spicks
+                cands = [c for c in self.pool_of(team) if c not in taken_set]
+                # 求生方优先选能提升评估的：先试稳救，再试高分角色
+                def pick_key(c):
+                    trial = list(spicks) + [c]
+                    return -(self._shallow(team, player, frozenset(trial), lban))
+                cands.sort(key=pick_key)
+            else:  # hunt_pick
+                cands = [c for c in self.players[player]["dist"]
+                         if c in self.strength and c not in lban and c not in lpick]
+                # 监管方优先选最克制的（分数最低）
+                cands.sort(key=lambda c: self.lineup_score(team, list(spicks), c) if spicks else 0)
+            cands = tuple(cands)
+            self._cands_cache[ckey] = cands
+        else:
+            cands = list(cands)
 
         if not cands:
             return self._leaf(team, player, spicks, lban), []
@@ -803,19 +1012,44 @@ class Engine:
 
         best_val = -1e9 if is_max else 1e9
         best_line = []
+        # 这两个判断只跟阶段类型有关，提到循环外算一次。
+        # 循环体是整棵树里执行次数最多的地方（每节点每候选一次）。
+        is_ban = kind.endswith("ban")
+        is_pick = kind.endswith("pick")
+        n_stages = len(stages)
+        # ⑩ 要展示的「最可能选的监管」必须排除「到那时已被 ban 的监管」，
+        # 而每个候选的 nb 不同，所以在循环内按 nb 现取（见下面的分支）。
+        nxt_is_hunt_pick = (idx + 1 < n_stages
+                            and stages[idx + 1][1] == "hunt_pick")
         for c in cands:
             if count > 1:
                 self._taken_chars[(idx, taken)] = c
-            nb = lban | {c} if kind.endswith("ban") else lban
-            np_ = lpick | {c} if kind.endswith("pick") else lpick
+            nb = lban | {c} if is_ban else lban
+            np_ = lpick | {c} if is_pick else lpick
             nsp = spicks | {c} if is_surv_pick else spicks
             # 本阶段还没做完就留在本阶段，做满了再进下一阶段
             if taken + 1 >= count:
                 nidx, ntaken = idx + 1, 0
             else:
                 nidx, ntaken = idx, taken + 1
-            v, line = self._dfs(team, player, game, stages, nidx,
-                                nb, np_, nsp, alpha, beta, depth, ntaken)
+            # 下一层是 ⑩（监管选人）时不必真递归进去：它的返回值就是
+            # 该状态的叶子评估，监管方选谁不影响分数，只在主变线路上
+            # 留一行展示。省掉的正是最深一层，节点数与叶子数同量级，
+            # 原本占了整棵树的九成。
+            if (nidx < n_stages and stages[nidx][1] == "hunt_pick"
+                    and nidx < depth):
+                v = self._leaf(team, player, nsp, nb)
+                likely = None
+                if nsp:
+                    rows = self._threat_rows(player, self.map_name)
+                    for r in rows:
+                        if r[0] not in nb:
+                            likely = r[0]
+                            break
+                line = [("⑩", likely, v)]
+            else:
+                v, line = self._dfs(team, player, game, stages, nidx,
+                                    nb, np_, nsp, alpha, beta, depth, ntaken)
             if count > 1:
                 self._taken_chars.pop((idx, taken), None)
             if v is None:
@@ -831,7 +1065,11 @@ class Engine:
             if beta <= alpha:
                 self.counters["cut"] += 1
                 break
-        if full_window:
+        # 存 memo 只在结果落在原窗口内部时安全：窗口内若发生过剪枝，
+        # best_val 只是「至少/至多这么多」，换个窗口再来就会算错。
+        # 判据：最终 best_val 严格落在 (alpha0, beta0) 之间，说明没有任何
+        # 兄弟节点被窗口截断，这次搜索是完整的精确值。
+        if memo_ok and alpha0 < best_val < beta0:
             self._memo[key] = (best_val, list(best_line))
         return best_val, best_line
 
@@ -841,10 +1079,9 @@ class Engine:
         lban 里被 ban 掉的监管必须排除，否则 ban 监管对结果毫无影响。
         地图从 self.map_name 读（search() 时设置），决定候选排序与加权。
         """
-        chars = list(spicks)
-        if len(chars) >= 4:
-            return self.expected_vs_player(team, chars, player, exclude=lban,
-                                           map_name=self.map_name)["expect"]
+        if len(spicks) >= 4:
+            return self._expect_value(team, spicks, player, exclude=lban,
+                                      map_name=self.map_name)
         return self._shallow(team, player, spicks, lban)
 
     def _shallow(self, team, player, spicks, lban=None):
@@ -855,11 +1092,10 @@ class Engine:
         阵容不完整的时间接扣分已在 lineup_score 里按 4 人归一处理，
         这里不再额外扣分，否则等于重复惩罚。
         """
-        chars = list(spicks)
-        if not chars:
+        if not spicks:
             return self.prior
-        return self.expected_vs_player(team, chars, player, exclude=lban,
-                                       map_name=self.map_name)["expect"]
+        return self._expect_value(team, spicks, player, exclude=lban,
+                                  map_name=self.map_name)
 
 
 def main():

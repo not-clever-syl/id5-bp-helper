@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>对位情报 · IVL 2026 秋</title>
+<link rel="stylesheet" href="char.css">
+<style>
+:root{
+  --bg:#12141a;--panel:#191c24;--panel2:#21252f;--border:#2c313d;
+  --text:#dfe5f0;--dim:#8a93a6;--accent:#6b8cff;
+  --ok:#6dc4a0;--err:#e0837b;--warn:#d8b25f;--ban:#9a6bb0;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+  font:13px/1.6 -apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
+header{padding:14px 20px;border-bottom:1px solid var(--border);
+  background:var(--panel);display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+header h1{margin:0;font-size:15px;font-weight:600}
+header .sub{color:var(--dim);font-size:12px}
+a.home{color:var(--dim);text-decoration:none;font-size:12.5px;
+  padding:4px 10px;border-radius:6px;border:1px solid var(--border);flex:none}
+a.home:hover{color:var(--text);border-color:var(--accent)}
+main{max-width:1080px;margin:0 auto;padding:18px 20px 60px}
+
+.card{background:var(--panel);border:1px solid var(--border);border-radius:10px;
+  padding:14px 16px;margin-bottom:14px}
+.card h2{margin:0 0 8px;font-size:13.5px;font-weight:600;
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.card h2 .badge{font-size:11px;padding:1px 8px;border-radius:10px;font-weight:500;
+  background:rgba(138,147,166,.2);color:#a9b2c3}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+label.lbl{color:var(--dim);font-size:12px}
+select{background:var(--panel2);color:var(--text);border:1px solid var(--border);
+  border-radius:6px;padding:5px 9px;font-size:12.5px;min-width:170px}
+.lead{color:var(--dim);font-size:11.5px;line-height:1.85;margin:0 0 12px}
+
+.tablewrap{width:100%;border:1px solid var(--border);border-radius:8px;overflow-x:auto}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:12px}
+th,td{padding:7px 9px;border-bottom:1px solid var(--border);white-space:nowrap;
+  text-align:left}
+thead th{background:var(--panel2);color:var(--dim);font-weight:600;font-size:11px}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:rgba(255,255,255,.03)}
+td.n{font-family:Consolas,monospace;text-align:right}
+td.note{white-space:normal;color:var(--dim);font-size:11.5px;line-height:1.6;
+  max-width:420px}
+/* 归因标签 */
+.kind{display:inline-block;font-size:10.5px;padding:1px 8px;border-radius:9px;
+  border:1px solid var(--border);background:var(--panel2)}
+.kind.ban{border-color:var(--ban);color:#c9a0dd}
+.kind.avoid{border-color:var(--accent);color:#cfe0ff}
+.kind.mix{border-color:var(--dim);color:var(--dim)}
+/* 逃脱值：2.00 居中 */
+.esc{font-family:Consolas,monospace}
+.empty{color:var(--dim);text-align:center;padding:26px 0}
+.legend{color:var(--dim);font-size:11.5px;line-height:1.9;margin-top:12px}
+.legend b{color:var(--text)}
+.stat{color:var(--dim);font-size:11.5px;margin-left:auto}
+.chips{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;
+  padding:2px 7px;border-radius:9px;background:var(--panel2);
+  border:1px solid var(--border)}
+.chip b{color:var(--text);font-family:Consolas,monospace;font-weight:600}
+</style>
+</head>
+<body>
+<header>
+  <a href="index.html" class="home">← 首页</a>
+  <h1>对位情报</h1>
+  <span class="sub">哪些「求生 × 监管」组合被双方刻意回避</span>
+</header>
+
+<main>
+  <section class="card">
+    <h2>筛选 <span class="badge" id="srcBadge"></span></h2>
+    <div class="row">
+      <label class="lbl">监管选手</label>
+      <select id="playerPick"></select>
+      <label class="lbl">我方队伍</label>
+      <select id="teamPick"></select>
+      <span class="stat" id="stat"></span>
+    </div>
+    <p class="lead">
+      统计的是赛季实际出场行为，跟分数表、地图、报告里选哪个 ban 组合都无关 ——
+      换这些只会让下面这张表变，所以单独放在这里。判定要看两边的样本：
+      该监管至少出场 10 半局、该求生至少出场 20 次，样本不够的组合不列。
+    </p>
+    <div class="tablewrap"><table id="tbl"></table></div>
+    <div class="legend">
+      <b>归因怎么读</b>：
+      <span class="kind ban">对手会ban</span>
+      实际出场加被 ban 的次数接近期望值 → 多半是对手主动 ban 掉，别指望他留在场上；
+      <span class="kind avoid">我方回避</span>
+      连 ban 都没人 ban，就是本队一直不选 → 选出即是逆版本，围绕他建阵容前先想清楚；
+      <span class="kind mix">混合</span>
+      介于两者之间，两边都有份。<br>
+      <b>出场时的局均逃脱</b>：这个组合真打出来时的实际得分（0~4，2.00 居中），
+      样本少的时候参考价值有限，括号里是局数。
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>候选监管的样本量</h2>
+    <p class="lead">上面那张表只统计这位选手用过的监管；每张图、每个监管的样本厚度不一样，
+      样本太薄的组合即使被标出来也不稳。</p>
+    <div class="chips" id="samples"></div>
+  </section>
+</main>
+
+<script src="char.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;')
+                                .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const f2 = v => (v == null || !isFinite(v)) ? '—' : Number(v).toFixed(2);
+
+let DATA = null;
+
+const KIND_CLS = {'对手会ban': 'ban', '我方回避': 'avoid', '混合': 'mix'};
+
+async function boot() {
+  DATA = await api('/api/matchup?player=BaiLu&team=ACT&limit=200');
+  const pp = $('#playerPick'), tp = $('#teamPick');
+  pp.innerHTML = DATA.players.map(p => `<option value="${esc(p)}">${esc(p)}</option>`).join('');
+  tp.innerHTML = DATA.teams.map(t => `<option value="${esc(t)}">${esc(t)}</option>`).join('');
+  pp.value = DATA.player || 'BaiLu';
+  tp.value = DATA.team || 'ACT';
+  pp.onchange = tp.onchange = reload;
+  render();
+}
+
+async function reload() {
+  const p = encodeURIComponent($('#playerPick').value);
+  const t = encodeURIComponent($('#teamPick').value);
+  DATA = await api(`/api/matchup?player=${p}&team=${t}&limit=200`);
+  render();
+}
+
+function render() {
+  const rows = DATA.rows || [];
+  $('#srcBadge').textContent = `${DATA.team} 的角色池 ${DATA.pool.length} 个角色`;
+  $('#stat').textContent = rows.length
+    ? `共 ${rows.length} 条 · 赛季 ${DATA.halves_n} 个半局`
+    : `赛季 ${DATA.halves_n} 个半局`;
+
+  if (!rows.length) {
+    $('#tbl').innerHTML = '<tbody><tr><td class="empty">这个组合没有显著互斥的对位。</td></tr></tbody>';
+  } else {
+    const body = rows.map(r => `<tr>
+      <td>${Char.chip(r.surv, {size: 22})}</td>
+      <td>${Char.chip(r.hunter, {size: 22})}</td>
+      <td><span class="kind ${KIND_CLS[r.kind] || 'mix'}">${esc(r.kind)}</span></td>
+      <td class="n">${r.play} / ${r.expect}</td>
+      <td class="n">${r.banned}</td>
+      <td class="n">${r.z.toFixed(2)}</td>
+      <td class="n esc">${r.esc == null ? '没出场过' : f2(r.esc) + '（' + r.esc_n + ' 局）'}</td>
+      <td class="note">${esc(r.note)}</td>
+    </tr>`).join('');
+    $('#tbl').innerHTML = `<thead><tr>
+      <th>求生</th><th>面对的监管</th><th>归因</th>
+      <th class="n">出场 / 期望</th><th class="n">被ban</th><th class="n">z</th>
+      <th class="n">出场时局均逃脱</th><th>依据</th>
+    </tr></thead><tbody>${body}</tbody>`;
+  }
+
+  const hh = DATA.hunter_halves || {};
+  const keys = Object.keys(hh).sort((a, b) => hh[b] - hh[a]);
+  $('#samples').innerHTML = keys.map(h =>
+    `<span class="chip">${Char.icon(h, 16)}<span>${esc(h)}</span><b>${hh[h]}</b></span>`
+  ).join('') || '<span class="empty">没有候选监管。</span>';
+}
+
+async function api(url) {
+  const r = await fetch(url);
+  let j = null;
+  try { j = await r.json(); } catch (e) { /* 非 JSON */ }
+  if (!r.ok || !j || j.ok === false) {
+    throw new Error((j && j.error) || ('HTTP ' + r.status));
+  }
+  return j;
+}
+
+boot().catch(e => {
+  $('main').insertAdjacentHTML('afterbegin',
+    `<div class="card"><div class="empty">加载失败：${esc(e.message)}<br>
+     请确认用 <code>python scripts/serve.py 8766</code> 启动服务后访问。</div></div>`);
+});
+</script>
+</body>
+</html>

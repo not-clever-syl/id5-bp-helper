@@ -105,6 +105,87 @@ footer b{color:var(--text)}
 .sets button:hover{border-color:var(--accent);color:var(--text)}
 .sets button.on{background:#2a3f6e;border-color:var(--accent);color:#cfe0ff}
 .sets button .cnt{font:10px Consolas,monospace;color:var(--dim)}
+/* 监管倾向排名：紧凑列表；块内单列，宽屏时左右两块并排 */
+.rank{margin-top:6px;display:flex;flex-direction:column;gap:0}
+/* ① 段的两块排名：左=地图倾向，右=这组 ban 的指向排名 */
+.rankcols{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));
+  gap:22px 34px;margin-top:16px;align-items:start}
+.rankcols .rank{display:grid;grid-template-columns:1fr}
+.rankcols .col{min-width:0}
+.rank .rk{display:flex;align-items:center;gap:8px;padding:5px 8px;
+  border-radius:6px;border-left:2px solid transparent;line-height:1.6}
+.rank .rk:hover{background:rgba(255,255,255,.03)}
+.rank .rk.top{border-left-color:var(--accent);background:rgba(107,140,255,.10)}
+.rank .rk .i{flex:none;width:16px;color:var(--dim);
+  font:11px Consolas,monospace;text-align:right}
+.rank .rk.top .i{color:var(--accent);font-weight:600}
+.rank .rk .who{flex:none;width:96px;display:flex;align-items:center;gap:5px;
+  font-size:12.5px;overflow:hidden;white-space:nowrap}
+.rank .rk .who span{overflow:hidden;text-overflow:ellipsis}
+.rank .rk .bar{flex:1;min-width:48px;height:8px;border-radius:4px;
+  background:var(--panel2);overflow:hidden}
+.rank .rk .bar i{display:block;height:100%;border-radius:4px;
+  background:linear-gradient(90deg,#3c5aa8,#6b8cff)}
+.rank .rk.top .bar i{background:linear-gradient(90deg,#4a6fd0,#8ea8ff)}
+.rank .rk .pct{flex:none;width:40px;text-align:right;
+  font:12px Consolas,monospace}
+.rank .rk .val{flex:none;width:42px;text-align:right;color:var(--dim);
+  font:11px Consolas,monospace}
+/* ① 段里的地图区块：块标题与说明 */
+.rankcols .col > .meta{margin:0 0 6px;line-height:1.6}
+.rankcols .col > .meta b{color:var(--text)}
+/* ── ⑤ 博弈树：节点是一条竖线串起来的可点条目 ── */
+.tbar{color:var(--dim);font-size:12px;margin:2px 0 10px;
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.tbar.warn{color:var(--warn)}
+button.mini{background:transparent;border:1px solid var(--border);color:var(--dim);
+  border-radius:6px;padding:2px 9px;font-size:11.5px;cursor:pointer}
+button.mini:hover{border-color:var(--accent);color:var(--text)}
+.tree{position:relative;padding-left:16px}
+.tree:before{content:"";position:absolute;left:5px;top:8px;bottom:26px;
+  width:1px;background:var(--border)}
+.tstep{position:relative}
+.tstep:before{content:"";position:absolute;left:-13px;top:15px;width:9px;height:1px;
+  background:var(--border)}
+.tstep.stale{opacity:.42}
+.tn{display:flex;align-items:center;gap:9px;padding:6px 10px;margin-bottom:3px;
+  border-radius:7px;background:var(--panel2);border:1px solid var(--border);
+  cursor:pointer;font-size:12.5px;transition:border-color .12s,background .12s}
+.tn:hover{border-color:var(--accent);background:#252a36}
+/* 不可点的节点（换手之后的下游）：鼠标不显示手型，也不做 hover 高亮 */
+.tn:not([data-stage]){cursor:default}
+.tn:not([data-stage]):hover{border-color:var(--border);background:var(--panel2)}
+.tn.ban{border-left:3px solid var(--ban)}
+.tn.pick{border-left:3px solid var(--accent)}
+.tn.open{border-color:var(--accent);background:#252a36}
+.tn.changed{box-shadow:inset 0 0 0 1px var(--warn)}
+.tn .st{flex:none;width:18px;color:var(--dim);font:11px Consolas,monospace}
+.tn .nm{flex:none;width:112px;color:var(--dim);font-size:12px;
+  overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.tn .ch{flex:none;width:110px;display:flex;align-items:center;gap:5px;
+  font-weight:600;overflow:hidden;white-space:nowrap}
+.tn .ch span{overflow:hidden;text-overflow:ellipsis}
+.tn .vv{flex:none;width:44px;text-align:right;
+  font:12.5px Consolas,monospace}
+.tn .tg{margin-left:auto;color:var(--dim);font-size:11.5px;flex:none}
+.tn.open .tg{color:var(--accent)}
+/* 展开的备选行 */
+.tops{display:flex;flex-wrap:wrap;gap:6px;padding:4px 0 8px 26px}
+.opt{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;
+  border-radius:7px;border:1px solid var(--border);background:var(--panel);
+  font-size:12px;cursor:pointer;transition:border-color .12s,background .12s}
+.opt:hover{border-color:var(--accent);background:#252a36}
+.opt.on{border-color:var(--accent);background:#2a3f6e;color:#cfe0ff}
+.opt.better:not(.on){border-color:#3d6b57}
+.opt .ov{color:var(--dim);font:11px Consolas,monospace}
+.opt.on .ov{color:#cfe0ff}
+.opt .od{font:10.5px Consolas,monospace}
+.opt .od.good{color:var(--good)}
+.opt .od.danger{color:var(--danger)}
+.tend{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px;
+  padding:8px 12px;border-radius:8px;background:var(--panel2);
+  border-left:3px solid var(--good);font-size:12.5px}
+.tend b{font:13px Consolas,monospace;color:#fff}
 </style>
 </head>
 <body>
@@ -311,36 +392,20 @@ function renderNew() {
   const optHtml = combos.map((c, i) =>
     `<option value="${i}"${i === COMBO ? ' selected' : ''}>${esc(c.label)}`
     + `（可能 ${f2(c.weight)}）</option>`).join('');
-  // 每个 ban 对的指向监管前 3，分数归一化成占比（softmax 语义的简化版：
-  // 直接按分数占比展示，负分视为 0，避免出现负百分比）
-  const hunterBar = c => {
-    const hs = c.hunter_scores
-      || (c.hunters || []).map(h => ({char: h, score: c.weight}));
-    const pos = hs.map(x => ({...x, s: Math.max(x.score, 0)}));
-    const tot = pos.reduce((a, x) => a + x.s, 0) || 1;
-    return `<div style="display:flex;flex-direction:column;gap:3px">`
-      + pos.map(x => `<div style="display:flex;align-items:center;gap:6px">
-          <span style="flex:none">${Char.chip(x.char, {size: 20})}</span>
-          <span style="flex:none;font-size:11px;min-width:34px;text-align:right">${x.s > 0 ? Math.round(x.s / tot * 100) + '%' : '—'}</span>
-        </div>`).join('') + `</div>`;
-  };
   const c1 = card(1, '对手前两个 ban 位',
     `对手已经 ban 了哪两个求生，决定了后面所有推演。`
-    + `换成别的组合，②③④ 会整体跟着变。右侧的百分比 = 这组 ban`
-    + `最可能指向的监管前 3（按 ban 指纹+单角色倾向+热门度打分，占比归一）。`,
+    + `换成别的组合，下面的监管倾向和 ②③④ 会整体跟着变。`,
     `<div class="row" style="margin-bottom:10px">
        <label class="lb">对手的 ban</label>
        <select id="comboSel" style="min-width:280px">${optHtml}</select>
      </div>
-     <div class="verdict"><b>当前选择：${bansHtml(C.bans)}</b></div>
+     <div class="verdict"><b>当前选择：${bansHtml(C.bans)}</b>
+       <span class="dim">（这组 ban 的可能性 ${f2(C.weight)}）</span></div>
      ${C.intent_note ? `<div class="meta" style="margin-top:8px">${esc(C.intent_note)}</div>` : ''}
-     ${mapIntentTable(C)}
-     <div class="tablewrap" style="margin-top:10px"><table>
-       <thead><tr><th style="width:24%">对手的 ban</th><th style="width:44%">最可能指向的监管（前 3）</th>
-         <th class="num">可能性</th></tr></thead>
-       <tbody>${combos.map((c, i) => `<tr class="${i === COMBO ? 'hl' : ''}">
-         <td>${chips(c.bans)}</td><td>${hunterBar(c)}</td>
-         <td class="num">${f2(c.weight)}</td></tr>`).join('')}</tbody></table></div>`);
+     <div class="rankcols">
+       ${mapIntentBlock(C, m)}
+       ${hunterRank(C)}
+     </div>`);
 
   // ── （原②已删：监管方可能考虑的监管 —— 用户判定没有参考价值）──
 
@@ -396,97 +461,223 @@ function renderNew() {
      </div>`);
 
   // ── ⑤ 后面博弈树 ──
-  // 沿最优线每一步的评估都是同一个数 —— 那就是这条线的最终结果。
-  // 有区分度的是下面的「各步关键备选」（换他之后会怎样）。
-  const lineRows = (C.line || []).map(x => `<tr>
-      <td class="dim">${esc(x.stage)}</td><td>${esc(x.name)}</td>
-      <td>${Char.chip(x.char, {size: 22})}</td>
-      <td class="num">${f2(x.value)}</td></tr>`).join('');
-  const stepRows = (C.steps || []).map(s => {
-    const isBan = (s.name || '').includes('ban');
-    const opts = (s.options || []).map(o =>
-      `<span class="pill ${o.chosen ? 'pick' : (o.better ? 'only' : '')}">`
-      + `${Char.icon(o.char, 16)}${esc(o.char)} ${f2(o.value)}</span>`).join(' ');
-    return `<tr>
-      <td class="dim">${esc(s.stage)}</td><td>${esc(s.name)}</td>
-      <td>${Char.chip(s.chosen, {size: 20})}</td>
-      <td>${opts}</td></tr>`;
-  }).join('');
   const c5 = card(4, '后面博弈树怎么选',
-    `主变线路（每一步的评估都是这条线的最终结果，所以数值相同）`
-    + `，以及每一步的关键备选 —— 备选里的数是「换他之后」的结果，`
-    + `绿色表示比主选更好。`,
-    ((C.line || []).length ? `<div class="tablewrap"><table>
-        <thead><tr><th style="width:10%">阶段</th><th style="width:20%">动作</th>
-          <th style="width:20%">主选</th><th class="num">这条线的结果</th></tr></thead>
-        <tbody>${lineRows}</tbody></table></div>` : '')
-    + ((C.steps || []).length ? `<div class="meta" style="margin-top:12px">各步关键备选</div>
-        <div class="tablewrap"><table>
-        <thead><tr><th style="width:10%">阶段</th><th style="width:20%">动作</th>
-          <th style="width:18%">主选</th><th>备选</th></tr></thead>
-        <tbody>${stepRows}</tbody></table></div>` : ''));
+    `默认只显示主变线路。点任意一手可以展开它的关键备选，`
+    + `再点某个备选就按「如果换成他」显示这一步的值 —— `
+    + `换过之后的分支这份报告没有继续往下算，后面几步会变灰。`,
+    `<div id="treeBox">${gameTree(C)}</div>`);
 
-  // ── 对位情报：显著互斥对（出场率显著低于赛季平均的行为统计）──
-  const alerts = REP.matchup_alerts || [];
-  const alertPill = a => {
-    const cls = a.kind === '对手会ban' ? 'ban' : a.kind === '我方回避' ? 'only' : '';
-    return `<span class="pill ${cls}">${esc(a.kind)}</span>`;
-  };
-  const alertRows = alerts.map(a => `<tr>
-      <td>${Char.chip(a.surv, {size: 22})}</td>
-      <td>${Char.chip(a.hunter, {size: 22})}</td>
-      <td>${alertPill(a)}</td>
-      <td class="num dim">${a.esc != null ? f2(a.esc) + '（' + a.esc_n + ' 局）' : '没出场过'}</td>
-      <td class="dim" title="${esc(a.note)}">${esc(a.note)}</td></tr>`).join('');
-  const cAlert = alerts.length ? card('⚠', '对位情报：互相回避的组合',
-    `赛季行为统计（不修正分数）：这些 (求生 × 监管) 组合的实际出场率显著低于该角色的赛季平均。`
-    + `「对手会ban」= 大多被对手拦截，别指望他留在场上；「我方回避」= 本队一直没选，`
-    + `选出即是逆版本，围绕他构建阵容前先想清楚。`,
-    `<div class="tablewrap"><table>
-       <thead><tr><th style="width:16%">求生</th><th style="width:16%">面对的监管</th>
-         <th style="width:13%">归因</th><th class="num" style="width:18%">出场时的局均逃脱</th>
-         <th>依据</th></tr></thead>
-       <tbody>${alertRows}</tbody></table></div>`) : '';
-
-  const gbLine = (m.global_ban_surv || []).length || (m.global_ban_hunt || []).length
-    ? `<div class="meta">生成时已排除的全局禁选：`
-      + `${chips(m.global_ban_surv)}（求生）${chips(m.global_ban_hunt)}（监管）</div>` : '';
+  // 对位情报已移到独立页面（web/matchup.html）：那张表只看角色池、
+  // 对手选手和全局禁选，跟报告里选哪个 ban 组合、用哪张图、
+  // 导入哪份分数配置都无关，留在正文里反而容易误以为它会跟着变。
 
   $('#body').innerHTML =
     settingsCard()
-    + c1 + c3 + c4 + c5 + cAlert;
+    + c1 + c3 + c4 + c5;
 
   const sel = $('#comboSel');
-  if (sel) sel.onchange = () => { COMBO = +sel.value; renderNew(); };
+  if (sel) sel.onchange = () => {
+    COMBO = +sel.value;
+    TREE = { open: '', alt: {} };  // 换组合就重置树的交互状态
+    renderNew();
+  };
+  wireTree();
 }
 
-/** 地图对「对手会拿谁」的影响：把该图的倍数和通用威胁度并列出来。
- *  只有指定了地图才显示；倍数 1.0 = 与全联盟平均持平。
+/** ⑤ 段的事件绑定：点节点展开备选，点备选换人，点按钮恢复主线。 */
+function wireTree() {
+  const box = $('#treeBox');
+  if (!box) return;
+  box.querySelectorAll('.tn[data-stage]').forEach(el => {
+    el.onclick = () => {
+      const st = el.dataset.stage;
+      TREE.open = (TREE.open === st) ? '' : st;
+      box.innerHTML = gameTree(curCombo());
+      wireTree();
+    };
+  });
+  box.querySelectorAll('.opt').forEach(el => {
+    el.onclick = ev => {
+      ev.stopPropagation();
+      const st = el.dataset.stage, ch = el.dataset.char;
+      if (TREE.alt[st] === ch) delete TREE.alt[st];   // 再点一次撤回
+      else TREE.alt[st] = ch;
+      box.innerHTML = gameTree(curCombo());
+      wireTree();
+    };
+  });
+  const rs = $('#treeReset');
+  if (rs) rs.onclick = () => {
+    TREE = { open: '', alt: {} };
+    box.innerHTML = gameTree(curCombo());
+    wireTree();
+  };
+}
+
+/** 当前选中的 combo（renderNew 里算过，交互里复用）。 */
+function curCombo() {
+  const combos = REP.combos || [];
+  return combos[Math.min(COMBO, Math.max(0, combos.length - 1))] || {};
+}
+
+/** ⑤ 段的交互状态：
+ *  TREE = { open: 已展开的阶段码, alt: {阶段码: 选中的备选角色} }
+ *  只影响显示，不重新计算 —— 备选的数都是生成就算好的。 */
+let TREE = { open: '', alt: {} };
+
+/** ⑤ 后面博弈树：主变线路上每一步都是一个可点的节点。
+ *
+ *  点节点 = 展开/收起这一步的关键备选；
+ *  点备选 = 把这一步换成那个角色（并标出它对求生是好是坏）；
+ *  换过的分支后面几步没有数据，显示为灰。
  */
-function mapIntentTable(C) {
-  const m = REP.meta || {};
-  const rows = (C.intent || []).filter(x => x.mult != null);
-  if (!m.map || !rows.length) return '';
-  const cells = rows.map(x => {
-    const v = Number(x.mult);
-    // 倍数偏离 1 越远颜色越明显：偏多绿、偏少红
-    const a = Math.min(0.5, Math.abs(v - 1) * 0.45);
-    const bg = Math.abs(v - 1) < 0.05 ? 'transparent'
-      : (v > 1 ? `rgba(109,196,160,${a.toFixed(3)})`
-               : `rgba(212,100,92,${a.toFixed(3)})`);
-    return `<tr>
-      <td>${Char.chip(x.char, {size: 22})}</td>
-      <td class="num dim">${f2(x.threat)}</td>
-      <td class="num" style="background:${bg}">×${v.toFixed(2)}</td></tr>`;
+function gameTree(C) {
+  const line = C.line || [];
+  const steps = C.steps || [];
+  if (!line.length) return '<div class="meta">这份报告没有博弈树数据。</div>';
+  const stepBy = new Map(steps.map(s => [s.stage, s]));
+  // 找到第一个换了备选的位置：它之后的分支没有继续推演
+  let divergeAt = -1;
+  line.forEach((x, i) => {
+    const use = TREE.alt[x.stage];
+    if (divergeAt < 0 && use && use !== x.char) divergeAt = i;
+  });
+
+  const nodes = line.map((x, i) => {
+    const s = stepBy.get(x.stage);
+    const open = TREE.open === x.stage;
+    const use = TREE.alt[x.stage];
+    const changed = !!use && use !== x.char;
+    const char = changed ? use : x.char;
+    const stale = divergeAt >= 0 && i > divergeAt;
+    const opt = s ? (s.options || []).find(o => o.char === use) : null;
+    // 数值：没换就是主线的值；换了就用备选那个值
+    const val = opt ? opt.value : x.value;
+    // 换过之后，对求生是更好还是更差
+    let deltaHtml = '';
+    if (changed && opt) {
+      const d = Number(opt.delta) || 0;
+      deltaHtml = `<span class="${d > 1e-9 ? 'good' : d < -1e-9 ? 'danger' : 'dim'}">`
+        + `${d > 1e-9 ? '+' : ''}${d.toFixed(2)}</span>`;
+    }
+    const isBan = (x.name || '').includes('ban');
+    const cls = ['tn', isBan ? 'ban' : 'pick', changed ? 'changed' : '',
+                 stale ? 'stale' : '', open ? 'open' : ''].filter(Boolean).join(' ');
+    // 换手之后的下游没有重新推演，展开备选也没有意义，直接禁掉
+    const expandable = !!s && (s.options || []).length > 1 && !stale;
+    return `<div class="tstep${stale ? ' stale' : ''}">
+      <div class="${cls}"${expandable ? ` data-stage="${esc(x.stage)}"` : ''}${
+        stale ? ' title="换手之前的推演，换过之后这条没有重算"' : ''}>
+        <span class="st">${esc(x.stage)}</span>
+        <span class="nm">${esc(x.name)}</span>
+        <span class="ch">${Char.icon(char, 20)}<span>${esc(char)}</span></span>
+        <span class="vv">${f2(val)}</span>
+        ${deltaHtml}
+        ${expandable ? `<span class="tg">${open ? '收起' : '备选 ' + (s.options.length)}</span>`
+          : stale ? '<span class="tg">未重算</span>' : ''}
+      </div>
+      ${(open && s && !stale) ? `<div class="tops">${(s.options || []).map(o => {
+          const d = Number(o.delta) || 0;
+          const on = o.char === char;
+          return `<span class="opt${on ? ' on' : ''}${d > 1e-9 ? ' better' : ''}"
+            data-stage="${esc(x.stage)}" data-char="${esc(o.char)}"
+            title="换成他：${esc(o.char)} ${f2(o.value)}${
+              o.chosen ? '（主线主选）' : (d > 1e-9 ? '，对求生更好' : d < -1e-9 ? '，对求生更差' : '，持平')}">
+            ${Char.icon(o.char, 17)}<span>${esc(o.char)}</span>
+            <span class="ov">${f2(o.value)}</span>
+            ${d > 1e-9 ? `<span class="od good">+${d.toFixed(2)}</span>`
+              : d < -1e-9 ? `<span class="od danger">${d.toFixed(2)}</span>` : ''}
+          </span>`;
+        }).join('')}</div>` : ''}
+    </div>`;
   }).join('');
-  return `<div style="margin-top:12px">
-    <div class="meta"><b>${esc(m.map)}</b> 这张图上的监管倾向
-      （×倍数 = 该图出场份额 ÷ 全联盟份额，1.00 表示与平均持平）。
-      倍数高的会被排到候选前面。</div>
-    <div class="tablewrap" style="margin-top:6px"><table>
-      <thead><tr><th style="width:50%">监管</th>
-        <th class="num">通用威胁度</th><th class="num">该图倍数</th></tr></thead>
-      <tbody>${cells}</tbody></table></div>
+
+  const endRow = `
+    <div class="tend">
+      <span class="dim">最终阵容</span>
+      <span class="chips">${chips(C.lineup || [])}</span>
+      <span class="dim">评估</span><b>${f2(C.expect ?? C.half_value)}</b>
+      <span class="dim">（救人位 ${C.solid_n ?? 0} 个）</span>
+    </div>`;
+
+  const changedAny = Object.keys(TREE.alt).length > 0;
+  return (divergeAt >= 0
+      ? `<div class="tbar warn">已按你的选择改过某一手。换成备选之后，后面几步的分支没有继续推演，
+         所以下面的值只到换手那一步为止，再往后的数沿用原主线，仅供参考。
+         <button id="treeReset" class="mini">恢复主线</button></div>`
+      : `<div class="tbar"><span class="dim">点任一手看关键备选，点备选就换成他。</span>
+         ${changedAny ? '<button id="treeReset" class="mini">恢复主线</button>' : ''}</div>`)
+    + `<div class="tree">${nodes}${endRow}</div>`;
+}
+
+/** ① 段的监管倾向排名：该选手全部候选监管，按这组 ban 的指向打分从高到低。
+ *  条形按最高分归一，右边同时给占比（分数 ÷ 全部正分之和）和原始分。
+ */
+function hunterRank(C) {
+  let rows = (C.hunter_rank || []).slice();
+  if (!rows.length) {
+    // 旧报告没有 hunter_rank 字段，退回只有前 3 的 hunter_scores
+    rows = (C.hunter_scores || []).slice();
+  }
+  if (!rows.length) return '<div class="meta" style="margin-top:10px">这份报告没有监管倾向数据。</div>';
+  const pos = rows.map(x => Math.max(Number(x.score) || 0, 0));
+  const tot = pos.reduce((a, v) => a + v, 0) || 1;
+  const hi = Math.max(...pos) || 1;
+  const body = rows.map((x, i) => {
+    const s = pos[i];
+    const w = Math.max(2, s / hi * 100);
+    const top = i === 0 && s > 0;
+    const pct = s > 0 ? (s / tot * 100).toFixed(0) + '%' : '—';
+    return `<div class="rk${top ? ' top' : ''}" title="${esc(x.char)} · ${pct} · 原始分 ${Number(x.score).toFixed(2)}">
+      <span class="i">${i + 1}</span>
+      <span class="who">${Char.icon(x.char, 16)}<span>${esc(x.char)}</span></span>
+      <span class="bar"><i style="width:${w.toFixed(1)}%"></i></span>
+      <span class="pct">${pct}</span>
+      <span class="val">${Number(x.score).toFixed(1)}</span>
+    </div>`;
+  }).join('');
+  return `<div class="col">
+    <div class="meta">这组 ban 最可能是在为谁清路 —— 该选手用过的
+      <b>${rows.length}</b> 个监管全部列出，按指向强度排序（百分比是分数占比，不是严格概率）。</div>
+    <div class="rank">${body}</div>
+  </div>`;
+}
+
+/** ① 段里的地图区块：这张图上对手更可能拿谁，紧跟在「当前选择」下面。
+ *  候选集合随下拉的 ban 组合变化，块内按该图倍数从高到低排。
+ */
+function mapIntentBlock(C, m) {
+  if (!m.map) {
+    return `<div class="meta" style="margin-top:10px">这次没指定地图，推演按全联盟口径，
+      所以没有地图倾向。要按地图看，回生成页在第 3 步选一张图再生成。</div>`;
+  }
+  // 优先用 ① 段的全量排名（每项都带该图倍数），旧报告没有 mult 时退回意图数据。
+  let base = (C.hunter_rank && C.hunter_rank.length)
+    ? C.hunter_rank : (C.rankWithMult || []);
+  let rows = base.filter(x => x.mult != null)
+                 .map(x => ({char: x.char, mult: Number(x.mult)}));
+  if (!rows.length) {
+    rows = (C.intent || []).filter(x => x.mult != null)
+                           .map(x => ({char: x.char, mult: Number(x.mult)}));
+  }
+  if (!rows.length) return '';
+  rows.sort((a, b) => b.mult - a.mult);
+  const hi = Math.max(...rows.map(x => x.mult), 1);
+  const body = rows.map(x => {
+    // 条形长度按该图份额算，颜色用赤/绿表示偏多偏少
+    const w = Math.max(2, x.mult / hi * 100);
+    return `<div class="rk" title="${esc(x.char)}：这张图的出场份额是全联盟的 ${x.mult.toFixed(2)} 倍">
+      <span class="who">${Char.icon(x.char, 16)}<span>${esc(x.char)}</span></span>
+      <span class="bar"><i style="width:${w.toFixed(1)}%;background:${
+        x.mult >= 1 ? 'linear-gradient(90deg,#2f7a63,#6dc4a0)'
+                    : 'linear-gradient(90deg,#8a4038,#d4645c)'}"></i></span>
+      <span class="pct">×${x.mult.toFixed(2)}</span>
+    </div>`;
+  }).join('');
+  return `<div class="col">
+    <div class="meta"><b>${esc(m.map)}</b> 这张图上对手更可能拿谁
+      （×倍数 = 该图份额 ÷ 全联盟份额，1.00 为平均；绿色偏高、红色偏低）</div>
+    <div class="rank">${body}</div>
   </div>`;
 }
 
