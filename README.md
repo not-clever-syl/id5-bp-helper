@@ -21,7 +21,7 @@
 ### Windows
 
 1. 装 Python 3.8 或更新的版本：<https://www.python.org/downloads/>，安装时记得勾上 **Add Python to PATH**
-2. 在仓库页面点 <kbd>Code</kbd> → <kbd>Download ZIP</kbd>，解压到任意位置
+2. 若托管平台是 github，在仓库页面点 <kbd>Code</kbd> → <kbd>Download ZIP</kbd>；若托管平台是 gitee，在仓库页面点 “克隆/下载” 再点右上角 “下载ZIP”；然后解压到任意位置
 3. 双击 `启动.bat`。浏览器会自动打开，关掉那个黑窗口就停了
 
 ### macOS / Linux
