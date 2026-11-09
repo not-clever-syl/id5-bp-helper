@@ -539,19 +539,48 @@ class Handler(SimpleHTTPRequestHandler):
             if not isinstance(hp, dict) or not hp:
                 hp = {"|".join(sorted(k)): v
                       for k, v in map_pick.HOME_PAIRS.items()}
+            halves = c.get("halves") or []
             self._json(200, {
                 "ok": True,
                 "meta": meta,
-                "halves": c.get("halves") or [],
+                "halves": halves,
                 "home_pairs": hp,
-                "teams": sorted({h["survivor_team"] for h in c.get("halves") or []}
-                                | {h["hunter_team"] for h in c.get("halves") or []}),
-                "maps": sorted({h["map"] for h in c.get("halves") or [] if h.get("map")}),
+                "teams": sorted({h["survivor_team"] for h in halves}
+                                | {h["hunter_team"] for h in halves}),
+                "maps": sorted({h["map"] for h in halves if h.get("map")}),
+                "pool_survivor": self._role_pool("survivor", halves),
+                "pool_hunter": self._role_pool("hunter", halves),
             })
         except Exception as e:
             import traceback
             traceback.print_exc()
             self._json(500, {"ok": False, "error": f"{type(e).__name__}: {e}"})
+
+    @staticmethod
+    def _role_pool(side, halves):
+        """该阵营的全量角色池（图鉴里的全部角色），加上数据里出现过的。
+
+        图鉴（data/bp_tree.json 的 pool）是权威的完整名单；
+        数据里可能有个别图鉴没收录的角色，这里一并补上。
+        """
+        pool = []
+        try:
+            t = json.loads((ROOT / "data" / "bp_tree.json").read_text(encoding="utf-8"))
+            pool = list(t.get("pool", {}).get(side) or [])
+        except Exception:
+            pool = []
+        for h in halves:
+            names = []
+            if side == "survivor":
+                names = list(h.get("survivors") or []) + list(h.get("hunter_bans") or [])
+            else:
+                names = list(h.get("survivor_bans") or [])
+                if h.get("hunter"):
+                    names.append(h["hunter"])
+            for c in names:
+                if c and c not in pool:
+                    pool.append(c)
+        return pool
 
     def _api_core_write(self):
         """保存原始数据：校验 → 备份 → 写回 bp_core.json → 重建派生数据。

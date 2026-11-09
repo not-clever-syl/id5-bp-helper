@@ -371,8 +371,9 @@ async function boot() {
     if (!META.home_pairs) META.home_pairs = core.home_pairs || {};
     TEAMS = core.teams || [];
     MAPS = core.maps || [];
-    SOC = (scores.all_survivors || []).slice();
-    HUNT = (scores.all_hunters || []).slice();
+    // 角色池用后端给的图鉴全量名单（本季没出场过的角色也能选）
+    SOC = (core.pool_survivor || scores.all_survivors || []).slice();
+    HUNT = (core.pool_hunter || scores.all_hunters || []).slice();
     for (const h of HALVES) {
       for (const c of h.survivors.concat(h.hunter_bans)) if (!SOC.includes(c)) SOC.push(c);
       for (const c of h.survivor_bans) if (!HUNT.includes(c)) HUNT.push(c);
@@ -739,6 +740,21 @@ function sel(options, value, id) {
   return html + '</select>';
 }
 
+// 单选下拉：值为空时给出「未填」占位项，避免浏览器自动选中第一项，
+// 让人以为已经填好了。候选里也会带上当前值（数据里可能有列表外的值）。
+function dd(options, value, id) {
+  const vs = options.map(o => o[0]);
+  const opts = options.slice();
+  const cur = value === undefined || value === null ? '' : String(value);
+  if (cur !== '' && !vs.includes(cur)) {
+    opts.unshift([cur, cur]);
+  }
+  if (cur === '') {
+    opts.unshift(['', '— 未填 —']);
+  }
+  return sel(opts, cur, id);
+}
+
 // 角色选择器：已选的角色是 chip，右边一个下拉可以加
 function picker(field, pool, listId) {
   const chosen = DRAFT[field] || [];
@@ -766,15 +782,6 @@ function buildDetail() {
   const sa = parts[0], sb = parts[1];
 
   const banQuota = h.game === 1 ? 0 : (h.game === 2 ? 1 : 2);
-
-  // 单选下拉：候选里加上当前值（数据里可能有列表外的值）
-  function dd(options, value, id) {
-    const vs = options.map(o => o[0]);
-    if (value !== '' && !vs.includes(String(value))) {
-      options = [[String(value), String(value)]].concat(options);
-    }
-    return sel(options, value, id);
-  }
 
   let html = '';
   // 主场 / 第几局 属于整场比赛，不在单个半局里改

@@ -101,9 +101,11 @@ def check(halves: list, meta: dict) -> list:
         if not isinstance(h, dict):
             add([i], tag, "不是对象")
             continue
-        for f in ("seq", "side", "survivor_team", "hunter_team", "map"):
+        for f, label in (("seq", "局序"), ("side", "半局方位"),
+                         ("survivor_team", "求生队伍"),
+                         ("hunter_team", "监管队伍"), ("map", "地图")):
             if not h.get(f):
-                add([i], tag, f"缺少 {f}")
+                add([i], tag, f"缺少{label}")
         if h.get("side") not in ("upper", "lower"):
             add([i], tag, f"side={h.get('side')} 不合法（应为 upper / lower）")
         if h.get("tiebreak"):
