@@ -48,17 +48,25 @@ HUNTER_BAN_COUNT = 4
 
 
 def player_teams() -> dict:
-    """监管选手 → 所属队伍。没有映射文件时返回空表（跳过该检查）。"""
+    """监管选手 → 所属队伍。roster.json（自定义名单）优先，
+    hunter_players.json 兜底。两处都没有时跳过该检查。"""
+    out = {}
     p = ROOT / "data" / "hunter_players.json"
     try:
         d = json.loads(p.read_text(encoding="utf-8"))
+        for name, info in (d.get("players") or {}).items():
+            t = (info or {}).get("team")
+            if t:
+                out[name] = t
     except Exception:
-        return {}
-    out = {}
-    for name, info in (d.get("players") or {}).items():
-        t = (info or {}).get("team")
-        if t:
-            out[name] = t
+        pass
+    try:
+        import roster_store
+        for p in roster_store.load()["players"]:
+            if p["team"]:
+                out[p["name"]] = p["team"]
+    except Exception:
+        pass
     return out
 
 

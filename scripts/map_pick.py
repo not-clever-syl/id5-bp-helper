@@ -213,12 +213,22 @@ def stats() -> dict:
         out_rows[team] = lst
 
     return {
-        "teams": sorted(teams),
+        "teams": _teams_all(sorted(teams)),
         "maps": MAP_ORDER,
         "rows": out_rows,
         "totals": totals,
         "seats": seats,
     }
+
+
+def _teams_all(data_teams: list) -> list:
+    """比赛里出现过的队伍 ∪ 登记过的（roster.json），合并去重。"""
+    try:
+        import roster_store
+        extra = roster_store.load()["teams"]
+    except Exception:
+        extra = []
+    return sorted(set(data_teams) | set(extra))
 
 
 def one(team: str) -> dict:

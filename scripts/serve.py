@@ -122,6 +122,8 @@ class Handler(SimpleHTTPRequestHandler):
             return self._api_core_write()
         if self.path == "/api/core/check":
             return self._api_core_check()
+        if self.path == "/api/roster_edit":
+            return self._api_roster_edit()
         if self.path == "/api/generate":
             return self._api_generate()
         if self.path.startswith("/api/files/list"):
@@ -134,6 +136,8 @@ class Handler(SimpleHTTPRequestHandler):
 
     def do_GET(self):
         # 只拦 /api/ 开头的，其余交给静态文件服务
+        if self.path.startswith("/api/roster_edit"):
+            return self._api_roster_edit()
         if self.path.startswith("/api/roster"):
             return self._api_roster_get()
         if self.path.startswith("/api/scores"):
@@ -280,14 +284,23 @@ class Handler(SimpleHTTPRequestHandler):
 
     @staticmethod
     def _player_teams() -> dict:
-        """监管选手 → 所属队伍（原始数据页用来收窄选手下拉）。"""
+        """监管选手 → 所属队伍（原始数据页用来收窄选手下拉）。
+
+        自定义名单（roster.json）优先，hunter_players.json 兜底——
+        新登记的选手还没打过比赛，hunter_players 里没有他。
+        """
         try:
             d = json.loads((ROOT / "data" / "hunter_players.json")
                            .read_text(encoding="utf-8"))
         except Exception:
-            return {}
-        return {name: (info or {}).get("team") or ""
-                for name, info in (d.get("players") or {}).items()}
+            d = {}
+        out = {name: (info or {}).get("team") or ""
+               for name, info in (d.get("players") or {}).items()}
+        import roster_store
+        for p in roster_store.load()["players"]:
+            if p["team"]:
+                out[p["name"]] = p["team"]
+        return out
 
     def _api_expect_meta(self):
         self._json(200, {
@@ -381,12 +394,15 @@ class Handler(SimpleHTTPRequestHandler):
                 return self._json(400, {"ok": False, "error": f"未知队伍 {team}"})
             rows = ban_intel.matchup_alerts(eng, team, player, top=limit)
             S = ban_intel.stats()
+            # 下拉候选：引擎里的（打过比赛的）∪ 登记过的
+            import roster_store
+            _rd = roster_store.load()
             self._json(200, {
                 "ok": True,
                 "player": player,
                 "team": team,
-                "players": sorted(eng.players),
-                "teams": sorted(eng.rosters),
+                "players": sorted(set(eng.players) | {p["name"] for p in _rd["players"]}),
+                "teams": sorted(set(eng.rosters) | set(_rd["teams"])),
                 "pool": [c for c in eng.pool_of(team)],
                 "hunter_halves": {h: S["hunter_halves"].get(h, 0)
                                   for h in ((eng.players.get(player) or {})
@@ -542,10 +558,161 @@ class Handler(SimpleHTTPRequestHandler):
             "count": len(issues),
         })
 
+    def _api_roster_edit(self):
+        """自定义队伍 / 监管选手名单：读、写（含改名同步历史数据）。
+
+        GET  → 现在的名单 + 数据里的引用情况
+        POST → {action: "add_team" | "add_player" | "rename" | "delete",
+                kind: "team" | "player", old?, new?, name?, team?}
+        改名会把 bp_core.json 里的旧名一并替换（有备份和快照）。
+        删除：数据里还在用的一律拒绝，避免历史行悬空。
+        """
+        import roster_store
+
+        if self.command == "GET":
+            halves = json.loads((ROOT / "data" / "bp_core.json")
+                                .read_text(encoding="utf-8")).get("halves") or []
+            used = roster_store.used_names(halves)
+            d = roster_store.load()
+            self._json(200, {
+                "ok": True,
+                "teams": d["teams"],
+                "players": d["players"],
+                "used_teams": sorted(used["teams"]),
+                "used_players": sorted(used["players"]),
+            })
+            return
+
+        try:
+            data = self._read_json()
+        except Exception as e:
+            return self._json(400, {"ok": False, "error": f"bad json: {e}"})
+        action = data.get("action")
+        kind = data.get("kind")
+        if kind not in ("team", "player"):
+            return self._json(400, {"ok": False, "error": "kind 必须是 team / player"})
+        d = roster_store.load()
+
+        if action == "add":
+            name = (data.get("name") or "").strip()
+            if not name:
+                return self._json(400, {"ok": False, "error": "名字不能为空"})
+            if kind == "team":
+                if name in d["teams"]:
+                    return self._json(400, {"ok": False, "error": f"{name} 已存在"})
+                d["teams"].append(name)
+            else:
+                if any(p["name"] == name for p in d["players"]):
+                    return self._json(400, {"ok": False, "error": f"{name} 已存在"})
+                d["players"].append({"name": name,
+                                     "team": (data.get("team") or "").strip()})
+            roster_store.save(d)
+            return self._json(200, {"ok": True, "roster": d})
+
+        if action == "rename":
+            old = (data.get("old") or "").strip()
+            new = (data.get("new") or "").strip()
+            if not old or not new:
+                return self._json(400, {"ok": False, "error": "新旧名字都不能为空"})
+            if old == new:
+                return self._json(200, {"ok": True, "roster": d})
+            core = json.loads((ROOT / "data" / "bp_core.json").read_text(encoding="utf-8"))
+            halves = core.get("halves") or []
+
+            used = roster_store.used_names(halves)
+            if kind == "team":
+                # 数据里在用的队 / 登记过的队都允许改名（同步历史数据是主要用途）
+                if old not in used["teams"] and old not in d["teams"]:
+                    return self._json(400, {"ok": False, "error": f"{old} 不在名单里"})
+                if (new in used["teams"] or new in d["teams"]) and new != old:
+                    return self._json(400, {"ok": False, "error": f"{new} 已存在"})
+                if old in d["teams"]:
+                    d["teams"][d["teams"].index(old)] = new
+                # 选手归属里引用的旧队名也同步
+                for p in d["players"]:
+                    if p["team"] == old:
+                        p["team"] = new
+            else:
+                idx = next((i for i, p in enumerate(d["players"])
+                            if p["name"] == old), None)
+                if idx is None and old not in used["players"]:
+                    return self._json(400, {"ok": False, "error": f"{old} 不在名单里"})
+                if any(p["name"] == new for p in d["players"]):
+                    return self._json(400, {"ok": False, "error": f"{new} 已存在"})
+                if idx is not None:
+                    d["players"][idx] = {"name": new,
+                                         "team": data.get("team") or d["players"][idx]["team"]}
+                else:
+                    # 数据里在用但没登记过 → 改名的同时登记新名
+                    d["players"].append({"name": new,
+                                         "team": (data.get("team") or "").strip()})
+
+            roster_store.save(d)
+
+            # 改 bp_core 里的历史数据（备份 → 快照 → 原子写 → 重算）
+            core_path = ROOT / "data" / "bp_core.json"
+            bak = ROOT / "data" / "bp_core.json.bak"
+            old_text = core_path.read_text(encoding="utf-8")
+            bak.write_text(old_text, encoding="utf-8")
+            snaps = ROOT / "tmp" / "bp_core_snapshots"
+            try:
+                snaps.mkdir(parents=True, exist_ok=True)
+                (snaps / ("bp_core-%s.json" % time.strftime("%Y%m%d-%H%M%S"))
+                 ).write_text(old_text, encoding="utf-8")
+            except Exception:
+                pass
+            roster_store.rename(halves, kind, old, new)
+            tmp = core_path.with_suffix(".json.tmp")
+            tmp.write_text(json.dumps(core, ensure_ascii=False, indent=1),
+                           encoding="utf-8")
+            tmp.replace(core_path)
+
+            try:
+                import rebuild
+                rebuild.rebuild()
+            except Exception as e:
+                import traceback
+                traceback.print_exc()
+                return self._json(500, {
+                    "ok": False,
+                    "error": f"名字已改，但重算失败：{type(e).__name__}: {e}",
+                    "backup": "data/bp_core.json.bak"})
+            custom_data.clear_cache()
+            return self._json(200, {"ok": True, "roster": d,
+                                    "renamed": f"{old} → {new}"})
+
+        if action == "delete":
+            name = (data.get("name") or "").strip()
+            if not name:
+                return self._json(400, {"ok": False, "error": "名字不能为空"})
+            halves = json.loads((ROOT / "data" / "bp_core.json")
+                                .read_text(encoding="utf-8")).get("halves") or []
+            used = roster_store.used_names(halves)
+            pool = used["teams"] if kind == "team" else used["players"]
+            if name in pool:
+                return self._json(400, {
+                    "ok": False,
+                    "error": f"{name} 在比赛数据里还在用（{sum(1 for h in halves for k in (('survivor_team','hunter_team') if kind=='team' else ('hunter_player',)) if h.get(k)==name)} 个半局），不能删"})
+            if kind == "team":
+                if name not in d["teams"]:
+                    return self._json(400, {"ok": False, "error": f"{name} 不在名单里"})
+                d["teams"].remove(name)
+            else:
+                before = len(d["players"])
+                d["players"] = [p for p in d["players"] if p["name"] != name]
+                if len(d["players"]) == before:
+                    return self._json(400, {"ok": False, "error": f"{name} 不在名单里"})
+            roster_store.save(d)
+            return self._json(200, {"ok": True, "roster": d})
+
+        return self._json(400, {"ok": False,
+                                "error": "action 必须是 add / rename / delete"})
+
     def _api_core_get(self):
         """原始数据：meta + 全部半局 + 主客队映射，给表格页展示。"""
         try:
             import map_pick
+            import roster_store
             c = json.loads((ROOT / "data" / "bp_core.json").read_text(encoding="utf-8"))
             meta = c.get("meta") or {}
             hp = meta.get("home_pairs")
@@ -553,13 +720,16 @@ class Handler(SimpleHTTPRequestHandler):
                 hp = {"|".join(sorted(k)): v
                       for k, v in map_pick.HOME_PAIRS.items()}
             halves = c.get("halves") or []
+            # 队伍 = 数据里出现过的 ∪ 登记过的（自定义名单）
+            teams = sorted({h["survivor_team"] for h in halves}
+                           | {h["hunter_team"] for h in halves}
+                           | set(roster_store.load()["teams"]))
             self._json(200, {
                 "ok": True,
                 "meta": meta,
                 "halves": halves,
                 "home_pairs": hp,
-                "teams": sorted({h["survivor_team"] for h in halves}
-                                | {h["hunter_team"] for h in halves}),
+                "teams": teams,
                 "maps": sorted({h["map"] for h in halves if h.get("map")}),
                 "pool_survivor": self._role_pool("survivor", halves),
                 "pool_hunter": self._role_pool("hunter", halves),
@@ -701,8 +871,7 @@ class Handler(SimpleHTTPRequestHandler):
         })
 
     def _teams_of_player(self):
-        tree = json.loads((ROOT / "data" / "bp_tree.json").read_text(encoding="utf-8"))
-        return {p: v.get("team") for p, v in tree["players"].items()}
+        return self._player_teams()
 
     # ── 报告生成 ──────────────────────────────────────────
     def _player_cells(self):
@@ -744,8 +913,18 @@ class Handler(SimpleHTTPRequestHandler):
         导入配置 + 手工修改决定，只在本次生成里生效。
         """
         tree = json.loads((ROOT / "data" / "bp_tree.json").read_text(encoding="utf-8"))
-        players = {p: v.get("team") for p, v in tree["players"].items()}
+        # 选手→队伍：roster（自定义名单）优先，bp_tree 兜底；
+        # 登记过但还没打过比赛的选手也列出来（队伍归属用 roster 的）
+        teams_of = self._player_teams()
+        players = {p: (teams_of.get(p) or v.get("team"))
+                   for p, v in tree["players"].items()}
+        for p, t in teams_of.items():
+            if p not in players:
+                players[p] = t
         base_roster = custom_data.base_roster()
+        # 队伍下拉：角色池有的 ∪ 登记过的（还没打过比赛的新队也能选）
+        import roster_store
+        all_teams = sorted(set(base_roster) | set(roster_store.load()["teams"]))
         base_cells = custom_data.base_cells()
         reports = _list_reports()
         player_cells, player_hunters = self._player_cells()
@@ -760,7 +939,7 @@ class Handler(SimpleHTTPRequestHandler):
         except Exception:
             map_rows = []
         self._json(200, {
-            "teams": sorted(base_roster),
+            "teams": all_teams,
             "players": [{"name": p, "team": t} for p, t in players.items()],
             "all_survivors": custom_data.all_survivors(),
             "all_hunters": custom_data.all_hunters(),

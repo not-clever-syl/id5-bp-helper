@@ -125,7 +125,16 @@ def build(core=None, adj=None, tree=None) -> dict:
     }
 
     def order_of(p):
-        order = team_order.get(tree["players"][p].get("team"), {})
+        # 选手→队伍：roster（自定义名单）优先，bp_tree 兜底
+        try:
+            import roster_store
+            team = next((x["team"] for x in roster_store.load()["players"]
+                         if x["name"] == p and x["team"]), None)
+        except Exception:
+            team = None
+        if not team:
+            team = tree["players"][p].get("team")
+        order = team_order.get(team, {})
         return lambda c: (order.get(c, 10 ** 6), gallery.get(c, 10 ** 6))
 
     trimmed = {}

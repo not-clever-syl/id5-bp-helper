@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>队伍 / 选手 · IVL 2026 秋</title>
+<link rel="stylesheet" href="char.css">
+<style>
+:root{
+  --bg:#12141a;--panel:#191c24;--panel2:#21252f;--border:#2c313d;
+  --text:#dfe5f0;--dim:#8a93a6;--accent:#6b8cff;
+  --ok:#6dc4a0;--err:#e0837b;--warn:#d8b25f;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+  font:13px/1.6 -apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
+header{padding:14px 20px;border-bottom:1px solid var(--border);
+  background:var(--panel);display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+header h1{margin:0;font-size:15px;font-weight:600}
+header .sub{color:var(--dim);font-size:12px}
+a.home{color:var(--dim);text-decoration:none;font-size:12.5px;
+  padding:4px 10px;border-radius:6px;border:1px solid var(--border);flex:none}
+a.home:hover{color:var(--text);border-color:var(--accent)}
+main{max-width:1080px;margin:0 auto;padding:18px 20px 60px}
+
+.card{background:var(--panel);border:1px solid var(--border);border-radius:10px;
+  padding:16px 18px;margin-bottom:14px}
+.card h2{margin:0 0 12px;font-size:14.5px;font-weight:600;
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.card h2 .badge{font-size:11.5px;padding:2px 10px;border-radius:10px;font-weight:500;
+  background:rgba(138,147,166,.2);color:#a9b2c3}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+label.lbl{color:var(--dim);font-size:12.5px}
+input[type=text],select{background:var(--panel2);color:var(--text);
+  border:1px solid var(--border);border-radius:7px;padding:8px 12px;
+  font-size:13.5px}
+input[type=text]{min-width:200px}
+input[type=text]:focus,select:focus{outline:none;border-color:var(--accent)}
+button{background:var(--panel2);color:var(--text);border:1px solid var(--border);
+  border-radius:7px;padding:8px 16px;font-size:13.5px;cursor:pointer}
+button:hover{border-color:var(--accent)}
+button.primary{background:rgba(107,140,255,.18);border-color:var(--accent);
+  color:#cfe0ff}
+.hint{color:var(--dim);font-size:12px;line-height:1.8}
+.note{background:var(--panel);border:1px solid var(--border);border-radius:10px;
+  padding:12px 16px;margin-bottom:14px;color:var(--dim);font-size:12.5px;line-height:1.9}
+.note b{color:var(--text)}
+
+.cols{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap}
+.cols>div{flex:1;min-width:300px}
+.tablewrap{width:100%;border:1px solid var(--border);border-radius:8px;overflow:auto}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:13px}
+th,td{padding:9px 12px;border-bottom:1px solid var(--border);white-space:nowrap;
+  text-align:center}
+thead th{background:var(--panel2);color:var(--dim);font-weight:600;font-size:12px;
+  position:sticky;top:0;z-index:1}
+tbody tr:last-child td{border-bottom:none}
+td.n{font-family:Consolas,monospace}
+td .dim{color:var(--dim);font-size:12px}
+tbody button{padding:5px 14px;font-size:12.5px}
+tbody button.danger:hover{border-color:var(--err);color:var(--err)}
+.addform .row{margin-bottom:10px}
+.addform .row:last-child{margin-bottom:0}
+.addform input[type=text]{flex:1;min-width:160px}
+.addform select{min-width:150px}
+.addform label.lbl{flex:none;width:56px}
+.flag{font-size:11px;padding:1px 8px;border-radius:8px;margin-left:6px;
+  background:rgba(107,140,255,.15);color:#9db4f0}
+.flag.reg{background:rgba(109,196,160,.15);color:#8fd4b6}
+</style>
+</head>
+<body>
+<header>
+  <a href="index.html" class="home">← 首页</a>
+  <h1>队伍 / 选手</h1>
+  <span class="sub">维护参赛队伍和监管选手名单；改名会把历史数据一起改</span>
+</header>
+
+<main>
+  <div class="note">
+    <b>怎么用</b>：这里登记的队伍 / 选手会和比赛数据里出现的合并显示。
+    <b>改名</b>会把 <code>data/bp_core.json</code> 里的历史记录一并替换（自动备份并重算）；
+    <b>删除</b>只在比赛数据里完全没用到的名字上生效，还在用的会被拒绝。
+    添加新选手时可以顺便指定他所属的队伍，原始数据页的「监管选手」下拉会按归属过滤。
+  </div>
+
+  <div class="cols">
+    <section class="card">
+      <h2>添加</h2>
+      <div class="addform">
+        <div class="row">
+          <label class="lbl">新队伍</label>
+          <input type="text" id="newTeam" placeholder="队伍名" onkeydown="if(event.key==='Enter')addTeam()">
+          <button class="primary" onclick="addTeam()">添加队伍</button>
+        </div>
+        <div class="row">
+          <label class="lbl">新选手</label>
+          <input type="text" id="newPlayer" placeholder="选手名">
+          <select id="newPlayerTeam"></select>
+          <button class="primary" onclick="addPlayer()">添加选手</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="cols">
+    <section class="card">
+      <h2>队伍 <span class="badge" id="teamCount"></span></h2>
+      <div class="tablewrap"><table id="teamTbl"></table></div>
+    </section>
+
+    <section class="card">
+      <h2>监管选手 <span class="badge" id="playerCount"></span></h2>
+      <div class="tablewrap"><table id="playerTbl"></table></div>
+    </section>
+  </div>
+</main>
+
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g,
+  m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+
+let DATA = null;   // /api/roster_edit 的返回
+
+async function refresh() {
+  const r = await fetch('/api/roster_edit').then(x => x.json());
+  if (!r.ok) { alert(r.error || '读取名单失败'); return; }
+  DATA = r;
+  renderTeams();
+  renderPlayers();
+}
+
+function renderTeams() {
+  const used = new Set(DATA.used_teams);
+  const reg = new Set(DATA.teams);
+  const all = [...new Set([...used, ...reg])].sort(
+    (a, b) => (used.has(b) ? 1 : 0) - (used.has(a) ? 1 : 0) || a.localeCompare(b, 'zh'));
+  let html = '<thead><tr><th>队伍</th><th>归属选手</th><th>状态</th><th>操作</th></tr></thead><tbody>';
+  for (const t of all) {
+    const members = DATA.players.filter(p => p.team === t).map(p => p.name);
+    html += `<tr><td><b>${esc(t)}</b>` +
+      `<span class="flag${used.has(t) ? '' : ' reg'}">${used.has(t) ? '比赛中' : '登记'}</span></td>` +
+      `<td>${members.length ? esc(members.join('、')) : '<span class="dim">—</span>'}</td>` +
+      `<td class="n"><span class="dim">${used.has(t) ? '在用' : '未上场'}</span></td>` +
+      `<td><button data-tren="${esc(t)}">改名</button>` +
+      `<button class="danger" data-tdel="${esc(t)}">删除</button></td></tr>`;
+  }
+  html += '</tbody>';
+  $('#teamTbl').innerHTML = html;
+  $('#teamCount').textContent = all.length + ' 支';
+}
+
+function renderPlayers() {
+  const used = new Set(DATA.used_players);
+  const reg = new Map(DATA.players.map(p => [p.name, p.team]));
+  const all = [...new Set([...used, ...reg.keys()])].sort(
+    (a, b) => (used.has(b) ? 1 : 0) - (used.has(a) ? 1 : 0) || a.localeCompare(b, 'zh'));
+  let html = '<thead><tr><th>选手</th><th>所属队伍</th><th>状态</th><th>操作</th></tr></thead><tbody>';
+  for (const p of all) {
+    const team = reg.get(p) || '';
+    html += `<tr><td><b>${esc(p)}</b>` +
+      `<span class="flag${used.has(p) ? '' : ' reg'}">${used.has(p) ? '比赛中' : '登记'}</span></td>` +
+      `<td>${team ? esc(team) : '<span class="dim">—</span>'}</td>` +
+      `<td class="n"><span class="dim">${used.has(p) ? '在用' : '未上场'}</span></td>` +
+      `<td><button data-pren="${esc(p)}">改名</button>` +
+      `<button class="danger" data-pdel="${esc(p)}">删除</button></td></tr>`;
+  }
+  html += '</tbody>';
+  $('#playerTbl').innerHTML = html;
+  $('#playerCount').textContent = all.length + ' 人';
+
+  // 新选手的队伍下拉（全部队伍）
+  const usedT = new Set(DATA.used_teams);
+  const teams = [...new Set([...usedT, ...DATA.teams])];
+  $('#newPlayerTeam').innerHTML =
+    '<option value="">— 无队伍 —</option>' +
+    teams.map(t => `<option value="${esc(t)}">${esc(t)}</option>`).join('');
+}
+
+async function api(body) {
+  const r = await fetch('/api/roster_edit', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(body),
+  }).then(x => x.json());
+  if (!r.ok) { alert(r.error || '操作失败'); return null; }
+  return r;
+}
+
+async function addTeam() {
+  const name = $('#newTeam').value.trim();
+  if (!name) { alert('请输入队伍名'); return; }
+  if (!await api({action: 'add', kind: 'team', name})) return;
+  $('#newTeam').value = '';
+  await refresh();
+}
+
+async function addPlayer() {
+  const name = $('#newPlayer').value.trim();
+  if (!name) { alert('请输入选手名'); return; }
+  if (!await api({action: 'add', kind: 'player', name, team: $('#newPlayerTeam').value})) return;
+  $('#newPlayer').value = '';
+  await refresh();
+}
+
+document.addEventListener('click', async ev => {
+  const tren = ev.target.closest('[data-tren]');
+  const tdel = ev.target.closest('[data-tdel]');
+  const pren = ev.target.closest('[data-pren]');
+  const pdel = ev.target.closest('[data-pdel]');
+  if (tren) {
+    const old = tren.dataset.tren;
+    const nw = prompt(`把队伍「${old}」改名为：`, old);
+    if (!nw || nw === old) return;
+    // 队伍改名后，选手归属里引用的旧队名后端会一并同步
+    if (!await api({action: 'rename', kind: 'team', old, new: nw.trim()})) return;
+    await refresh();
+  } else if (tdel) {
+    const name = tdel.dataset.tdel;
+    if (!confirm(`删除队伍「${name}」？比赛数据里还在用的话会被拒绝。`)) return;
+    if (!await api({action: 'delete', kind: 'team', name})) return;
+    await refresh();
+  } else if (pren) {
+    const old = pren.dataset.pren;
+    const nw = prompt(`把选手「${old}」改名为：`, old);
+    if (!nw || nw === old) return;
+    const cur = (DATA.players.find(p => p.name === old) || {}).team || '';
+    if (!await api({action: 'rename', kind: 'player', old, new: nw.trim(), team: cur})) return;
+    await refresh();
+  } else if (pdel) {
+    const name = pdel.dataset.pdel;
+    if (!confirm(`删除选手「${name}」？比赛数据里还在用的话会被拒绝。`)) return;
+    if (!await api({action: 'delete', kind: 'player', name})) return;
+    await refresh();
+  }
+});
+
+refresh();
+</script>
+</body>
+</html>

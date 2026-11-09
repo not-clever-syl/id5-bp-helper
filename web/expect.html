@@ -186,8 +186,14 @@ async function boot() {
   // 角色池 = 全部求生角色（不区分队伍、不受各队角色池限制）
   POOL = (roster.all_survivors || []).slice().sort(byName);
 
-  // 监管选手按名称字典序排（忽略大小写）
-  const names = [...Object.keys(PL)].sort(byName);
+  // 监管选手：web_bp.json 里打过比赛的 ∪ 登记过的（roster.json）。
+  // 新登记的选手还没有分布数据，选了他会显示「没有选手数据」。
+  let reg = [];
+  try {
+    const rr = await api('/api/roster_edit');
+    if (rr && rr.ok) reg = rr.players || [];
+  } catch (e) {}
+  const names = [...new Set([...Object.keys(PL), ...reg.map(p => p.name)])].sort(byName);
   $('#playerPick').innerHTML = names
     .map(p => `<option value="${p}">${p}</option>`).join('');
   $('#playerPick').onchange = showPlayer;
