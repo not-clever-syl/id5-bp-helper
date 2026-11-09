@@ -35,37 +35,37 @@
  },
  "hunter_char_effect": {
   "跛脚羊": {
-   "alpha": -0.3108,
-   "n": 24,
+   "alpha": -0.2864,
+   "n": 23,
    "estimated": true
   },
   "牙医": {
-   "alpha": -0.2519,
-   "n": 57,
+   "alpha": -0.2615,
+   "n": 58,
    "estimated": true
   },
   "鹿头": {
-   "alpha": -0.2456,
+   "alpha": -0.2486,
    "n": 22,
    "estimated": true
   },
   "歌剧演员": {
-   "alpha": 0.1308,
+   "alpha": 0.1278,
    "n": 35,
    "estimated": true
   },
   "喧嚣": {
-   "alpha": 0.1488,
+   "alpha": 0.1459,
    "n": 20,
    "estimated": true
   },
   "女王蜂": {
-   "alpha": 0.2322,
+   "alpha": 0.2294,
    "n": 33,
    "estimated": true
   },
   "台球手": {
-   "alpha": 0.2964,
+   "alpha": 0.2934,
    "n": 25,
    "estimated": true
   }
@@ -105,36 +105,36 @@
  "player_char_adjust": {
   "BaiLu@喧嚣": {
    "n": 1,
-   "beta": -0.48,
-   "adjust": 0.48,
-   "adjust_unclipped": 0.48,
+   "beta": -0.4802,
+   "adjust": 0.4802,
+   "adjust_unclipped": 0.4802,
    "clipped": false,
    "shrink_weight": 0.25,
    "counter_pick": false
   },
   "BaiLu@女王蜂": {
    "n": 2,
-   "beta": 0.0083,
-   "adjust": -0.0083,
-   "adjust_unclipped": -0.0083,
+   "beta": 0.0082,
+   "adjust": -0.0082,
+   "adjust_unclipped": -0.0082,
    "clipped": false,
    "shrink_weight": 0.4,
    "counter_pick": false
   },
   "BaiLu@歌剧演员": {
    "n": 1,
-   "beta": 0.016,
-   "adjust": -0.016,
-   "adjust_unclipped": -0.016,
+   "beta": 0.0155,
+   "adjust": -0.0155,
+   "adjust_unclipped": -0.0155,
    "clipped": false,
    "shrink_weight": 0.25,
    "counter_pick": false
   },
   "BaiLu@牙医": {
    "n": 2,
-   "beta": -0.2045,
-   "adjust": 0.2045,
-   "adjust_unclipped": 0.2045,
+   "beta": -0.2024,
+   "adjust": 0.2024,
+   "adjust_unclipped": 0.2024,
    "clipped": false,
    "shrink_weight": 0.4,
    "counter_pick": false
@@ -150,18 +150,18 @@
   },
   "BaiLu@跛脚羊": {
    "n": 1,
-   "beta": -0.3698,
-   "adjust": 0.3698,
-   "adjust_unclipped": 0.3698,
+   "beta": -0.378,
+   "adjust": 0.378,
+   "adjust_unclipped": 0.378,
    "clipped": false,
    "shrink_weight": 0.25,
    "counter_pick": false
   },
   "BaiLu@鹿头": {
    "n": 1,
-   "beta": 0.1155,
-   "adjust": -0.1155,
-   "adjust_unclipped": -0.1155,
+   "beta": 0.1151,
+   "adjust": -0.1151,
+   "adjust_unclipped": -0.1151,
    "clipped": false,
    "shrink_weight": 0.25,
    "counter_pick": false
@@ -177,18 +177,18 @@
   },
   "ChoAi@喧嚣": {
    "n": 1,
-   "beta": 0.27,
-   "adjust": -0.27,
-   "adjust_unclipped": -0.27,
+   "beta": 0.2698,
+   "adjust": -0.2698,
+   "adjust_unclipped": -0.2698,
    "clipped": false,
    "shrink_weight": 0.25,
    "counter_pick": false
   },
   "ChoAi@女王蜂": {
    "n": 2,
-   "beta": 0.2083,
-   "adjust": -0.2083,
-   "adjust_unclipped": -0.2083,
+   "beta": 0.2082,
+   "adjust": -0.2082,
+   "adjust_unclipped": -0.2082,
    "clipped": false,
    "shrink_weight": 0.4,
    "counter_pick": false
@@ -204,72 +204,72 @@
   },
   "ChoAi@歌剧演员": {
    "n": 2,
-   "beta": 0.0464,
-   "adjust": -0.0464,
-   "adjust_unclipped": -0.0464,
+   "beta": 0.0463,
+   "adjust": -0.0463,
+   "adjust_unclipped": -0.0463,
    "clipped": false,
    "shrink_weight": 0.4,
    "counter_pick": false
   },
   "ChoAi@牙医": {
    "n": 2,
-   "beta": 0.1955,
-   "adjust": -0.1955,
-   "adjust_unclipped": -0.1955,
+   "beta": 0.1976,
+   "adjust": -0.1976,
+   "adjust_unclipped": -0.1976,
    "clipped": false,
    "shrink_weight": 0.4,
    "counter_pick": false
   },
   "ChoAi@跛脚羊": {
    "n": 3,
-   "beta": -0.2087,
-   "adjust": 0.2087,
-   "adjust_unclipped": 0.2087,
+   "beta": -0.223,
+   "adjust": 0.223,
+   "adjust_unclipped": 0.223,
    "clipped": false,
    "shrink_weight": 0.5,
    "counter_pick": false
   },
   "ChoAi@鹿头": {
    "n": 1,
-   "beta": 0.1155,
-   "adjust": -0.1155,
-   "adjust_unclipped": -0.1155,
+   "beta": 0.1151,
+   "adjust": -0.1151,
+   "adjust_unclipped": -0.1151,
    "clipped": false,
    "shrink_weight": 0.25,
    "counter_pick": false
   },
   "CyanX@台球手": {
    "n": 1,
-   "beta": -0.0223,
-   "adjust": 0.0223,
-   "adjust_unclipped": 0.0223,
+   "beta": -0.0227,
+   "adjust": 0.0227,
+   "adjust_unclipped": 0.0227,
    "clipped": false,
    "shrink_weight": 0.25,
    "counter_pick": false
   },
   "CyanX@女王蜂": {
    "n": 3,
-   "beta": 0.185,
-   "adjust": -0.185,
-   "adjust_unclipped": -0.185,
+   "beta": 0.1853,
+   "adjust": -0.1853,
+   "adjust_unclipped": -0.1853,
    "clipped": false,
    "shrink_weight": 0.5,
    "counter_pick": false
   },
   "CyanX@牙医": {
    "n": 4,
-   "beta": -0.5613,
+   "beta": -0.5576,
    "adjust": 0.5,
-   "adjust_unclipped": 0.5613,
+   "adjust_unclipped": 0.5576,
    "clipped": true,
    "shrink_weight": 0.571,
    "counter_pick": false
   },
   "CyanX@鹿头": {
    "n": 2,
-   "beta": 0.2023,
-   "adjust": -0.2023,
-   "adjust_unclipped": -0.2023,
+   "beta": 0.2024,
+   "adjust": -0.2024,
+   "adjust_unclipped": -0.2024,
    "clipped": false,
    "shrink_weight": 0.4,
    "counter_pick": false
@@ -285,18 +285,18 @@
   },
   "DongX@喧嚣": {
    "n": 1,
-   "beta": 0.27,
-   "adjust": -0.27,
-   "adjust_unclipped": -0.27,
+   "beta": 0.2698,
+   "adjust": -0.2698,
+   "adjust_unclipped": -0.2698,
    "clipped": false,
    "shrink_weight": 0.25,
    "counter_pick": false
   },
   "DongX@女王蜂": {
    "n": 3,
-   "beta": -0.4816,
-   "adjust": 0.4816,
-   "adjust_unclipped": 0.4816,
+   "beta": -0.4814,
+   "adjust": 0.4814,
+   "adjust_unclipped": 0.4814,
    "clipped": false,
    "shrink_weight": 0.5,
    "counter_pick": false
@@ -321,9 +321,9 @@
   },
   "DongX@鹿头": {
    "n": 4,
-   "beta": -0.6985,
+   "beta": -0.6978,
    "adjust": 0.5,
-   "adjust_unclipped": 0.6985,
+   "adjust_unclipped": 0.6978,
    "clipped": true,
    "shrink_weight": 0.571,
    "counter_pick": false
@@ -339,27 +339,27 @@
   },
   "Jin@喧嚣": {
    "n": 2,
-   "beta": -0.1523,
-   "adjust": 0.1523,
-   "adjust_unclipped": 0.1523,
+   "beta": -0.1521,
+   "adjust": 0.1521,
+   "adjust_unclipped": 0.1521,
    "clipped": false,
    "shrink_weight": 0.4,
    "counter_pick": false
   },
   "Jin@歌剧演员": {
    "n": 2,
-   "beta": 0.0464,
-   "adjust": -0.0464,
-   "adjust_unclipped": -0.0464,
+   "beta": 0.0463,
+   "adjust": -0.0463,
+   "adjust_unclipped": -0.0463,
    "clipped": false,
    "shrink_weight": 0.4,
    "counter_pick": false
   },
   "Jin@牙医": {
    "n": 4,
-   "beta": -0.2756,
-   "adjust": 0.2756,
-   "adjust_unclipped": 0.2756,
+   "beta": -0.2719,
+   "adjust": 0.2719,
+   "adjust_unclipped": 0.2719,
    "clipped": false,
    "shrink_weight": 0.571,
    "counter_pick": false
@@ -375,18 +375,18 @@
   },
   "Jin@跛脚羊": {
    "n": 2,
-   "beta": -0.3732,
-   "adjust": 0.3732,
-   "adjust_unclipped": 0.3732,
+   "beta": -0.385,
+   "adjust": 0.385,
+   "adjust_unclipped": 0.385,
    "clipped": false,
    "shrink_weight": 0.4,
    "counter_pick": false
   },
   "Jin@鹿头": {
    "n": 1,
-   "beta": 0.3655,
-   "adjust": -0.3655,
-   "adjust_unclipped": -0.3655,
+   "beta": 0.3651,
+   "adjust": -0.3651,
+   "adjust_unclipped": -0.3651,
    "clipped": false,
    "shrink_weight": 0.25,
    "counter_pick": false
@@ -402,18 +402,18 @@
   },
   "Mort1s@喧嚣": {
    "n": 3,
-   "beta": 0.0661,
-   "adjust": -0.0661,
-   "adjust_unclipped": -0.0661,
+   "beta": 0.0666,
+   "adjust": -0.0666,
+   "adjust_unclipped": -0.0666,
    "clipped": false,
    "shrink_weight": 0.5,
    "counter_pick": false
   },
   "Mort1s@女王蜂": {
    "n": 2,
-   "beta": 0.2083,
-   "adjust": -0.2083,
-   "adjust_unclipped": -0.2083,
+   "beta": 0.2082,
+   "adjust": -0.2082,
+   "adjust_unclipped": -0.2082,
    "clipped": false,
    "shrink_weight": 0.4,
    "counter_pick": false
@@ -438,9 +438,9 @@
   },
   "Mort1s@牙医": {
    "n": 4,
-   "beta": 0.2958,
-   "adjust": -0.2958,
-   "adjust_unclipped": -0.2958,
+   "beta": 0.2995,
+   "adjust": -0.2995,
+   "adjust_unclipped": -0.2995,
    "clipped": false,
    "shrink_weight": 0.571,
    "counter_pick": false
@@ -474,18 +474,18 @@
   },
   "N1e@喧嚣": {
    "n": 1,
-   "beta": 0.02,
-   "adjust": -0.02,
-   "adjust_unclipped": -0.02,
+   "beta": 0.0198,
+   "adjust": -0.0198,
+   "adjust_unclipped": -0.0198,
    "clipped": false,
    "shrink_weight": 0.25,
    "counter_pick": false
   },
   "N1e@女王蜂": {
    "n": 3,
-   "beta": -0.4816,
-   "adjust": 0.4816,
-   "adjust_unclipped": 0.4816,
+   "beta": -0.4814,
+   "adjust": 0.4814,
+   "adjust_unclipped": 0.4814,
    "clipped": false,
    "shrink_weight": 0.5,
    "counter_pick": false
@@ -510,36 +510,36 @@
   },
   "N1e@歌剧演员": {
    "n": 4,
-   "beta": -0.2046,
-   "adjust": 0.2046,
-   "adjust_unclipped": 0.2046,
+   "beta": -0.2042,
+   "adjust": 0.2042,
+   "adjust_unclipped": 0.2042,
    "clipped": false,
    "shrink_weight": 0.571,
    "counter_pick": false
   },
   "N1e@牙医": {
    "n": 1,
-   "beta": 0.1077,
-   "adjust": -0.1077,
-   "adjust_unclipped": -0.1077,
+   "beta": 0.1083,
+   "adjust": -0.1083,
+   "adjust_unclipped": -0.1083,
    "clipped": false,
    "shrink_weight": 0.25,
    "counter_pick": false
   },
   "N1e@跛脚羊": {
    "n": 1,
-   "beta": 0.6302,
+   "beta": 0.622,
    "adjust": -0.5,
-   "adjust_unclipped": -0.6302,
+   "adjust_unclipped": -0.622,
    "clipped": true,
    "shrink_weight": 0.25,
    "counter_pick": false
   },
   "Nokino@女王蜂": {
    "n": 1,
-   "beta": -0.0069,
-   "adjust": 0.0069,
-   "adjust_unclipped": 0.0069,
+   "beta": -0.0074,
+   "adjust": 0.0074,
+   "adjust_unclipped": 0.0074,
    "clipped": false,
    "shrink_weight": 0.25,
    "counter_pick": false
@@ -555,9 +555,9 @@
   },
   "Nokino@牙医": {
    "n": 1,
-   "beta": 0.1077,
-   "adjust": -0.1077,
-   "adjust_unclipped": -0.1077,
+   "beta": 0.1083,
+   "adjust": -0.1083,
+   "adjust_unclipped": -0.1083,
    "clipped": false,
    "shrink_weight": 0.25,
    "counter_pick": false
@@ -573,54 +573,54 @@
   },
   "NonSept@台球手": {
    "n": 1,
-   "beta": 0.2277,
-   "adjust": -0.2277,
-   "adjust_unclipped": -0.2277,
+   "beta": 0.2273,
+   "adjust": -0.2273,
+   "adjust_unclipped": -0.2273,
    "clipped": false,
    "shrink_weight": 0.25,
    "counter_pick": false
   },
   "NonSept@女王蜂": {
    "n": 1,
-   "beta": -0.0069,
-   "adjust": 0.0069,
-   "adjust_unclipped": 0.0069,
+   "beta": -0.0074,
+   "adjust": 0.0074,
+   "adjust_unclipped": 0.0074,
    "clipped": false,
    "shrink_weight": 0.25,
    "counter_pick": false
   },
   "NonSept@歌剧演员": {
    "n": 2,
-   "beta": 0.0464,
-   "adjust": -0.0464,
-   "adjust_unclipped": -0.0464,
+   "beta": 0.0463,
+   "adjust": -0.0463,
+   "adjust_unclipped": -0.0463,
    "clipped": false,
    "shrink_weight": 0.4,
    "counter_pick": false
   },
   "NonSept@牙医": {
    "n": 4,
-   "beta": 0.0101,
-   "adjust": -0.0101,
-   "adjust_unclipped": -0.0101,
+   "beta": 0.0138,
+   "adjust": -0.0138,
+   "adjust_unclipped": -0.0138,
    "clipped": false,
    "shrink_weight": 0.571,
    "counter_pick": false
   },
   "NonSept@跛脚羊": {
    "n": 2,
-   "beta": 0.4268,
-   "adjust": -0.4268,
-   "adjust_unclipped": -0.4268,
+   "beta": 0.415,
+   "adjust": -0.415,
+   "adjust_unclipped": -0.415,
    "clipped": false,
    "shrink_weight": 0.4,
    "counter_pick": false
   },
   "NonSept@鹿头": {
    "n": 2,
-   "beta": 0.0023,
-   "adjust": -0.0023,
-   "adjust_unclipped": -0.0023,
+   "beta": 0.0024,
+   "adjust": -0.0024,
+   "adjust_unclipped": -0.0024,
    "clipped": false,
    "shrink_weight": 0.4,
    "counter_pick": false
@@ -636,36 +636,36 @@
   },
   "Qiu@喧嚣": {
    "n": 2,
-   "beta": 0.2477,
-   "adjust": -0.2477,
-   "adjust_unclipped": -0.2477,
+   "beta": 0.2479,
+   "adjust": -0.2479,
+   "adjust_unclipped": -0.2479,
    "clipped": false,
    "shrink_weight": 0.4,
    "counter_pick": false
   },
   "Qiu@女王蜂": {
    "n": 4,
-   "beta": 0.1684,
-   "adjust": -0.1684,
-   "adjust_unclipped": -0.1684,
+   "beta": 0.1689,
+   "adjust": -0.1689,
+   "adjust_unclipped": -0.1689,
    "clipped": false,
    "shrink_weight": 0.571,
    "counter_pick": false
   },
   "Qiu@歌剧演员": {
    "n": 4,
-   "beta": -0.0617,
-   "adjust": 0.0617,
-   "adjust_unclipped": 0.0617,
+   "beta": -0.0613,
+   "adjust": 0.0613,
+   "adjust_unclipped": 0.0613,
    "clipped": false,
    "shrink_weight": 0.571,
    "counter_pick": false
   },
   "Qiu@牙医": {
    "n": 5,
-   "beta": 0.2021,
-   "adjust": -0.2021,
-   "adjust_unclipped": -0.2021,
+   "beta": 0.2064,
+   "adjust": -0.2064,
+   "adjust_unclipped": -0.2064,
    "clipped": false,
    "shrink_weight": 0.625,
    "counter_pick": false
@@ -681,108 +681,99 @@
   },
   "Qiu@跛脚羊": {
    "n": 4,
-   "beta": -0.0913,
-   "adjust": 0.0913,
-   "adjust_unclipped": 0.0913,
+   "beta": -0.1073,
+   "adjust": 0.1073,
+   "adjust_unclipped": 0.1073,
    "clipped": false,
    "shrink_weight": 0.571,
    "counter_pick": false
   },
   "Qiu@鹿头": {
    "n": 1,
-   "beta": -0.3845,
-   "adjust": 0.3845,
-   "adjust_unclipped": 0.3845,
+   "beta": -0.3849,
+   "adjust": 0.3849,
+   "adjust_unclipped": 0.3849,
    "clipped": false,
    "shrink_weight": 0.25,
    "counter_pick": false
   },
   "Qx@台球手": {
    "n": 1,
-   "beta": 0.4777,
-   "adjust": -0.4777,
-   "adjust_unclipped": -0.4777,
+   "beta": 0.4773,
+   "adjust": -0.4773,
+   "adjust_unclipped": -0.4773,
    "clipped": false,
    "shrink_weight": 0.25,
    "counter_pick": false
   },
   "Qx@喧嚣": {
    "n": 1,
-   "beta": 0.02,
-   "adjust": -0.02,
-   "adjust_unclipped": -0.02,
+   "beta": 0.0198,
+   "adjust": -0.0198,
+   "adjust_unclipped": -0.0198,
    "clipped": false,
    "shrink_weight": 0.25,
    "counter_pick": false
   },
   "Qx@歌剧演员": {
    "n": 2,
-   "beta": 0.2464,
-   "adjust": -0.2464,
-   "adjust_unclipped": -0.2464,
+   "beta": 0.2463,
+   "adjust": -0.2463,
+   "adjust_unclipped": -0.2463,
    "clipped": false,
    "shrink_weight": 0.4,
    "counter_pick": false
   },
   "Qx@牙医": {
-   "n": 7,
-   "beta": 0.071,
-   "adjust": -0.071,
-   "adjust_unclipped": -0.071,
+   "n": 8,
+   "beta": 0.0286,
+   "adjust": -0.0286,
+   "adjust_unclipped": -0.0286,
    "clipped": false,
-   "shrink_weight": 0.7,
-   "counter_pick": false
-  },
-  "Qx@跛脚羊": {
-   "n": 1,
-   "beta": -0.1198,
-   "adjust": 0.1198,
-   "adjust_unclipped": 0.1198,
-   "clipped": false,
-   "shrink_weight": 0.25,
+   "shrink_weight": 0.727,
    "counter_pick": false
   },
   "Tear@台球手": {
    "n": 4,
-   "beta": -0.2961,
-   "adjust": 0.2961,
-   "adjust_unclipped": 0.2961,
+   "beta": -0.2956,
+   "adjust": 0.2956,
+   "adjust_unclipped": 0.2956,
    "clipped": false,
    "shrink_weight": 0.571,
    "counter_pick": false
   },
   "Tear@喧嚣": {
    "n": 4,
-   "beta": -0.3493,
-   "adjust": 0.3493,
-   "adjust_unclipped": 0.3493,
+   "beta": -0.3486,
+   "adjust": 0.3486,
+   "adjust_unclipped": 0.3486,
    "clipped": false,
    "shrink_weight": 0.571,
    "counter_pick": false
   },
   "Tear@女王蜂": {
    "n": 5,
-   "beta": -0.469,
-   "adjust": 0.469,
-   "adjust_unclipped": 0.469,
+   "beta": -0.4684,
+   "adjust": 0.4684,
+   "adjust_unclipped": 0.4684,
    "clipped": false,
    "shrink_weight": 0.625,
    "counter_pick": false
   },
   "Tear@歌剧演员": {
    "n": 1,
-   "beta": 0.266,
-   "adjust": -0.266,
-   "adjust_unclipped": -0.266,
+   "beta": 0.2655,
+   "adjust": -0.2655,
+   "adjust_unclipped": -0.2655,
    "clipped": false,
    "shrink_weight": 0.25,
    "counter_pick": false
   },
   "Tear@牙医": {
    "n": 5,
-   "beta": -0.1729,
-   "adjust": 0.1729,
-   "adjust_unclipped": 0.1729,
+   "beta": -0.1686,
+   "adjust": 0.1686,
+   "adjust_unclipped": 0.1686,
    "clipped": false,
    "shrink_weight": 0.625,
    "counter_pick": false
@@ -798,9 +789,9 @@
   },
   "Tear@跛脚羊": {
    "n": 2,
-   "beta": 0.0268,
-   "adjust": -0.0268,
-   "adjust_unclipped": -0.0268,
+   "beta": 0.015,
+   "adjust": -0.015,
+   "adjust_unclipped": -0.015,
    "clipped": false,
    "shrink_weight": 0.4,
    "counter_pick": false
@@ -816,18 +807,18 @@
   },
   "YuM@台球手": {
    "n": 6,
-   "beta": -0.118,
-   "adjust": 0.118,
-   "adjust_unclipped": 0.118,
+   "beta": -0.1172,
+   "adjust": 0.1172,
+   "adjust_unclipped": 0.1172,
    "clipped": false,
    "shrink_weight": 0.667,
    "counter_pick": false
   },
   "YuM@女王蜂": {
    "n": 1,
-   "beta": 0.2431,
-   "adjust": -0.2431,
-   "adjust_unclipped": -0.2431,
+   "beta": 0.2426,
+   "adjust": -0.2426,
+   "adjust_unclipped": -0.2426,
    "clipped": false,
    "shrink_weight": 0.25,
    "counter_pick": false
@@ -861,54 +852,54 @@
   },
   "YuM@歌剧演员": {
    "n": 7,
-   "beta": 0.0072,
-   "adjust": -0.0072,
-   "adjust_unclipped": -0.0072,
+   "beta": 0.008,
+   "adjust": -0.008,
+   "adjust_unclipped": -0.008,
    "clipped": false,
    "shrink_weight": 0.7,
    "counter_pick": false
   },
   "YuM@牙医": {
    "n": 6,
-   "beta": -0.3151,
-   "adjust": 0.3151,
-   "adjust_unclipped": 0.3151,
+   "beta": -0.3105,
+   "adjust": 0.3105,
+   "adjust_unclipped": 0.3105,
    "clipped": false,
    "shrink_weight": 0.667,
    "counter_pick": false
   },
   "YuM@跛脚羊": {
    "n": 2,
-   "beta": -0.1732,
-   "adjust": 0.1732,
-   "adjust_unclipped": 0.1732,
+   "beta": -0.185,
+   "adjust": 0.185,
+   "adjust_unclipped": 0.185,
    "clipped": false,
    "shrink_weight": 0.4,
    "counter_pick": false
   },
   "YuM@鹿头": {
    "n": 5,
-   "beta": 0.2076,
-   "adjust": -0.2076,
-   "adjust_unclipped": -0.2076,
+   "beta": 0.2083,
+   "adjust": -0.2083,
+   "adjust_unclipped": -0.2083,
    "clipped": false,
    "shrink_weight": 0.625,
    "counter_pick": false
   },
   "YuZ@牙医": {
    "n": 1,
-   "beta": 0.3577,
-   "adjust": -0.3577,
-   "adjust_unclipped": -0.3577,
+   "beta": 0.3583,
+   "adjust": -0.3583,
+   "adjust_unclipped": -0.3583,
    "clipped": false,
    "shrink_weight": 0.25,
    "counter_pick": false
   },
   "mhxm@女王蜂": {
    "n": 2,
-   "beta": 0.0083,
-   "adjust": -0.0083,
-   "adjust_unclipped": -0.0083,
+   "beta": 0.0082,
+   "adjust": -0.0082,
+   "adjust_unclipped": -0.0082,
    "clipped": false,
    "shrink_weight": 0.4,
    "counter_pick": false
@@ -924,99 +915,99 @@
   },
   "mhxm@歌剧演员": {
    "n": 2,
-   "beta": 0.0464,
-   "adjust": -0.0464,
-   "adjust_unclipped": -0.0464,
+   "beta": 0.0463,
+   "adjust": -0.0463,
+   "adjust_unclipped": -0.0463,
    "clipped": false,
    "shrink_weight": 0.4,
    "counter_pick": false
   },
   "mhxm@牙医": {
    "n": 2,
-   "beta": -0.0045,
-   "adjust": 0.0045,
-   "adjust_unclipped": 0.0045,
+   "beta": -0.0024,
+   "adjust": 0.0024,
+   "adjust_unclipped": 0.0024,
    "clipped": false,
    "shrink_weight": 0.4,
    "counter_pick": false
   },
   "mhxm@跛脚羊": {
    "n": 1,
-   "beta": 0.1302,
-   "adjust": -0.1302,
-   "adjust_unclipped": -0.1302,
+   "beta": 0.122,
+   "adjust": -0.122,
+   "adjust_unclipped": -0.122,
    "clipped": false,
    "shrink_weight": 0.25,
    "counter_pick": false
   },
   "mhxm@鹿头": {
    "n": 1,
-   "beta": 0.1155,
-   "adjust": -0.1155,
-   "adjust_unclipped": -0.1155,
+   "beta": 0.1151,
+   "adjust": -0.1151,
+   "adjust_unclipped": -0.1151,
    "clipped": false,
    "shrink_weight": 0.25,
    "counter_pick": false
   },
   "moonlight@喧嚣": {
    "n": 1,
-   "beta": 0.02,
-   "adjust": -0.02,
-   "adjust_unclipped": -0.02,
+   "beta": 0.0198,
+   "adjust": -0.0198,
+   "adjust_unclipped": -0.0198,
    "clipped": false,
    "shrink_weight": 0.25,
    "counter_pick": false
   },
   "moonlight@歌剧演员": {
    "n": 1,
-   "beta": 0.016,
-   "adjust": -0.016,
-   "adjust_unclipped": -0.016,
+   "beta": 0.0155,
+   "adjust": -0.0155,
+   "adjust_unclipped": -0.0155,
    "clipped": false,
    "shrink_weight": 0.25,
    "counter_pick": false
   },
   "moonlight@牙医": {
    "n": 1,
-   "beta": 0.1077,
-   "adjust": -0.1077,
-   "adjust_unclipped": -0.1077,
+   "beta": 0.1083,
+   "adjust": -0.1083,
+   "adjust_unclipped": -0.1083,
    "clipped": false,
    "shrink_weight": 0.25,
    "counter_pick": false
   },
   "ppei@台球手": {
    "n": 1,
-   "beta": -0.0223,
-   "adjust": 0.0223,
-   "adjust_unclipped": 0.0223,
+   "beta": -0.0227,
+   "adjust": 0.0227,
+   "adjust_unclipped": 0.0227,
    "clipped": false,
    "shrink_weight": 0.25,
    "counter_pick": false
   },
   "ppei@喧嚣": {
    "n": 2,
-   "beta": 0.0477,
-   "adjust": -0.0477,
-   "adjust_unclipped": -0.0477,
+   "beta": 0.0479,
+   "adjust": -0.0479,
+   "adjust_unclipped": -0.0479,
    "clipped": false,
    "shrink_weight": 0.4,
    "counter_pick": false
   },
   "ppei@女王蜂": {
    "n": 2,
-   "beta": 0.2083,
-   "adjust": -0.2083,
-   "adjust_unclipped": -0.2083,
+   "beta": 0.2082,
+   "adjust": -0.2082,
+   "adjust_unclipped": -0.2082,
    "clipped": false,
    "shrink_weight": 0.4,
    "counter_pick": false
   },
   "ppei@歌剧演员": {
    "n": 4,
-   "beta": -0.2046,
-   "adjust": 0.2046,
-   "adjust_unclipped": 0.2046,
+   "beta": -0.2042,
+   "adjust": 0.2042,
+   "adjust_unclipped": 0.2042,
    "clipped": false,
    "shrink_weight": 0.571,
    "counter_pick": false
@@ -1032,9 +1023,9 @@
   },
   "ppei@牙医": {
    "n": 7,
-   "beta": -0.029,
-   "adjust": 0.029,
-   "adjust_unclipped": 0.029,
+   "beta": -0.024,
+   "adjust": 0.024,
+   "adjust_unclipped": 0.024,
    "clipped": false,
    "shrink_weight": 0.7,
    "counter_pick": false
@@ -1050,36 +1041,36 @@
   },
   "ppei@鹿头": {
    "n": 1,
-   "beta": 0.3655,
-   "adjust": -0.3655,
-   "adjust_unclipped": -0.3655,
+   "beta": 0.3651,
+   "adjust": -0.3651,
+   "adjust_unclipped": -0.3651,
    "clipped": false,
    "shrink_weight": 0.25,
    "counter_pick": false
   },
   "zz9@台球手": {
    "n": 3,
-   "beta": -0.1797,
-   "adjust": 0.1797,
-   "adjust_unclipped": 0.1797,
+   "beta": -0.1794,
+   "adjust": 0.1794,
+   "adjust_unclipped": 0.1794,
    "clipped": false,
    "shrink_weight": 0.5,
    "counter_pick": false
   },
   "zz9@喧嚣": {
    "n": 1,
-   "beta": 0.02,
-   "adjust": -0.02,
-   "adjust_unclipped": -0.02,
+   "beta": 0.0198,
+   "adjust": -0.0198,
+   "adjust_unclipped": -0.0198,
    "clipped": false,
    "shrink_weight": 0.25,
    "counter_pick": false
   },
   "zz9@女王蜂": {
    "n": 2,
-   "beta": 0.2083,
-   "adjust": -0.2083,
-   "adjust_unclipped": -0.2083,
+   "beta": 0.2082,
+   "adjust": -0.2082,
+   "adjust_unclipped": -0.2082,
    "clipped": false,
    "shrink_weight": 0.4,
    "counter_pick": false
@@ -1095,18 +1086,18 @@
   },
   "zz9@歌剧演员": {
    "n": 3,
-   "beta": -0.2666,
-   "adjust": 0.2666,
-   "adjust_unclipped": 0.2666,
+   "beta": -0.2665,
+   "adjust": 0.2665,
+   "adjust_unclipped": 0.2665,
    "clipped": false,
    "shrink_weight": 0.5,
    "counter_pick": false
   },
   "zz9@牙医": {
    "n": 1,
-   "beta": 0.1077,
-   "adjust": -0.1077,
-   "adjust_unclipped": -0.1077,
+   "beta": 0.1083,
+   "adjust": -0.1083,
+   "adjust_unclipped": -0.1083,
    "clipped": false,
    "shrink_weight": 0.25,
    "counter_pick": false
@@ -1122,18 +1113,18 @@
   },
   "zz9@跛脚羊": {
    "n": 5,
-   "beta": 0.1218,
-   "adjust": -0.1218,
-   "adjust_unclipped": -0.1218,
+   "beta": 0.1044,
+   "adjust": -0.1044,
+   "adjust_unclipped": -0.1044,
    "clipped": false,
    "shrink_weight": 0.625,
    "counter_pick": false
   },
   "zz9@鹿头": {
    "n": 3,
-   "beta": -0.4065,
-   "adjust": 0.4065,
-   "adjust_unclipped": 0.4065,
+   "beta": -0.4061,
+   "adjust": 0.4061,
+   "adjust_unclipped": 0.4061,
    "clipped": false,
    "shrink_weight": 0.5,
    "counter_pick": false
@@ -1145,16 +1136,16 @@
     "牙医": {
      "n": 4,
      "raw": 1.75,
-     "adjusted": 1.828,
-     "delta": 0.078,
+     "adjusted": 1.836,
+     "delta": 0.086,
      "confidence": "high",
      "counter_pick": false
     },
     "女王蜂": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.832,
-     "delta": -0.168,
+     "adjusted": 1.831,
+     "delta": -0.169,
      "confidence": "low",
      "counter_pick": false
     },
@@ -1169,8 +1160,8 @@
     "台球手": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.118,
-     "delta": 0.118,
+     "adjusted": 2.117,
+     "delta": 0.117,
      "confidence": "low",
      "counter_pick": false
     }
@@ -1179,8 +1170,8 @@
     "牙医": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.005,
-     "delta": 0.005,
+     "adjusted": 2.002,
+     "delta": 0.002,
      "confidence": "low",
      "counter_pick": false
     }
@@ -1189,8 +1180,8 @@
     "牙医": {
      "n": 2,
      "raw": 2.0,
-     "adjusted": 1.905,
-     "delta": -0.095,
+     "adjusted": 1.902,
+     "delta": -0.098,
      "confidence": "medium",
      "counter_pick": false
     },
@@ -1239,8 +1230,8 @@
     "牙医": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.005,
-     "delta": 0.005,
+     "adjusted": 2.002,
+     "delta": 0.002,
      "confidence": "low",
      "counter_pick": false
     },
@@ -1255,8 +1246,8 @@
     "女王蜂": {
      "n": 2,
      "raw": 2.0,
-     "adjusted": 1.999,
-     "delta": -0.001,
+     "adjusted": 2.0,
+     "delta": -0.0,
      "confidence": "medium",
      "counter_pick": false
     }
@@ -1273,8 +1264,8 @@
     "牙医": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.798,
-     "delta": -0.202,
+     "adjusted": 1.794,
+     "delta": -0.206,
      "confidence": "low",
      "counter_pick": false
     }
@@ -1309,8 +1300,8 @@
     "牙医": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.798,
-     "delta": -0.202,
+     "adjusted": 1.794,
+     "delta": -0.206,
      "confidence": "low",
      "counter_pick": false
     },
@@ -1359,8 +1350,8 @@
     "女王蜂": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 1.469,
-     "delta": 0.469,
+     "adjusted": 1.468,
+     "delta": 0.468,
      "confidence": "low",
      "counter_pick": false
     }
@@ -1437,16 +1428,16 @@
     "牙医": {
      "n": 2,
      "raw": 2.0,
-     "adjusted": 1.801,
-     "delta": -0.199,
+     "adjusted": 1.798,
+     "delta": -0.202,
      "confidence": "medium",
      "counter_pick": false
     },
     "歌剧演员": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.993,
-     "delta": -0.007,
+     "adjusted": 1.992,
+     "delta": -0.008,
      "confidence": "low",
      "counter_pick": false
     },
@@ -1471,24 +1462,24 @@
     "跛脚羊": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.878,
-     "delta": -0.122,
+     "adjusted": 1.896,
+     "delta": -0.104,
      "confidence": "low",
      "counter_pick": false
     },
     "牙医": {
      "n": 4,
      "raw": 1.75,
-     "adjusted": 1.776,
-     "delta": 0.026,
+     "adjusted": 1.784,
+     "delta": 0.034,
      "confidence": "high",
      "counter_pick": false
     },
     "歌剧演员": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.993,
-     "delta": -0.007,
+     "adjusted": 1.992,
+     "delta": -0.008,
      "confidence": "low",
      "counter_pick": false
     },
@@ -1505,8 +1496,8 @@
     "跛脚羊": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.878,
-     "delta": -0.122,
+     "adjusted": 1.896,
+     "delta": -0.104,
      "confidence": "low",
      "counter_pick": false
     },
@@ -1531,16 +1522,16 @@
     "跛脚羊": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.878,
-     "delta": -0.122,
+     "adjusted": 1.896,
+     "delta": -0.104,
      "confidence": "low",
      "counter_pick": false
     },
     "女王蜂": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.832,
-     "delta": -0.168,
+     "adjusted": 1.831,
+     "delta": -0.169,
      "confidence": "low",
      "counter_pick": false
     },
@@ -1555,8 +1546,8 @@
     "牙医": {
      "n": 4,
      "raw": 1.75,
-     "adjusted": 1.8,
-     "delta": 0.05,
+     "adjusted": 1.809,
+     "delta": 0.059,
      "confidence": "high",
      "counter_pick": false
     }
@@ -1565,8 +1556,8 @@
     "跛脚羊": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.878,
-     "delta": -0.122,
+     "adjusted": 1.896,
+     "delta": -0.104,
      "confidence": "low",
      "counter_pick": false
     },
@@ -1607,16 +1598,16 @@
     "牙医": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.804,
-     "delta": -0.196,
+     "adjusted": 1.802,
+     "delta": -0.198,
      "confidence": "low",
      "counter_pick": false
     },
     "歌剧演员": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.993,
-     "delta": -0.007,
+     "adjusted": 1.992,
+     "delta": -0.008,
      "confidence": "low",
      "counter_pick": false
     },
@@ -1701,8 +1692,8 @@
     "牙医": {
      "n": 2,
      "raw": 1.5,
-     "adjusted": 1.567,
-     "delta": 0.067,
+     "adjusted": 1.587,
+     "delta": 0.087,
      "confidence": "medium",
      "counter_pick": false
     },
@@ -1717,8 +1708,8 @@
     "女王蜂": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 1.469,
-     "delta": 0.469,
+     "adjusted": 1.468,
+     "delta": 0.468,
      "confidence": "low",
      "counter_pick": false
     }
@@ -1771,16 +1762,16 @@
     "女王蜂": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.832,
-     "delta": -0.168,
+     "adjusted": 1.831,
+     "delta": -0.169,
      "confidence": "low",
      "counter_pick": false
     },
     "牙医": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.804,
-     "delta": -0.196,
+     "adjusted": 1.802,
+     "delta": -0.198,
      "confidence": "low",
      "counter_pick": false
     },
@@ -1797,8 +1788,8 @@
     "女王蜂": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.832,
-     "delta": -0.168,
+     "adjusted": 1.831,
+     "delta": -0.169,
      "confidence": "low",
      "counter_pick": false
     },
@@ -1813,16 +1804,16 @@
     "台球手": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.118,
-     "delta": 0.118,
+     "adjusted": 2.117,
+     "delta": 0.117,
      "confidence": "low",
      "counter_pick": false
     },
     "牙医": {
      "n": 2,
      "raw": 2.0,
-     "adjusted": 2.033,
-     "delta": 0.033,
+     "adjusted": 2.03,
+     "delta": 0.03,
      "confidence": "medium",
      "counter_pick": false
     }
@@ -1877,8 +1868,8 @@
     "女王蜂": {
      "n": 2,
      "raw": 2.0,
-     "adjusted": 1.999,
-     "delta": -0.001,
+     "adjusted": 2.0,
+     "delta": -0.0,
      "confidence": "medium",
      "counter_pick": false
     },
@@ -1947,32 +1938,32 @@
     "女王蜂": {
      "n": 2,
      "raw": 2.0,
-     "adjusted": 1.999,
-     "delta": -0.001,
+     "adjusted": 2.0,
+     "delta": -0.0,
      "confidence": "medium",
      "counter_pick": false
     },
     "牙医": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 1.029,
-     "delta": 0.029,
+     "adjusted": 1.024,
+     "delta": 0.024,
      "confidence": "low",
      "counter_pick": false
     },
     "歌剧演员": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.062,
-     "delta": 0.062,
+     "adjusted": 2.061,
+     "delta": 0.061,
      "confidence": "low",
      "counter_pick": false
     },
     "跛脚羊": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 0.878,
-     "delta": -0.122,
+     "adjusted": 0.896,
+     "delta": -0.104,
      "confidence": "low",
      "counter_pick": false
     }
@@ -1989,8 +1980,8 @@
     "女王蜂": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 1.469,
-     "delta": 0.469,
+     "adjusted": 1.468,
+     "delta": 0.468,
      "confidence": "low",
      "counter_pick": false
     },
@@ -2005,8 +1996,8 @@
     "牙医": {
      "n": 1,
      "raw": 0.0,
-     "adjusted": 0.204,
-     "delta": 0.204,
+     "adjusted": 0.202,
+     "delta": 0.202,
      "confidence": "low",
      "counter_pick": false
     }
@@ -2015,8 +2006,8 @@
     "歌剧演员": {
      "n": 3,
      "raw": 2.0,
-     "adjusted": 2.007,
-     "delta": 0.007,
+     "adjusted": 2.006,
+     "delta": 0.006,
      "confidence": "high",
      "counter_pick": false
     },
@@ -2031,8 +2022,8 @@
     "牙医": {
      "n": 2,
      "raw": 1.0,
-     "adjusted": 1.048,
-     "delta": 0.048,
+     "adjusted": 1.047,
+     "delta": 0.047,
      "confidence": "medium",
      "counter_pick": false
     },
@@ -2049,8 +2040,8 @@
     "歌剧演员": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.205,
-     "delta": 0.205,
+     "adjusted": 2.204,
+     "delta": 0.204,
      "confidence": "low",
      "counter_pick": false
     },
@@ -2076,15 +2067,15 @@
      "n": 3,
      "raw": 2.667,
      "adjusted": 2.645,
-     "delta": -0.021,
+     "delta": -0.022,
      "confidence": "high",
      "counter_pick": false
     },
     "牙医": {
      "n": 2,
      "raw": 1.0,
-     "adjusted": 1.048,
-     "delta": 0.048,
+     "adjusted": 1.047,
+     "delta": 0.047,
      "confidence": "medium",
      "counter_pick": false
     },
@@ -2101,24 +2092,24 @@
     "跛脚羊": {
      "n": 2,
      "raw": 2.5,
-     "adjusted": 2.189,
-     "delta": -0.311,
+     "adjusted": 2.198,
+     "delta": -0.302,
      "confidence": "medium",
      "counter_pick": false
     },
     "牙医": {
      "n": 4,
      "raw": 1.0,
-     "adjusted": 1.019,
-     "delta": 0.019,
+     "adjusted": 1.027,
+     "delta": 0.027,
      "confidence": "high",
      "counter_pick": false
     },
     "女王蜂": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 1.469,
-     "delta": 0.469,
+     "adjusted": 1.468,
+     "delta": 0.468,
      "confidence": "low",
      "counter_pick": false
     },
@@ -2151,16 +2142,16 @@
     "牙医": {
      "n": 4,
      "raw": 1.0,
-     "adjusted": 1.019,
-     "delta": 0.019,
+     "adjusted": 1.027,
+     "delta": 0.027,
      "confidence": "high",
      "counter_pick": false
     },
     "台球手": {
      "n": 2,
      "raw": 2.0,
-     "adjusted": 2.238,
-     "delta": 0.238,
+     "adjusted": 2.237,
+     "delta": 0.237,
      "confidence": "medium",
      "counter_pick": false
     },
@@ -2193,24 +2184,24 @@
     "歌剧演员": {
      "n": 2,
      "raw": 2.0,
-     "adjusted": 2.099,
-     "delta": 0.099,
+     "adjusted": 2.098,
+     "delta": 0.098,
      "confidence": "medium",
      "counter_pick": false
     },
     "女王蜂": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.832,
-     "delta": -0.168,
+     "adjusted": 1.831,
+     "delta": -0.169,
      "confidence": "low",
      "counter_pick": false
     },
     "台球手": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.18,
-     "delta": 0.18,
+     "adjusted": 2.179,
+     "delta": 0.179,
      "confidence": "low",
      "counter_pick": false
     }
@@ -2219,16 +2210,16 @@
     "跛脚羊": {
      "n": 2,
      "raw": 2.5,
-     "adjusted": 2.189,
-     "delta": -0.311,
+     "adjusted": 2.198,
+     "delta": -0.302,
      "confidence": "medium",
      "counter_pick": false
     },
     "台球手": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.022,
-     "delta": 0.022,
+     "adjusted": 2.023,
+     "delta": 0.023,
      "confidence": "low",
      "counter_pick": false
     },
@@ -2243,8 +2234,8 @@
     "歌剧演员": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.993,
-     "delta": -0.007,
+     "adjusted": 1.992,
+     "delta": -0.008,
      "confidence": "low",
      "counter_pick": false
     }
@@ -2253,16 +2244,16 @@
     "牙医": {
      "n": 5,
      "raw": 1.2,
-     "adjusted": 1.175,
-     "delta": -0.025,
+     "adjusted": 1.18,
+     "delta": -0.02,
      "confidence": "high",
      "counter_pick": false
     },
     "台球手": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.18,
-     "delta": 0.18,
+     "adjusted": 2.179,
+     "delta": 0.179,
      "confidence": "low",
      "counter_pick": false
     },
@@ -2297,8 +2288,8 @@
     "台球手": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.022,
-     "delta": 0.022,
+     "adjusted": 2.023,
+     "delta": 0.023,
      "confidence": "low",
      "counter_pick": false
     }
@@ -2325,8 +2316,8 @@
     "牙医": {
      "n": 2,
      "raw": 1.0,
-     "adjusted": 1.056,
-     "delta": 0.056,
+     "adjusted": 1.052,
+     "delta": 0.052,
      "confidence": "medium",
      "counter_pick": false
     }
@@ -2351,16 +2342,16 @@
     "牙医": {
      "n": 2,
      "raw": 1.5,
-     "adjusted": 1.363,
-     "delta": -0.137,
+     "adjusted": 1.383,
+     "delta": -0.117,
      "confidence": "medium",
      "counter_pick": false
     },
     "跛脚羊": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 0.878,
-     "delta": -0.122,
+     "adjusted": 0.896,
+     "delta": -0.104,
      "confidence": "low",
      "counter_pick": false
     },
@@ -2393,8 +2384,8 @@
     "牙医": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.804,
-     "delta": -0.196,
+     "adjusted": 1.802,
+     "delta": -0.198,
      "confidence": "low",
      "counter_pick": false
     }
@@ -2413,8 +2404,8 @@
     "女王蜂": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.832,
-     "delta": -0.168,
+     "adjusted": 1.831,
+     "delta": -0.169,
      "confidence": "low",
      "counter_pick": false
     },
@@ -2429,8 +2420,8 @@
     "台球手": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.118,
-     "delta": 0.118,
+     "adjusted": 2.117,
+     "delta": 0.117,
      "confidence": "low",
      "counter_pick": false
     }
@@ -2439,8 +2430,8 @@
     "女王蜂": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.832,
-     "delta": -0.168,
+     "adjusted": 1.831,
+     "delta": -0.169,
      "confidence": "low",
      "counter_pick": false
     }
@@ -2449,8 +2440,8 @@
     "牙医": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.798,
-     "delta": -0.202,
+     "adjusted": 1.794,
+     "delta": -0.206,
      "confidence": "low",
      "counter_pick": false
     }
@@ -2467,8 +2458,8 @@
     "牙医": {
      "n": 2,
      "raw": 1.0,
-     "adjusted": 1.048,
-     "delta": 0.048,
+     "adjusted": 1.047,
+     "delta": 0.047,
      "confidence": "medium",
      "counter_pick": false
     },
@@ -2485,8 +2476,8 @@
     "歌剧演员": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.993,
-     "delta": -0.007,
+     "adjusted": 1.992,
+     "delta": -0.008,
      "confidence": "low",
      "counter_pick": false
     }
@@ -2533,8 +2524,8 @@
     "跛脚羊": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 1.091,
-     "delta": 0.091,
+     "adjusted": 1.107,
+     "delta": 0.107,
      "confidence": "low",
      "counter_pick": false
     },
@@ -2559,8 +2550,8 @@
     "牙医": {
      "n": 5,
      "raw": 1.6,
-     "adjusted": 1.634,
-     "delta": 0.034,
+     "adjusted": 1.63,
+     "delta": 0.03,
      "confidence": "high",
      "counter_pick": false
     },
@@ -2575,8 +2566,8 @@
     "台球手": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.118,
-     "delta": 0.118,
+     "adjusted": 2.117,
+     "delta": 0.117,
      "confidence": "low",
      "counter_pick": false
     }
@@ -2593,16 +2584,16 @@
     "牙医": {
      "n": 3,
      "raw": 1.333,
-     "adjusted": 1.479,
-     "delta": 0.146,
+     "adjusted": 1.476,
+     "delta": 0.142,
      "confidence": "high",
      "counter_pick": false
     },
     "跛脚羊": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 1.091,
-     "delta": 0.091,
+     "adjusted": 1.107,
+     "delta": 0.107,
      "confidence": "low",
      "counter_pick": false
     },
@@ -2619,8 +2610,8 @@
     "女王蜂": {
      "n": 3,
      "raw": 1.0,
-     "adjusted": 1.261,
-     "delta": 0.261,
+     "adjusted": 1.26,
+     "delta": 0.26,
      "confidence": "high",
      "counter_pick": false
     },
@@ -2635,16 +2626,16 @@
     "跛脚羊": {
      "n": 1,
      "raw": 0.0,
-     "adjusted": 0.209,
-     "delta": 0.209,
+     "adjusted": 0.223,
+     "delta": 0.223,
      "confidence": "low",
      "counter_pick": false
     },
     "歌剧演员": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.993,
-     "delta": -0.007,
+     "adjusted": 1.992,
+     "delta": -0.008,
      "confidence": "low",
      "counter_pick": false
     }
@@ -2671,8 +2662,8 @@
     "女王蜂": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 1.482,
-     "delta": 0.482,
+     "adjusted": 1.481,
+     "delta": 0.481,
      "confidence": "low",
      "counter_pick": false
     },
@@ -2687,8 +2678,8 @@
     "牙医": {
      "n": 2,
      "raw": 2.0,
-     "adjusted": 2.152,
-     "delta": 0.152,
+     "adjusted": 2.148,
+     "delta": 0.148,
      "confidence": "medium",
      "counter_pick": false
     }
@@ -2697,8 +2688,8 @@
     "女王蜂": {
      "n": 3,
      "raw": 1.0,
-     "adjusted": 1.261,
-     "delta": 0.261,
+     "adjusted": 1.26,
+     "delta": 0.26,
      "confidence": "high",
      "counter_pick": false
     },
@@ -2713,8 +2704,8 @@
     "跛脚羊": {
      "n": 1,
      "raw": 0.0,
-     "adjusted": 0.209,
-     "delta": 0.209,
+     "adjusted": 0.223,
+     "delta": 0.223,
      "confidence": "low",
      "counter_pick": false
     },
@@ -2729,8 +2720,8 @@
     "歌剧演员": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.993,
-     "delta": -0.007,
+     "adjusted": 1.992,
+     "delta": -0.008,
      "confidence": "low",
      "counter_pick": false
     }
@@ -2747,8 +2738,8 @@
     "牙医": {
      "n": 3,
      "raw": 2.0,
-     "adjusted": 2.003,
-     "delta": 0.003,
+     "adjusted": 1.999,
+     "delta": -0.001,
      "confidence": "high",
      "counter_pick": false
     },
@@ -2843,24 +2834,24 @@
     "牙医": {
      "n": 2,
      "raw": 1.0,
-     "adjusted": 1.081,
-     "delta": 0.081,
+     "adjusted": 1.077,
+     "delta": 0.077,
      "confidence": "medium",
      "counter_pick": false
     },
     "歌剧演员": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.205,
-     "delta": 0.205,
+     "adjusted": 2.204,
+     "delta": 0.204,
      "confidence": "low",
      "counter_pick": false
     },
     "台球手": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.118,
-     "delta": 0.118,
+     "adjusted": 2.117,
+     "delta": 0.117,
      "confidence": "low",
      "counter_pick": false
     }
@@ -2869,8 +2860,8 @@
     "牙医": {
      "n": 3,
      "raw": 2.0,
-     "adjusted": 1.908,
-     "delta": -0.092,
+     "adjusted": 1.904,
+     "delta": -0.096,
      "confidence": "high",
      "counter_pick": false
     },
@@ -2885,8 +2876,8 @@
     "台球手": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.118,
-     "delta": 0.118,
+     "adjusted": 2.117,
+     "delta": 0.117,
      "confidence": "low",
      "counter_pick": false
     }
@@ -2895,8 +2886,8 @@
     "女王蜂": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.482,
-     "delta": 0.482,
+     "adjusted": 2.481,
+     "delta": 0.481,
      "confidence": "low",
      "counter_pick": false
     },
@@ -2947,8 +2938,8 @@
     "歌剧演员": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.205,
-     "delta": 0.205,
+     "adjusted": 2.204,
+     "delta": 0.204,
      "confidence": "low",
      "counter_pick": false
     }
@@ -2975,16 +2966,16 @@
     "跛脚羊": {
      "n": 2,
      "raw": 0.5,
-     "adjusted": 0.65,
-     "delta": 0.15,
+     "adjusted": 0.665,
+     "delta": 0.165,
      "confidence": "medium",
      "counter_pick": false
     },
     "歌剧演员": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.205,
-     "delta": 0.205,
+     "adjusted": 2.204,
+     "delta": 0.204,
      "confidence": "low",
      "counter_pick": false
     },
@@ -3025,8 +3016,8 @@
     "歌剧演员": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.993,
-     "delta": -0.007,
+     "adjusted": 1.992,
+     "delta": -0.008,
      "confidence": "low",
      "counter_pick": false
     }
@@ -3035,16 +3026,16 @@
     "跛脚羊": {
      "n": 1,
      "raw": 0.0,
-     "adjusted": 0.209,
-     "delta": 0.209,
+     "adjusted": 0.223,
+     "delta": 0.223,
      "confidence": "low",
      "counter_pick": false
     },
     "女王蜂": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.832,
-     "delta": -0.168,
+     "adjusted": 1.831,
+     "delta": -0.169,
      "confidence": "low",
      "counter_pick": false
     }
@@ -3053,16 +3044,16 @@
     "歌剧演员": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.205,
-     "delta": 0.205,
+     "adjusted": 2.204,
+     "delta": 0.204,
      "confidence": "low",
      "counter_pick": false
     },
     "牙医": {
      "n": 1,
      "raw": 0.0,
-     "adjusted": 0.173,
-     "delta": 0.173,
+     "adjusted": 0.169,
+     "delta": 0.169,
      "confidence": "low",
      "counter_pick": false
     },
@@ -3087,16 +3078,16 @@
     "跛脚羊": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 1.091,
-     "delta": 0.091,
+     "adjusted": 1.107,
+     "delta": 0.107,
      "confidence": "low",
      "counter_pick": false
     },
     "歌剧演员": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.993,
-     "delta": -0.007,
+     "adjusted": 1.992,
+     "delta": -0.008,
      "confidence": "low",
      "counter_pick": false
     }
@@ -3105,16 +3096,16 @@
     "牙医": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.704,
-     "delta": -0.296,
+     "adjusted": 1.7,
+     "delta": -0.3,
      "confidence": "low",
      "counter_pick": false
     },
     "台球手": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.118,
-     "delta": 0.118,
+     "adjusted": 2.117,
+     "delta": 0.117,
      "confidence": "low",
      "counter_pick": false
     }
@@ -3159,8 +3150,8 @@
     "牙医": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.798,
-     "delta": -0.202,
+     "adjusted": 1.794,
+     "delta": -0.206,
      "confidence": "low",
      "counter_pick": false
     }
@@ -3185,8 +3176,8 @@
     "牙医": {
      "n": 5,
      "raw": 2.0,
-     "adjusted": 2.017,
-     "delta": 0.017,
+     "adjusted": 2.013,
+     "delta": 0.013,
      "confidence": "high",
      "counter_pick": false
     },
@@ -3211,16 +3202,16 @@
     "牙医": {
      "n": 3,
      "raw": 2.0,
-     "adjusted": 1.908,
-     "delta": -0.092,
+     "adjusted": 1.904,
+     "delta": -0.096,
      "confidence": "high",
      "counter_pick": false
     },
     "歌剧演员": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 0.993,
-     "delta": -0.007,
+     "adjusted": 0.992,
+     "delta": -0.008,
      "confidence": "low",
      "counter_pick": false
     },
@@ -3235,8 +3226,8 @@
     "台球手": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.022,
-     "delta": 0.022,
+     "adjusted": 2.023,
+     "delta": 0.023,
      "confidence": "low",
      "counter_pick": false
     }
@@ -3281,16 +3272,16 @@
     "歌剧演员": {
      "n": 2,
      "raw": 2.5,
-     "adjusted": 2.736,
-     "delta": 0.236,
+     "adjusted": 2.735,
+     "delta": 0.235,
      "confidence": "medium",
      "counter_pick": false
     },
     "牙医": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.315,
-     "delta": 0.315,
+     "adjusted": 2.311,
+     "delta": 0.311,
      "confidence": "low",
      "counter_pick": false
     },
@@ -3307,16 +3298,16 @@
     "歌剧演员": {
      "n": 2,
      "raw": 2.0,
-     "adjusted": 2.13,
-     "delta": 0.13,
+     "adjusted": 2.129,
+     "delta": 0.129,
      "confidence": "medium",
      "counter_pick": false
     },
     "喧嚣": {
      "n": 2,
      "raw": 2.0,
-     "adjusted": 2.142,
-     "delta": 0.142,
+     "adjusted": 2.141,
+     "delta": 0.141,
      "confidence": "medium",
      "counter_pick": false
     },
@@ -3349,8 +3340,8 @@
     "台球手": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.022,
-     "delta": 0.022,
+     "adjusted": 2.023,
+     "delta": 0.023,
      "confidence": "low",
      "counter_pick": false
     }
@@ -3375,16 +3366,16 @@
     "台球手": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.022,
-     "delta": 0.022,
+     "adjusted": 2.023,
+     "delta": 0.023,
      "confidence": "low",
      "counter_pick": false
     },
     "歌剧演员": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 1.062,
-     "delta": 0.062,
+     "adjusted": 1.061,
+     "delta": 0.061,
      "confidence": "low",
      "counter_pick": false
     }
@@ -3401,8 +3392,8 @@
     "喧嚣": {
      "n": 2,
      "raw": 2.0,
-     "adjusted": 2.142,
-     "delta": 0.142,
+     "adjusted": 2.141,
+     "delta": 0.141,
      "confidence": "medium",
      "counter_pick": false
     },
@@ -3461,16 +3452,16 @@
     "台球手": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.022,
-     "delta": 0.022,
+     "adjusted": 2.023,
+     "delta": 0.023,
      "confidence": "low",
      "counter_pick": false
     },
     "歌剧演员": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.205,
-     "delta": 0.205,
+     "adjusted": 2.204,
+     "delta": 0.204,
      "confidence": "low",
      "counter_pick": false
     }
@@ -3479,8 +3470,8 @@
     "牙医": {
      "n": 6,
      "raw": 2.0,
-     "adjusted": 2.081,
-     "delta": 0.081,
+     "adjusted": 2.077,
+     "delta": 0.077,
      "confidence": "high",
      "counter_pick": false
     },
@@ -3505,8 +3496,8 @@
     "牙医": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.029,
-     "delta": 0.029,
+     "adjusted": 2.024,
+     "delta": 0.024,
      "confidence": "low",
      "counter_pick": false
     }
@@ -3515,8 +3506,8 @@
     "牙医": {
      "n": 6,
      "raw": 2.0,
-     "adjusted": 2.002,
-     "delta": 0.002,
+     "adjusted": 1.997,
+     "delta": -0.003,
      "confidence": "high",
      "counter_pick": false
     }
@@ -3533,16 +3524,16 @@
     "牙医": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.173,
-     "delta": 0.173,
+     "adjusted": 2.169,
+     "delta": 0.169,
      "confidence": "low",
      "counter_pick": false
     },
     "歌剧演员": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 1.062,
-     "delta": 0.062,
+     "adjusted": 1.061,
+     "delta": 0.061,
      "confidence": "low",
      "counter_pick": false
     }
@@ -3587,8 +3578,8 @@
     "喧嚣": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.934,
-     "delta": -0.066,
+     "adjusted": 1.933,
+     "delta": -0.067,
      "confidence": "low",
      "counter_pick": false
     }
@@ -3597,8 +3588,8 @@
     "喧嚣": {
      "n": 2,
      "raw": 2.0,
-     "adjusted": 2.142,
-     "delta": 0.142,
+     "adjusted": 2.141,
+     "delta": 0.141,
      "confidence": "medium",
      "counter_pick": false
     },
@@ -3613,8 +3604,8 @@
     "牙医": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.276,
-     "delta": 0.276,
+     "adjusted": 2.272,
+     "delta": 0.272,
      "confidence": "low",
      "counter_pick": false
     }
@@ -3685,8 +3676,8 @@
     "歌剧演员": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.205,
-     "delta": 0.205,
+     "adjusted": 2.204,
+     "delta": 0.204,
      "confidence": "low",
      "counter_pick": false
     }
@@ -3729,8 +3720,8 @@
     "牙医": {
      "n": 2,
      "raw": 2.0,
-     "adjusted": 2.037,
-     "delta": 0.037,
+     "adjusted": 2.033,
+     "delta": 0.033,
      "confidence": "medium",
      "counter_pick": false
     },
@@ -3745,8 +3736,8 @@
     "歌剧演员": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.205,
-     "delta": 0.205,
+     "adjusted": 2.204,
+     "delta": 0.204,
      "confidence": "low",
      "counter_pick": false
     }
@@ -3809,8 +3800,8 @@
     "牙医": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.173,
-     "delta": 0.173,
+     "adjusted": 2.169,
+     "delta": 0.169,
      "confidence": "low",
      "counter_pick": false
     }
@@ -3841,8 +3832,8 @@
     "牙医": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.704,
-     "delta": -0.296,
+     "adjusted": 1.7,
+     "delta": -0.3,
      "confidence": "low",
      "counter_pick": false
     },
@@ -3873,8 +3864,8 @@
     "跛脚羊": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 1.209,
-     "delta": 0.209,
+     "adjusted": 1.223,
+     "delta": 0.223,
      "confidence": "low",
      "counter_pick": false
     }
@@ -3883,16 +3874,16 @@
     "牙医": {
      "n": 4,
      "raw": 1.25,
-     "adjusted": 1.163,
-     "delta": -0.087,
+     "adjusted": 1.171,
+     "delta": -0.079,
      "confidence": "high",
      "counter_pick": false
     },
     "喧嚣": {
      "n": 2,
      "raw": 1.0,
-     "adjusted": 1.251,
-     "delta": 0.251,
+     "adjusted": 1.25,
+     "delta": 0.25,
      "confidence": "medium",
      "counter_pick": false
     },
@@ -3909,16 +3900,16 @@
     "牙医": {
      "n": 3,
      "raw": 1.667,
-     "adjusted": 1.554,
-     "delta": -0.113,
+     "adjusted": 1.565,
+     "delta": -0.101,
      "confidence": "high",
      "counter_pick": false
     },
     "跛脚羊": {
      "n": 4,
      "raw": 1.25,
-     "adjusted": 1.329,
-     "delta": 0.079,
+     "adjusted": 1.343,
+     "delta": 0.093,
      "confidence": "high",
      "counter_pick": false
     }
@@ -3927,8 +3918,8 @@
     "牙医": {
      "n": 2,
      "raw": 1.5,
-     "adjusted": 1.367,
-     "delta": -0.133,
+     "adjusted": 1.362,
+     "delta": -0.138,
      "confidence": "medium",
      "counter_pick": false
     },
@@ -3943,8 +3934,8 @@
     "跛脚羊": {
      "n": 2,
      "raw": 1.0,
-     "adjusted": 1.232,
-     "delta": 0.232,
+     "adjusted": 1.246,
+     "delta": 0.246,
      "confidence": "medium",
      "counter_pick": false
     },
@@ -3993,16 +3984,16 @@
     "歌剧演员": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 1.205,
-     "delta": 0.205,
+     "adjusted": 1.204,
+     "delta": 0.204,
      "confidence": "low",
      "counter_pick": false
     },
     "跛脚羊": {
      "n": 3,
      "raw": 1.0,
-     "adjusted": 1.153,
-     "delta": 0.153,
+     "adjusted": 1.168,
+     "delta": 0.168,
      "confidence": "high",
      "counter_pick": false
     }
@@ -4027,8 +4018,8 @@
     "跛脚羊": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.878,
-     "delta": -0.122,
+     "adjusted": 1.896,
+     "delta": -0.104,
      "confidence": "low",
      "counter_pick": false
     }
@@ -4061,16 +4052,16 @@
     "牙医": {
      "n": 1,
      "raw": 0.0,
-     "adjusted": -0.01,
-     "delta": -0.01,
+     "adjusted": -0.014,
+     "delta": -0.014,
      "confidence": "low",
      "counter_pick": false
     },
     "跛脚羊": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 1.209,
-     "delta": 0.209,
+     "adjusted": 1.223,
+     "delta": 0.223,
      "confidence": "low",
      "counter_pick": false
     }
@@ -4105,8 +4096,8 @@
     "跛脚羊": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 0.973,
-     "delta": -0.027,
+     "adjusted": 0.985,
+     "delta": -0.015,
      "confidence": "low",
      "counter_pick": false
     },
@@ -4139,8 +4130,8 @@
     "跛脚羊": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 0.973,
-     "delta": -0.027,
+     "adjusted": 0.985,
+     "delta": -0.015,
      "confidence": "low",
      "counter_pick": false
     },
@@ -4165,16 +4156,16 @@
     "跛脚羊": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 0.973,
-     "delta": -0.027,
+     "adjusted": 0.985,
+     "delta": -0.015,
      "confidence": "low",
      "counter_pick": false
     },
     "歌剧演员": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.062,
-     "delta": 0.062,
+     "adjusted": 2.061,
+     "delta": 0.061,
      "confidence": "low",
      "counter_pick": false
     },
@@ -4233,16 +4224,16 @@
     "跛脚羊": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.091,
-     "delta": 0.091,
+     "adjusted": 2.107,
+     "delta": 0.107,
      "confidence": "low",
      "counter_pick": false
     },
     "女王蜂": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.482,
-     "delta": 0.482,
+     "adjusted": 2.481,
+     "delta": 0.481,
      "confidence": "low",
      "counter_pick": false
     },
@@ -4329,8 +4320,8 @@
     "跛脚羊": {
      "n": 4,
      "raw": 1.25,
-     "adjusted": 1.388,
-     "delta": 0.138,
+     "adjusted": 1.403,
+     "delta": 0.153,
      "confidence": "high",
      "counter_pick": false
     },
@@ -4373,16 +4364,16 @@
     "女王蜂": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.469,
-     "delta": 0.469,
+     "adjusted": 2.468,
+     "delta": 0.468,
      "confidence": "low",
      "counter_pick": false
     },
     "牙医": {
      "n": 3,
      "raw": 1.0,
-     "adjusted": 0.983,
-     "delta": -0.017,
+     "adjusted": 0.994,
+     "delta": -0.006,
      "confidence": "high",
      "counter_pick": false
     },
@@ -4435,8 +4426,8 @@
     "歌剧演员": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.062,
-     "delta": 0.062,
+     "adjusted": 2.061,
+     "delta": 0.061,
      "confidence": "low",
      "counter_pick": false
     }
@@ -4445,8 +4436,8 @@
     "歌剧演员": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.062,
-     "delta": 0.062,
+     "adjusted": 2.061,
+     "delta": 0.061,
      "confidence": "low",
      "counter_pick": false
     }
@@ -4463,8 +4454,8 @@
     "牙医": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.929,
-     "delta": -0.071,
+     "adjusted": 1.971,
+     "delta": -0.029,
      "confidence": "low",
      "counter_pick": false
     },
@@ -4515,16 +4506,16 @@
     "女王蜂": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.482,
-     "delta": 0.482,
+     "adjusted": 2.481,
+     "delta": 0.481,
      "confidence": "low",
      "counter_pick": false
     },
     "歌剧演员": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 1.205,
-     "delta": 0.205,
+     "adjusted": 1.204,
+     "delta": 0.204,
      "confidence": "low",
      "counter_pick": false
     },
@@ -4559,8 +4550,8 @@
     "牙医": {
      "n": 1,
      "raw": 0.0,
-     "adjusted": -0.01,
-     "delta": -0.01,
+     "adjusted": -0.014,
+     "delta": -0.014,
      "confidence": "low",
      "counter_pick": false
     }
@@ -4627,8 +4618,8 @@
     "台球手": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.118,
-     "delta": 0.118,
+     "adjusted": 2.117,
+     "delta": 0.117,
      "confidence": "low",
      "counter_pick": false
     }
@@ -4647,16 +4638,16 @@
     "台球手": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.118,
-     "delta": 0.118,
+     "adjusted": 2.117,
+     "delta": 0.117,
      "confidence": "low",
      "counter_pick": false
     },
     "牙医": {
      "n": 3,
      "raw": 2.0,
-     "adjusted": 1.906,
-     "delta": -0.094,
+     "adjusted": 1.917,
+     "delta": -0.083,
      "confidence": "high",
      "counter_pick": false
     },
@@ -4681,16 +4672,16 @@
     "牙医": {
      "n": 4,
      "raw": 1.25,
-     "adjusted": 1.309,
-     "delta": 0.059,
+     "adjusted": 1.305,
+     "delta": 0.055,
      "confidence": "high",
      "counter_pick": false
     },
     "跛脚羊": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 0.878,
-     "delta": -0.122,
+     "adjusted": 0.896,
+     "delta": -0.104,
      "confidence": "low",
      "counter_pick": false
     }
@@ -4699,16 +4690,16 @@
     "牙医": {
      "n": 2,
      "raw": 1.0,
-     "adjusted": 1.122,
-     "delta": 0.122,
+     "adjusted": 1.141,
+     "delta": 0.141,
      "confidence": "medium",
      "counter_pick": false
     },
     "跛脚羊": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.209,
-     "delta": 0.209,
+     "adjusted": 2.223,
+     "delta": 0.223,
      "confidence": "low",
      "counter_pick": false
     },
@@ -4733,16 +4724,16 @@
     "牙医": {
      "n": 3,
      "raw": 0.333,
-     "adjusted": 0.588,
-     "delta": 0.255,
+     "adjusted": 0.584,
+     "delta": 0.25,
      "confidence": "high",
      "counter_pick": false
     },
     "跛脚羊": {
      "n": 2,
      "raw": 1.5,
-     "adjusted": 1.543,
-     "delta": 0.043,
+     "adjusted": 1.559,
+     "delta": 0.059,
      "confidence": "medium",
      "counter_pick": false
     },
@@ -4759,8 +4750,8 @@
     "牙医": {
      "n": 3,
      "raw": 0.333,
-     "adjusted": 0.663,
-     "delta": 0.329,
+     "adjusted": 0.66,
+     "delta": 0.326,
      "confidence": "high",
      "counter_pick": false
     },
@@ -4785,8 +4776,8 @@
     "牙医": {
      "n": 1,
      "raw": 0.0,
-     "adjusted": 0.315,
-     "delta": 0.315,
+     "adjusted": 0.31,
+     "delta": 0.31,
      "confidence": "low",
      "counter_pick": false
     },
@@ -4801,8 +4792,8 @@
     "歌剧演员": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.205,
-     "delta": 0.205,
+     "adjusted": 2.204,
+     "delta": 0.204,
      "confidence": "low",
      "counter_pick": false
     }
@@ -4887,8 +4878,8 @@
     "跛脚羊": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.209,
-     "delta": 0.209,
+     "adjusted": 2.223,
+     "delta": 0.223,
      "confidence": "low",
      "counter_pick": false
     },
@@ -4931,8 +4922,8 @@
     "跛脚羊": {
      "n": 1,
      "raw": 0.0,
-     "adjusted": 0.173,
-     "delta": 0.173,
+     "adjusted": 0.185,
+     "delta": 0.185,
      "confidence": "low",
      "counter_pick": false
     },
@@ -4957,16 +4948,16 @@
     "跛脚羊": {
      "n": 1,
      "raw": 0.0,
-     "adjusted": 0.173,
-     "delta": 0.173,
+     "adjusted": 0.185,
+     "delta": 0.185,
      "confidence": "low",
      "counter_pick": false
     },
     "牙医": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.798,
-     "delta": -0.202,
+     "adjusted": 1.794,
+     "delta": -0.206,
      "confidence": "low",
      "counter_pick": false
     },
@@ -4983,8 +4974,8 @@
     "跛脚羊": {
      "n": 1,
      "raw": 0.0,
-     "adjusted": 0.173,
-     "delta": 0.173,
+     "adjusted": 0.185,
+     "delta": 0.185,
      "confidence": "low",
      "counter_pick": false
     },
@@ -5001,8 +4992,8 @@
     "跛脚羊": {
      "n": 1,
      "raw": 0.0,
-     "adjusted": 0.173,
-     "delta": 0.173,
+     "adjusted": 0.185,
+     "delta": 0.185,
      "confidence": "low",
      "counter_pick": false
     }
@@ -5011,16 +5002,16 @@
     "牙医": {
      "n": 2,
      "raw": 1.5,
-     "adjusted": 1.485,
-     "delta": -0.015,
+     "adjusted": 1.481,
+     "delta": -0.019,
      "confidence": "medium",
      "counter_pick": false
     },
     "跛脚羊": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 0.878,
-     "delta": -0.122,
+     "adjusted": 0.896,
+     "delta": -0.104,
      "confidence": "low",
      "counter_pick": false
     }
@@ -5037,8 +5028,8 @@
     "牙医": {
      "n": 2,
      "raw": 1.0,
-     "adjusted": 1.215,
-     "delta": 0.215,
+     "adjusted": 1.236,
+     "delta": 0.236,
      "confidence": "medium",
      "counter_pick": false
     },
@@ -5073,8 +5064,8 @@
     "牙医": {
      "n": 2,
      "raw": 1.0,
-     "adjusted": 1.215,
-     "delta": 0.215,
+     "adjusted": 1.236,
+     "delta": 0.236,
      "confidence": "medium",
      "counter_pick": false
     },
@@ -5107,8 +5098,8 @@
     "牙医": {
      "n": 2,
      "raw": 1.0,
-     "adjusted": 1.133,
-     "delta": 0.133,
+     "adjusted": 1.129,
+     "delta": 0.129,
      "confidence": "medium",
      "counter_pick": false
     }
@@ -5181,8 +5172,8 @@
     "跛脚羊": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.209,
-     "delta": 0.209,
+     "adjusted": 2.223,
+     "delta": 0.223,
      "confidence": "low",
      "counter_pick": false
     }
@@ -5191,8 +5182,8 @@
     "跛脚羊": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 0.878,
-     "delta": -0.122,
+     "adjusted": 0.896,
+     "delta": -0.104,
      "confidence": "low",
      "counter_pick": false
     },
@@ -5207,16 +5198,16 @@
     "歌剧演员": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.205,
-     "delta": 0.205,
+     "adjusted": 2.204,
+     "delta": 0.204,
      "confidence": "low",
      "counter_pick": false
     },
     "牙医": {
      "n": 1,
      "raw": 0.0,
-     "adjusted": 0.276,
-     "delta": 0.276,
+     "adjusted": 0.272,
+     "delta": 0.272,
      "confidence": "low",
      "counter_pick": false
     }
@@ -5225,8 +5216,8 @@
     "牙医": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.99,
-     "delta": -0.01,
+     "adjusted": 1.986,
+     "delta": -0.014,
      "confidence": "low",
      "counter_pick": false
     }
@@ -5267,16 +5258,16 @@
     "牙医": {
      "n": 4,
      "raw": 1.25,
-     "adjusted": 1.226,
-     "delta": -0.024,
+     "adjusted": 1.234,
+     "delta": -0.016,
      "confidence": "high",
      "counter_pick": false
     },
     "台球手": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.118,
-     "delta": 0.118,
+     "adjusted": 2.117,
+     "delta": 0.117,
      "confidence": "low",
      "counter_pick": false
     }
@@ -5285,8 +5276,8 @@
     "牙医": {
      "n": 7,
      "raw": 1.143,
-     "adjusted": 1.23,
-     "delta": 0.087,
+     "adjusted": 1.234,
+     "delta": 0.091,
      "confidence": "high",
      "counter_pick": false
     },
@@ -5303,8 +5294,8 @@
     "牙医": {
      "n": 5,
      "raw": 1.0,
-     "adjusted": 1.177,
-     "delta": 0.177,
+     "adjusted": 1.175,
+     "delta": 0.175,
      "confidence": "high",
      "counter_pick": false
     },
@@ -5319,8 +5310,8 @@
     "跛脚羊": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 1.091,
-     "delta": 0.091,
+     "adjusted": 1.107,
+     "delta": 0.107,
      "confidence": "low",
      "counter_pick": false
     }
@@ -5329,16 +5320,16 @@
     "牙医": {
      "n": 3,
      "raw": 1.667,
-     "adjusted": 1.609,
-     "delta": -0.058,
+     "adjusted": 1.622,
+     "delta": -0.045,
      "confidence": "high",
      "counter_pick": false
     },
     "歌剧演员": {
      "n": 1,
      "raw": 3.0,
-     "adjusted": 2.993,
-     "delta": -0.007,
+     "adjusted": 2.992,
+     "delta": -0.008,
      "confidence": "low",
      "counter_pick": false
     },
@@ -5405,8 +5396,8 @@
     "跛脚羊": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 1.091,
-     "delta": 0.091,
+     "adjusted": 1.107,
+     "delta": 0.107,
      "confidence": "low",
      "counter_pick": false
     },
@@ -5431,16 +5422,16 @@
     "牙医": {
      "n": 2,
      "raw": 1.5,
-     "adjusted": 1.363,
-     "delta": -0.137,
+     "adjusted": 1.383,
+     "delta": -0.117,
      "confidence": "medium",
      "counter_pick": false
     },
     "喧嚣": {
      "n": 2,
      "raw": 2.0,
-     "adjusted": 2.165,
-     "delta": 0.165,
+     "adjusted": 2.164,
+     "delta": 0.164,
      "confidence": "medium",
      "counter_pick": false
     },
@@ -5481,16 +5472,16 @@
     "台球手": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.118,
-     "delta": 0.118,
+     "adjusted": 2.117,
+     "delta": 0.117,
      "confidence": "low",
      "counter_pick": false
     },
     "跛脚羊": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 1.091,
-     "delta": 0.091,
+     "adjusted": 1.107,
+     "delta": 0.107,
      "confidence": "low",
      "counter_pick": false
     }
@@ -5575,8 +5566,8 @@
     "女王蜂": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 1.482,
-     "delta": 0.482,
+     "adjusted": 1.481,
+     "delta": 0.481,
      "confidence": "low",
      "counter_pick": false
     }
@@ -5623,8 +5614,8 @@
     "台球手": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.118,
-     "delta": 0.118,
+     "adjusted": 2.117,
+     "delta": 0.117,
      "confidence": "low",
      "counter_pick": false
     },
@@ -5657,8 +5648,8 @@
     "牙医": {
      "n": 4,
      "raw": 0.75,
-     "adjusted": 0.946,
-     "delta": 0.196,
+     "adjusted": 0.943,
+     "delta": 0.193,
      "confidence": "high",
      "counter_pick": false
     },
@@ -5711,16 +5702,16 @@
     "牙医": {
      "n": 2,
      "raw": 0.5,
-     "adjusted": 0.908,
-     "delta": 0.408,
+     "adjusted": 0.905,
+     "delta": 0.405,
      "confidence": "medium",
      "counter_pick": false
     },
     "女王蜂": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 1.482,
-     "delta": 0.482,
+     "adjusted": 1.481,
+     "delta": 0.481,
      "confidence": "low",
      "counter_pick": false
     }
@@ -5755,8 +5746,8 @@
     "女王蜂": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 1.482,
-     "delta": 0.482,
+     "adjusted": 1.481,
+     "delta": 0.481,
      "confidence": "low",
      "counter_pick": false
     }
@@ -5765,16 +5756,16 @@
     "台球手": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.118,
-     "delta": 0.118,
+     "adjusted": 2.117,
+     "delta": 0.117,
      "confidence": "low",
      "counter_pick": false
     },
     "女王蜂": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 1.482,
-     "delta": 0.482,
+     "adjusted": 1.481,
+     "delta": 0.481,
      "confidence": "low",
      "counter_pick": false
     }
@@ -5783,8 +5774,8 @@
     "跛脚羊": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 1.091,
-     "delta": 0.091,
+     "adjusted": 1.107,
+     "delta": 0.107,
      "confidence": "low",
      "counter_pick": false
     }
@@ -5795,8 +5786,8 @@
     "牙医": {
      "n": 4,
      "raw": 1.25,
-     "adjusted": 1.434,
-     "delta": 0.184,
+     "adjusted": 1.432,
+     "delta": 0.182,
      "confidence": "high",
      "counter_pick": false
     },
@@ -5819,8 +5810,8 @@
     "台球手": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.18,
-     "delta": 0.18,
+     "adjusted": 2.179,
+     "delta": 0.179,
      "confidence": "low",
      "counter_pick": false
     },
@@ -5837,8 +5828,8 @@
     "牙医": {
      "n": 3,
      "raw": 0.667,
-     "adjusted": 0.819,
-     "delta": 0.153,
+     "adjusted": 0.832,
+     "delta": 0.165,
      "confidence": "high",
      "counter_pick": false
     }
@@ -5847,8 +5838,8 @@
     "牙医": {
      "n": 3,
      "raw": 1.0,
-     "adjusted": 1.14,
-     "delta": 0.14,
+     "adjusted": 1.139,
+     "delta": 0.139,
      "confidence": "high",
      "counter_pick": false
     },
@@ -5889,16 +5880,16 @@
     "牙医": {
      "n": 3,
      "raw": 1.0,
-     "adjusted": 1.281,
-     "delta": 0.281,
+     "adjusted": 1.278,
+     "delta": 0.278,
      "confidence": "high",
      "counter_pick": false
     },
     "跛脚羊": {
      "n": 2,
      "raw": 1.5,
-     "adjusted": 1.481,
-     "delta": -0.019,
+     "adjusted": 1.493,
+     "delta": -0.007,
      "confidence": "medium",
      "counter_pick": false
     },
@@ -5949,8 +5940,8 @@
     "歌剧演员": {
      "n": 3,
      "raw": 0.667,
-     "adjusted": 0.801,
-     "delta": 0.134,
+     "adjusted": 0.8,
+     "delta": 0.133,
      "confidence": "high",
      "counter_pick": false
     }
@@ -5967,16 +5958,16 @@
     "歌剧演员": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 0.993,
-     "delta": -0.007,
+     "adjusted": 0.992,
+     "delta": -0.008,
      "confidence": "low",
      "counter_pick": false
     },
     "跛脚羊": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.87,
-     "delta": -0.13,
+     "adjusted": 1.878,
+     "delta": -0.122,
      "confidence": "low",
      "counter_pick": false
     }
@@ -5993,8 +5984,8 @@
     "歌剧演员": {
      "n": 3,
      "raw": 1.0,
-     "adjusted": 1.155,
-     "delta": 0.155,
+     "adjusted": 1.154,
+     "delta": 0.154,
      "confidence": "high",
      "counter_pick": false
     },
@@ -6011,8 +6002,8 @@
     "牙医": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.315,
-     "delta": 0.315,
+     "adjusted": 2.311,
+     "delta": 0.311,
      "confidence": "low",
      "counter_pick": false
     },
@@ -6027,16 +6018,16 @@
     "跛脚羊": {
      "n": 1,
      "raw": 0.0,
-     "adjusted": 0.37,
-     "delta": 0.37,
+     "adjusted": 0.378,
+     "delta": 0.378,
      "confidence": "low",
      "counter_pick": false
     },
     "歌剧演员": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 1.267,
-     "delta": 0.267,
+     "adjusted": 1.266,
+     "delta": 0.266,
      "confidence": "low",
      "counter_pick": false
     },
@@ -6053,32 +6044,32 @@
     "牙医": {
      "n": 2,
      "raw": 1.5,
-     "adjusted": 1.622,
-     "delta": 0.122,
+     "adjusted": 1.641,
+     "delta": 0.141,
      "confidence": "medium",
      "counter_pick": false
     },
     "跛脚羊": {
      "n": 2,
      "raw": 0.5,
-     "adjusted": 0.731,
-     "delta": 0.231,
+     "adjusted": 0.743,
+     "delta": 0.243,
      "confidence": "medium",
      "counter_pick": false
     },
     "台球手": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.18,
-     "delta": 0.18,
+     "adjusted": 2.179,
+     "delta": 0.179,
      "confidence": "low",
      "counter_pick": false
     },
     "女王蜂": {
      "n": 1,
      "raw": 0.0,
-     "adjusted": 0.482,
-     "delta": 0.482,
+     "adjusted": 0.481,
+     "delta": 0.481,
      "confidence": "low",
      "counter_pick": false
     }
@@ -6095,24 +6086,24 @@
     "跛脚羊": {
      "n": 3,
      "raw": 1.0,
-     "adjusted": 1.11,
-     "delta": 0.11,
+     "adjusted": 1.121,
+     "delta": 0.121,
      "confidence": "high",
      "counter_pick": false
     },
     "歌剧演员": {
      "n": 2,
      "raw": 0.5,
-     "adjusted": 0.736,
-     "delta": 0.236,
+     "adjusted": 0.735,
+     "delta": 0.235,
      "confidence": "medium",
      "counter_pick": false
     },
     "牙医": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 0.929,
-     "delta": -0.071,
+     "adjusted": 0.971,
+     "delta": -0.029,
      "confidence": "low",
      "counter_pick": false
     }
@@ -6137,24 +6128,24 @@
     "跛脚羊": {
      "n": 1,
      "raw": 0.0,
-     "adjusted": 0.37,
-     "delta": 0.37,
+     "adjusted": 0.378,
+     "delta": 0.378,
      "confidence": "low",
      "counter_pick": false
     },
     "歌剧演员": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 1.267,
-     "delta": 0.267,
+     "adjusted": 1.266,
+     "delta": 0.266,
      "confidence": "low",
      "counter_pick": false
     },
     "牙医": {
      "n": 2,
      "raw": 1.5,
-     "adjusted": 1.411,
-     "delta": -0.089,
+     "adjusted": 1.432,
+     "delta": -0.068,
      "confidence": "medium",
      "counter_pick": false
     },
@@ -6189,16 +6180,16 @@
     "歌剧演员": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 0.993,
-     "delta": -0.007,
+     "adjusted": 0.992,
+     "delta": -0.008,
      "confidence": "low",
      "counter_pick": false
     },
     "台球手": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.18,
-     "delta": 0.18,
+     "adjusted": 2.179,
+     "delta": 0.179,
      "confidence": "low",
      "counter_pick": false
     },
@@ -6213,8 +6204,8 @@
     "跛脚羊": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 1.091,
-     "delta": 0.091,
+     "adjusted": 1.107,
+     "delta": 0.107,
      "confidence": "low",
      "counter_pick": false
     },
@@ -6249,16 +6240,16 @@
     "歌剧演员": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.062,
-     "delta": 0.062,
+     "adjusted": 2.061,
+     "delta": 0.061,
      "confidence": "low",
      "counter_pick": false
     },
     "女王蜂": {
      "n": 1,
      "raw": 0.0,
-     "adjusted": 0.482,
-     "delta": 0.482,
+     "adjusted": 0.481,
+     "delta": 0.481,
      "confidence": "low",
      "counter_pick": false
     }
@@ -6285,8 +6276,8 @@
     "跛脚羊": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.87,
-     "delta": -0.13,
+     "adjusted": 1.878,
+     "delta": -0.122,
      "confidence": "low",
      "counter_pick": false
     },
@@ -6303,8 +6294,8 @@
     "歌剧演员": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 1.205,
-     "delta": 0.205,
+     "adjusted": 1.204,
+     "delta": 0.204,
      "confidence": "low",
      "counter_pick": false
     }
@@ -6371,16 +6362,16 @@
     "歌剧演员": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.062,
-     "delta": 0.062,
+     "adjusted": 2.061,
+     "delta": 0.061,
      "confidence": "low",
      "counter_pick": false
     },
     "女王蜂": {
      "n": 1,
      "raw": 0.0,
-     "adjusted": 0.482,
-     "delta": 0.482,
+     "adjusted": 0.481,
+     "delta": 0.481,
      "confidence": "low",
      "counter_pick": false
     }
@@ -6405,19 +6396,11 @@
      "counter_pick": true
     },
     "牙医": {
-     "n": 4,
-     "raw": 2.0,
-     "adjusted": 1.923,
-     "delta": -0.077,
+     "n": 5,
+     "raw": 1.8,
+     "adjusted": 1.73,
+     "delta": -0.07,
      "confidence": "high",
-     "counter_pick": false
-    },
-    "跛脚羊": {
-     "n": 1,
-     "raw": 1.0,
-     "adjusted": 1.12,
-     "delta": 0.12,
-     "confidence": "low",
      "counter_pick": false
     }
    },
@@ -6441,26 +6424,18 @@
      "counter_pick": true
     },
     "牙医": {
-     "n": 2,
-     "raw": 2.0,
-     "adjusted": 1.867,
-     "delta": -0.133,
-     "confidence": "medium",
-     "counter_pick": false
-    },
-    "跛脚羊": {
-     "n": 1,
-     "raw": 1.0,
-     "adjusted": 1.12,
-     "delta": 0.12,
-     "confidence": "low",
+     "n": 3,
+     "raw": 1.667,
+     "adjusted": 1.565,
+     "delta": -0.101,
+     "confidence": "high",
      "counter_pick": false
     },
     "女王蜂": {
      "n": 1,
      "raw": 3.0,
-     "adjusted": 2.832,
-     "delta": -0.168,
+     "adjusted": 2.831,
+     "delta": -0.169,
      "confidence": "low",
      "counter_pick": false
     },
@@ -6501,16 +6476,16 @@
     "牙医": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.704,
-     "delta": -0.296,
+     "adjusted": 1.7,
+     "delta": -0.3,
      "confidence": "low",
      "counter_pick": false
     },
     "跛脚羊": {
      "n": 1,
      "raw": 3.0,
-     "adjusted": 2.573,
-     "delta": -0.427,
+     "adjusted": 2.585,
+     "delta": -0.415,
      "confidence": "low",
      "counter_pick": false
     },
@@ -6525,8 +6500,8 @@
     "女王蜂": {
      "n": 1,
      "raw": 3.0,
-     "adjusted": 2.832,
-     "delta": -0.168,
+     "adjusted": 2.831,
+     "delta": -0.169,
      "confidence": "low",
      "counter_pick": false
     },
@@ -6543,16 +6518,16 @@
     "歌剧演员": {
      "n": 1,
      "raw": 3.0,
-     "adjusted": 2.734,
-     "delta": -0.266,
+     "adjusted": 2.735,
+     "delta": -0.265,
      "confidence": "low",
      "counter_pick": false
     },
     "跛脚羊": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.878,
-     "delta": -0.122,
+     "adjusted": 1.896,
+     "delta": -0.104,
      "confidence": "low",
      "counter_pick": false
     },
@@ -6583,8 +6558,8 @@
     "牙医": {
      "n": 1,
      "raw": 0.0,
-     "adjusted": 0.276,
-     "delta": 0.276,
+     "adjusted": 0.272,
+     "delta": 0.272,
      "confidence": "low",
      "counter_pick": false
     }
@@ -6593,8 +6568,8 @@
     "歌剧演员": {
      "n": 1,
      "raw": 3.0,
-     "adjusted": 2.734,
-     "delta": -0.266,
+     "adjusted": 2.735,
+     "delta": -0.265,
      "confidence": "low",
      "counter_pick": false
     },
@@ -6609,8 +6584,8 @@
     "牙医": {
      "n": 1,
      "raw": 0.0,
-     "adjusted": 0.276,
-     "delta": 0.276,
+     "adjusted": 0.272,
+     "delta": 0.272,
      "confidence": "low",
      "counter_pick": false
     }
@@ -6619,16 +6594,16 @@
     "歌剧演员": {
      "n": 1,
      "raw": 3.0,
-     "adjusted": 2.734,
-     "delta": -0.266,
+     "adjusted": 2.735,
+     "delta": -0.265,
      "confidence": "low",
      "counter_pick": false
     },
     "喧嚣": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 0.934,
-     "delta": -0.066,
+     "adjusted": 0.933,
+     "delta": -0.067,
      "confidence": "low",
      "counter_pick": false
     },
@@ -6645,16 +6620,16 @@
     "歌剧演员": {
      "n": 1,
      "raw": 3.0,
-     "adjusted": 2.734,
-     "delta": -0.266,
+     "adjusted": 2.735,
+     "delta": -0.265,
      "confidence": "low",
      "counter_pick": false
     },
     "跛脚羊": {
      "n": 2,
      "raw": 2.5,
-     "adjusted": 2.226,
-     "delta": -0.274,
+     "adjusted": 2.24,
+     "delta": -0.26,
      "confidence": "medium",
      "counter_pick": false
     },
@@ -6687,8 +6662,8 @@
     "牙医": {
      "n": 3,
      "raw": 2.0,
-     "adjusted": 1.995,
-     "delta": -0.005,
+     "adjusted": 1.992,
+     "delta": -0.008,
      "confidence": "high",
      "counter_pick": false
     }
@@ -6721,8 +6696,8 @@
     "牙医": {
      "n": 2,
      "raw": 2.0,
-     "adjusted": 1.979,
-     "delta": -0.021,
+     "adjusted": 1.976,
+     "delta": -0.024,
      "confidence": "medium",
      "counter_pick": false
     }
@@ -6731,16 +6706,16 @@
     "跛脚羊": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.878,
-     "delta": -0.122,
+     "adjusted": 1.896,
+     "delta": -0.104,
      "confidence": "low",
      "counter_pick": false
     },
     "喧嚣": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 0.934,
-     "delta": -0.066,
+     "adjusted": 0.933,
+     "delta": -0.067,
      "confidence": "low",
      "counter_pick": false
     },
@@ -6779,8 +6754,8 @@
     "牙医": {
      "n": 1,
      "raw": 0.0,
-     "adjusted": 0.276,
-     "delta": 0.276,
+     "adjusted": 0.272,
+     "delta": 0.272,
      "confidence": "low",
      "counter_pick": false
     }
@@ -6789,24 +6764,24 @@
     "跛脚羊": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.878,
-     "delta": -0.122,
+     "adjusted": 1.896,
+     "delta": -0.104,
      "confidence": "low",
      "counter_pick": false
     },
     "牙医": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.704,
-     "delta": -0.296,
+     "adjusted": 1.7,
+     "delta": -0.3,
      "confidence": "low",
      "counter_pick": false
     },
     "女王蜂": {
      "n": 1,
      "raw": 3.0,
-     "adjusted": 2.832,
-     "delta": -0.168,
+     "adjusted": 2.831,
+     "delta": -0.169,
      "confidence": "low",
      "counter_pick": false
     }
@@ -6815,8 +6790,8 @@
     "女王蜂": {
      "n": 2,
      "raw": 2.5,
-     "adjusted": 2.312,
-     "delta": -0.188,
+     "adjusted": 2.311,
+     "delta": -0.189,
      "confidence": "medium",
      "counter_pick": false
     }
@@ -6856,11 +6831,11 @@
      "confidence": "low",
      "counter_pick": true
     },
-    "跛脚羊": {
+    "牙医": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 1.12,
-     "delta": 0.12,
+     "adjusted": 0.971,
+     "delta": -0.029,
      "confidence": "low",
      "counter_pick": false
     },
@@ -6901,8 +6876,8 @@
     "跛脚羊": {
      "n": 1,
      "raw": 3.0,
-     "adjusted": 2.573,
-     "delta": -0.427,
+     "adjusted": 2.585,
+     "delta": -0.415,
      "confidence": "low",
      "counter_pick": false
     },
@@ -6977,8 +6952,8 @@
     "牙医": {
      "n": 1,
      "raw": 0.0,
-     "adjusted": 0.276,
-     "delta": 0.276,
+     "adjusted": 0.272,
+     "delta": 0.272,
      "confidence": "low",
      "counter_pick": false
     }
@@ -6987,8 +6962,8 @@
     "跛脚羊": {
      "n": 1,
      "raw": 3.0,
-     "adjusted": 2.573,
-     "delta": -0.427,
+     "adjusted": 2.585,
+     "delta": -0.415,
      "confidence": "low",
      "counter_pick": false
     },
@@ -7040,19 +7015,11 @@
     }
    },
    "默剧艺人": {
-    "跛脚羊": {
-     "n": 1,
-     "raw": 1.0,
-     "adjusted": 1.12,
-     "delta": 0.12,
-     "confidence": "low",
-     "counter_pick": false
-    },
     "牙医": {
-     "n": 3,
-     "raw": 2.0,
-     "adjusted": 1.995,
-     "delta": -0.005,
+     "n": 4,
+     "raw": 1.75,
+     "adjusted": 1.737,
+     "delta": -0.013,
      "confidence": "high",
      "counter_pick": false
     }
@@ -7091,8 +7058,8 @@
     "跛脚羊": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.573,
-     "delta": -0.427,
+     "adjusted": 1.585,
+     "delta": -0.415,
      "confidence": "low",
      "counter_pick": false
     },
@@ -7115,8 +7082,8 @@
     "女王蜂": {
      "n": 1,
      "raw": 0.0,
-     "adjusted": 0.482,
-     "delta": 0.482,
+     "adjusted": 0.481,
+     "delta": 0.481,
      "confidence": "low",
      "counter_pick": false
     }
@@ -7133,16 +7100,16 @@
     "跛脚羊": {
      "n": 2,
      "raw": 2.0,
-     "adjusted": 1.873,
-     "delta": -0.127,
+     "adjusted": 1.885,
+     "delta": -0.115,
      "confidence": "medium",
      "counter_pick": false
     },
     "台球手": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 1.18,
-     "delta": 0.18,
+     "adjusted": 1.179,
+     "delta": 0.179,
      "confidence": "low",
      "counter_pick": false
     },
@@ -7157,8 +7124,8 @@
     "牙医": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.929,
-     "delta": -0.071,
+     "adjusted": 1.971,
+     "delta": -0.029,
      "confidence": "low",
      "counter_pick": false
     }
@@ -7175,24 +7142,24 @@
     "台球手": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 1.118,
-     "delta": 0.118,
+     "adjusted": 1.117,
+     "delta": 0.117,
      "confidence": "low",
      "counter_pick": false
     },
     "跛脚羊": {
      "n": 2,
      "raw": 1.5,
-     "adjusted": 1.473,
-     "delta": -0.027,
+     "adjusted": 1.485,
+     "delta": -0.015,
      "confidence": "medium",
      "counter_pick": false
     },
     "牙医": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.029,
-     "delta": 0.029,
+     "adjusted": 2.024,
+     "delta": 0.024,
      "confidence": "low",
      "counter_pick": false
     }
@@ -7209,24 +7176,24 @@
     "跛脚羊": {
      "n": 4,
      "raw": 1.75,
-     "adjusted": 1.773,
-     "delta": 0.023,
+     "adjusted": 1.785,
+     "delta": 0.035,
      "confidence": "high",
      "counter_pick": false
     },
     "台球手": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 1.18,
-     "delta": 0.18,
+     "adjusted": 1.179,
+     "delta": 0.179,
      "confidence": "low",
      "counter_pick": false
     },
     "牙医": {
      "n": 3,
      "raw": 1.667,
-     "adjusted": 1.819,
-     "delta": 0.153,
+     "adjusted": 1.832,
+     "delta": 0.165,
      "confidence": "high",
      "counter_pick": false
     }
@@ -7243,16 +7210,16 @@
     "跛脚羊": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.973,
-     "delta": -0.027,
+     "adjusted": 1.985,
+     "delta": -0.015,
      "confidence": "low",
      "counter_pick": false
     },
     "牙医": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.929,
-     "delta": -0.071,
+     "adjusted": 1.971,
+     "delta": -0.029,
      "confidence": "low",
      "counter_pick": false
     }
@@ -7339,24 +7306,24 @@
     "跛脚羊": {
      "n": 2,
      "raw": 1.5,
-     "adjusted": 1.773,
-     "delta": 0.273,
+     "adjusted": 1.785,
+     "delta": 0.285,
      "confidence": "medium",
      "counter_pick": false
     },
     "牙医": {
      "n": 2,
      "raw": 2.0,
-     "adjusted": 1.979,
-     "delta": -0.021,
+     "adjusted": 1.998,
+     "delta": -0.002,
      "confidence": "medium",
      "counter_pick": false
     },
     "女王蜂": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.469,
-     "delta": 0.469,
+     "adjusted": 2.468,
+     "delta": 0.468,
      "confidence": "low",
      "counter_pick": false
     }
@@ -7365,8 +7332,8 @@
     "跛脚羊": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.173,
-     "delta": 0.173,
+     "adjusted": 2.185,
+     "delta": 0.185,
      "confidence": "low",
      "counter_pick": false
     },
@@ -7383,8 +7350,8 @@
     "歌剧演员": {
      "n": 2,
      "raw": 1.0,
-     "adjusted": 1.13,
-     "delta": 0.13,
+     "adjusted": 1.129,
+     "delta": 0.129,
      "confidence": "medium",
      "counter_pick": false
     },
@@ -7409,8 +7376,8 @@
     "歌剧演员": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.993,
-     "delta": -0.007,
+     "adjusted": 1.992,
+     "delta": -0.008,
      "confidence": "low",
      "counter_pick": false
     }
@@ -7453,8 +7420,8 @@
     "台球手": {
      "n": 4,
      "raw": 1.75,
-     "adjusted": 1.842,
-     "delta": 0.092,
+     "adjusted": 1.841,
+     "delta": 0.091,
      "confidence": "high",
      "counter_pick": false
     },
@@ -7479,8 +7446,8 @@
     "台球手": {
      "n": 2,
      "raw": 1.5,
-     "adjusted": 1.707,
-     "delta": 0.207,
+     "adjusted": 1.706,
+     "delta": 0.206,
      "confidence": "medium",
      "counter_pick": false
     },
@@ -7537,8 +7504,8 @@
     "跛脚羊": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.973,
-     "delta": -0.027,
+     "adjusted": 1.985,
+     "delta": -0.015,
      "confidence": "low",
      "counter_pick": false
     }
@@ -7547,8 +7514,8 @@
     "台球手": {
      "n": 1,
      "raw": 3.0,
-     "adjusted": 2.772,
-     "delta": -0.228,
+     "adjusted": 2.773,
+     "delta": -0.227,
      "confidence": "low",
      "counter_pick": false
     },
@@ -7565,16 +7532,16 @@
     "台球手": {
      "n": 1,
      "raw": 3.0,
-     "adjusted": 2.772,
-     "delta": -0.228,
+     "adjusted": 2.773,
+     "delta": -0.227,
      "confidence": "low",
      "counter_pick": false
     },
     "女王蜂": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.469,
-     "delta": 0.469,
+     "adjusted": 2.468,
+     "delta": 0.468,
      "confidence": "low",
      "counter_pick": false
     }
@@ -7583,8 +7550,8 @@
     "跛脚羊": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 1.373,
-     "delta": 0.373,
+     "adjusted": 1.385,
+     "delta": 0.385,
      "confidence": "low",
      "counter_pick": false
     },
@@ -7633,16 +7600,16 @@
     "牙医": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 2.029,
-     "delta": 0.029,
+     "adjusted": 2.024,
+     "delta": 0.024,
      "confidence": "low",
      "counter_pick": false
     },
     "女王蜂": {
      "n": 1,
      "raw": 0.0,
-     "adjusted": 0.482,
-     "delta": 0.482,
+     "adjusted": 0.481,
+     "delta": 0.481,
      "confidence": "low",
      "counter_pick": false
     }
@@ -7705,8 +7672,8 @@
     "跛脚羊": {
      "n": 1,
      "raw": 2.0,
-     "adjusted": 1.973,
-     "delta": -0.027,
+     "adjusted": 1.985,
+     "delta": -0.015,
      "confidence": "low",
      "counter_pick": false
     },
@@ -7723,8 +7690,8 @@
     "台球手": {
      "n": 1,
      "raw": 1.0,
-     "adjusted": 1.18,
-     "delta": 0.18,
+     "adjusted": 1.179,
+     "delta": 0.179,
      "confidence": "low",
      "counter_pick": false
     }
@@ -7751,8 +7718,8 @@
     "女王蜂": {
      "n": 1,
      "raw": 0.0,
-     "adjusted": 0.482,
-     "delta": 0.482,
+     "adjusted": 0.481,
+     "delta": 0.481,
      "confidence": "low",
      "counter_pick": false
     }
