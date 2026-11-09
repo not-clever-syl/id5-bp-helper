@@ -101,10 +101,13 @@ tr.mrow:hover td{background:rgba(107,140,255,.12)}
 tr.mrow td.mrow-t{cursor:pointer}
 .tw{display:inline-block;width:12px;color:var(--dim);font-size:10px}
 tr.srow td{font-size:11.5px;color:var(--dim);background:rgba(0,0,0,.14)}
-tr.srow td.s-i{text-align:center;font-family:Consolas,monospace}
-tr.shead td{color:var(--dim);font-size:11px;font-weight:600;
-  background:rgba(107,140,255,.08);border-bottom:1px solid var(--border)}
-tr.srow td.s-open{text-align:center;color:var(--accent)}
+tr.srow td.s-cell{padding:5px 8px}
+tr.srow:hover td{background:rgba(255,255,255,.03)}
+.s-flex{display:flex;flex-wrap:wrap;align-items:center;gap:4px 18px}
+.s-kv{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.s-kv > i{font-style:normal;color:var(--dim);opacity:.75;font-size:11px}
+.s-kv .chips{display:inline-flex}
+.s-kv .char-avatar{width:18px;height:18px}
 tr.srow td.s-open:hover{text-decoration:underline}
 tr.srow:hover td{background:rgba(255,255,255,.03)}
 .dim{color:var(--dim);font-weight:400;font-size:11.5px}
@@ -536,7 +539,7 @@ function render() {
       <td class="opcol"><button class="addbtn" data-addm="${esc(mkey)}" title="在这场后面新建一场比赛">+</button></td>
     </tr>`;
 
-    // 展开：按半局逐行展开（列与比赛行对齐，6 列）
+    // 展开：按半局逐行展开。整行合并成一格，内部自己排版，不跟外层列对齐
     if (expanded) {
       for (const x of g) {
         const h = x.h;
@@ -545,28 +548,30 @@ function render() {
           ? `<span class="tb">加时</span> 第 ${h.game} 局`
           : `第 ${h.game} 局`;
         html += `<tr class="srow${w ? ' warnrow' : ''}${dirty(x.i) ? ' changed' : ''}" data-i="${x.i}">
-          <td class="s-i">${esc(h.side === 'upper' ? '上半' : '下半')} ${gg}</td>
-          <td class="click" data-i="${x.i}">
-            <div>${esc(h.survivor_team || '')}</div>
-            <div class="dim">${esc(h.hunter_player || '')}</div>
+          <td colspan="6" class="s-cell">
+            <div class="s-flex">
+              <span class="s-kv"><i>局次</i>${esc(h.side === 'upper' ? '上半' : '下半')} ${gg}</span>
+              <span class="s-kv"><i>队伍</i>${esc(h.survivor_team || '')}</span>
+              <span class="s-kv"><i>监管选手</i>${esc(h.hunter_player || '')}</span>
+              <span class="s-kv"><i>地图</i>${esc(h.map || '')}</span>
+              <span class="s-kv"><i>求生阵容</i>${chipList(h.survivors)}</span>
+              <span class="s-kv"><i>求生 ban</i>${h.hunter_bans.length ? esc(h.hunter_bans.join('、')) : '—'}</span>
+              <span class="s-kv"><i>监管角色</i>${h.hunter ? Char.chip(h.hunter, {size: 18}) : '—'}</span>
+              <span class="s-kv"><i>监管 ban</i>${h.survivor_bans.length ? esc(h.survivor_bans.join('、')) : '—'}</span>
+              <span class="s-kv"><i>比分</i><span class="mono">${esc(h.score || '')}</span> <span class="dim">${h.escape}:${h.kill}</span></span>
+              <span class="s-kv"><button class="lnk" data-i="${x.i}">编辑</button></span>
+            </div>
           </td>
-          <td class="click" data-i="${x.i}">${esc(h.map || '')}</td>
-          <td class="click" data-i="${x.i}">
-            ${chipList(h.survivors)}
-            <div class="dim">求生 ban：${h.hunter_bans.length ? esc(h.hunter_bans.join('、')) : '—'}</div>
-          </td>
-          <td class="click" data-i="${x.i}">
-            ${h.hunter ? Char.chip(h.hunter, {size: 18}) : '—'}
-            <div class="dim">监管 ban：${h.survivor_bans.length ? esc(h.survivor_bans.join('、')) : '—'}</div>
-            <div class="mono">${esc(h.score || '')} <span style="opacity:.6">${h.escape}:${h.kill}</span></div>
-          </td>
-          <td class="click s-open" data-i="${x.i}">编辑</td>
         </tr>`;
       }
       // 在这场里加一局
       html += `<tr class="srow s-add">
-        <td colspan="5" class="dim">共 ${g.length} 个半局</td>
-        <td class="click s-open" data-addhalf="${esc(mkey)}">+ 加一局</td>
+        <td colspan="6" class="s-cell">
+          <div class="s-flex">
+            <span class="dim">共 ${g.length} 个半局</span>
+            <span class="s-kv"><button class="lnk" data-addhalf="${esc(mkey)}">+ 加一局</button></span>
+          </div>
+        </td>
       </tr>`;
     }
   }
