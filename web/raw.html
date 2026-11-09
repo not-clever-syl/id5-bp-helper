@@ -101,13 +101,20 @@ tr.mrow:hover td{background:rgba(107,140,255,.12)}
 tr.mrow td.mrow-t{cursor:pointer}
 .tw{display:inline-block;width:12px;color:var(--dim);font-size:10px}
 tr.srow td{font-size:11.5px;color:var(--dim);background:rgba(0,0,0,.14)}
-tr.srow td.s-cell{padding:5px 8px}
+tr.srow td.s-cell{padding:0}
 tr.srow:hover td{background:rgba(255,255,255,.03)}
-.s-flex{display:flex;flex-wrap:wrap;align-items:center;gap:4px 18px}
-.s-kv{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
-.s-kv > i{font-style:normal;color:var(--dim);opacity:.75;font-size:11px}
-.s-kv .chips{display:inline-flex}
-.s-kv .char-avatar{width:18px;height:18px}
+/* 展开区里的嵌套表：按之前半局明细的格式 */
+table.sub{font-size:11.5px;table-layout:auto}
+table.sub thead th{position:static;background:rgba(255,255,255,.03);
+  font-size:10.5px;padding:4px 7px;border-bottom:1px solid var(--border)}
+table.sub tbody td{padding:4px 7px;vertical-align:middle}
+table.sub tbody tr:hover td{background:rgba(255,255,255,.03)}
+table.sub td.edit{cursor:pointer}
+table.sub td.edit:hover{background:rgba(107,140,255,.10)}
+table.sub .chips{display:inline-flex}
+table.sub .char-avatar{width:18px;height:18px}
+.s-foot{display:flex;align-items:center;gap:12px;padding:5px 9px;
+  border-top:1px solid var(--border)}
 tr.srow td.s-open:hover{text-decoration:underline}
 tr.srow:hover td{background:rgba(255,255,255,.03)}
 .dim{color:var(--dim);font-weight:400;font-size:11.5px}
@@ -539,40 +546,41 @@ function render() {
       <td class="opcol"><button class="addbtn" data-addm="${esc(mkey)}" title="在这场后面新建一场比赛">+</button></td>
     </tr>`;
 
-    // 展开：按半局逐行展开。整行合并成一格，内部自己排版，不跟外层列对齐
+    // 展开：用一个嵌套表格，按之前的半局明细格式（一行一半局，带表头）
     if (expanded) {
+      html += `<tr class="srow"><td colspan="6" class="s-cell">
+        <table class="sub">
+          <thead><tr>
+            <th>主场 vs 客场</th><th>第几局</th><th>监管选手</th>
+            <th>求生队伍</th><th>地图</th><th>求生阵容</th>
+            <th>监管角色</th><th>求生 ban 位</th><th>监管 ban 位</th><th>比分</th>
+          </tr></thead>
+          <tbody>`;
       for (const x of g) {
         const h = x.h;
         const w = BAD[x.i];
         const gg = h.tiebreak
           ? `<span class="tb">加时</span> 第 ${h.game} 局`
           : `第 ${h.game} 局`;
-        html += `<tr class="srow${w ? ' warnrow' : ''}${dirty(x.i) ? ' changed' : ''}" data-i="${x.i}">
-          <td colspan="6" class="s-cell">
-            <div class="s-flex">
-              <span class="s-kv"><i>局次</i>${esc(h.side === 'upper' ? '上半' : '下半')} ${gg}</span>
-              <span class="s-kv"><i>队伍</i>${esc(h.survivor_team || '')}</span>
-              <span class="s-kv"><i>监管选手</i>${esc(h.hunter_player || '')}</span>
-              <span class="s-kv"><i>地图</i>${esc(h.map || '')}</span>
-              <span class="s-kv"><i>求生阵容</i>${chipList(h.survivors)}</span>
-              <span class="s-kv"><i>求生 ban</i>${h.hunter_bans.length ? esc(h.hunter_bans.join('、')) : '—'}</span>
-              <span class="s-kv"><i>监管角色</i>${h.hunter ? Char.chip(h.hunter, {size: 18}) : '—'}</span>
-              <span class="s-kv"><i>监管 ban</i>${h.survivor_bans.length ? esc(h.survivor_bans.join('、')) : '—'}</span>
-              <span class="s-kv"><i>比分</i><span class="mono">${esc(h.score || '')}</span> <span class="dim">${h.escape}:${h.kill}</span></span>
-              <span class="s-kv"><button class="lnk" data-i="${x.i}">编辑</button></span>
-            </div>
-          </td>
+        html += `<tr class="subrow${w ? ' warnrow' : ''}${dirty(x.i) ? ' changed' : ''}">
+          <td class="edit" data-i="${x.i}">${esc(h.survivor_team || '')} vs ${esc(h.hunter_team || '')}</td>
+          <td class="game edit" data-i="${x.i}">${esc(h.side === 'upper' ? '上半' : '下半')} ${gg}</td>
+          <td class="edit" data-i="${x.i}">${esc(h.hunter_player || '')}</td>
+          <td class="edit" data-i="${x.i}">${esc(h.survivor_team || '')}</td>
+          <td class="edit" data-i="${x.i}">${esc(h.map || '')}</td>
+          <td class="edit" data-i="${x.i}">${chipList(h.survivors)}</td>
+          <td class="edit" data-i="${x.i}">${h.hunter ? Char.chip(h.hunter, {size: 18}) : '—'}</td>
+          <td class="edit" data-i="${x.i}">${chipList(h.hunter_bans)}</td>
+          <td class="edit" data-i="${x.i}">${chipList(h.survivor_bans)}</td>
+          <td class="edit mono" data-i="${x.i}">${esc(h.score || '')} <span style="opacity:.6">${h.escape}:${h.kill}</span></td>
         </tr>`;
       }
-      // 在这场里加一局
-      html += `<tr class="srow s-add">
-        <td colspan="6" class="s-cell">
-          <div class="s-flex">
-            <span class="dim">共 ${g.length} 个半局</span>
-            <span class="s-kv"><button class="lnk" data-addhalf="${esc(mkey)}">+ 加一局</button></span>
-          </div>
-        </td>
-      </tr>`;
+      html += `</tbody></table>
+        <div class="s-foot">
+          <span class="dim">共 ${g.length} 个半局</span>
+          <button class="lnk" data-addhalf="${esc(mkey)}">+ 加一局</button>
+        </div>
+      </td></tr>`;
     }
   }
 
@@ -869,8 +877,8 @@ function openNewMatch(afterId) {
 
 // 表格交互：点比赛行展开/收起，点半局开详情，点「+」新建
 $('#tbl').addEventListener('click', ev => {
-  // 展开的半局明细行 → 开详情
-  const scell = ev.target.closest('tr.srow td[data-i]');
+  // 展开的半局明细格 → 开详情
+  const scell = ev.target.closest('td.edit[data-i]');
   if (scell) {
     openDetail(+scell.dataset.i);
     return;
