@@ -32,6 +32,7 @@ import json
 import socket
 import sys
 import threading
+import time
 import urllib.parse
 import webbrowser
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
@@ -605,7 +606,16 @@ class Handler(SimpleHTTPRequestHandler):
         # 备份 → 原子写
         core_path = ROOT / "data" / "bp_core.json"
         bak = ROOT / "data" / "bp_core.json.bak"
-        bak.write_text(core_path.read_text(encoding="utf-8"), encoding="utf-8")
+        old_text = core_path.read_text(encoding="utf-8")
+        bak.write_text(old_text, encoding="utf-8")
+        # 额外在 tmp/ 留一份带时间戳的快照，多存几次以便回退到任意一次保存前
+        snaps = ROOT / "tmp" / "bp_core_snapshots"
+        try:
+            snaps.mkdir(parents=True, exist_ok=True)
+            stamp = time.strftime("%Y%m%d-%H%M%S")
+            (snaps / ("bp_core-%s.json" % stamp)).write_text(old_text, encoding="utf-8")
+        except Exception:
+            pass
         tmp = core_path.with_suffix(".json.tmp")
         tmp.write_text(json.dumps({"meta": data.get("meta") or old.get("meta"),
                                    "halves": halves},
@@ -628,6 +638,7 @@ class Handler(SimpleHTTPRequestHandler):
         custom_data.clear_cache()
         self._json(200, {"ok": True, "halves": len(halves),
                          "backup": "data/bp_core.json.bak",
+                         "snapshots": "tmp/bp_core_snapshots/",
                          "timing": timing})
 
     def _api_player_scores(self):

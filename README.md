@@ -71,6 +71,8 @@ python3 scripts/bp_combo_report.py ACT YuM 3 --map 月亮河公园
 
 原始数据页改完保存，`data/bp_core.json` 会被覆盖（旧文件留一份 `bp_core.json.bak`），随后所有派生数据自动重算，不用手工跑任何命令。也可以在命令行里重算：
 
+每次保存还会额外在 `tmp/bp_core_snapshots/` 里留一份带时间戳的旧文件，改错了可以从那里回退到任意一次保存前的状态。
+
 ```bash
 python3 scripts/rebuild.py
 ```
