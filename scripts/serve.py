@@ -83,63 +83,19 @@ def _list_reports() -> list:
 def _validate_core(halves, meta) -> str:
     """校验原始数据。返回错误字符串，通过则返回空串。
 
-    score 是 5 分制原始比分（形如 "2:2"），escape/kill 是逃脱/击杀人数。
-    escape 必须与 score 对得上，否则下游算出来的分全是错的。
+    具体规则在 core_check.py 里，命令行也能单独跑：
+        python scripts/core_check.py
     """
-    s2e = (meta.get("score_to_escape") or
-           {"0": 0, "1": 1, "2": 2, "3": 3, "5": 4})
-    s2e = {str(k): int(v) for k, v in s2e.items()}
-    seen_key = set()
-    for i, h in enumerate(halves):
-        tag = f"第 {i + 1} 行"
-        if not isinstance(h, dict):
-            return f"{tag}不是对象"
-        for f in ("seq", "side", "survivor_team", "hunter_team", "map"):
-            if not h.get(f):
-                return f"{tag}缺少 {f}"
-        # seq 是「同场比赛内」的序号，不同场次会重复，
-        # 所以唯一性要看 (seq, 求生队, 监管队) 这个组合。
-        key = (h.get("seq"), h.get("survivor_team"), h.get("hunter_team"))
-        if key in seen_key:
-            return f"{tag}与前面某行重复（seq={key[0]}，{key[1]} vs {key[2]}）"
-        seen_key.add(key)
-        g = h.get("game")
-        if not h.get("tiebreak") and g not in (1, 2, 3, 4, 5):
-            return f"{tag}的 game={g} 不合法（应为 1~5，或加时赛）"
-        if h.get("tiebreak") and g not in (4, 5):
-            return f"{tag}标了加时，game 应为 4 或 5（加时最多一局）"
-        sb, hb = h.get("survivors"), h.get("hunter_bans")
-        if not isinstance(sb, list) or len(sb) != 4:
-            return f"{tag}的求生阵容必须正好 4 个"
-        if not isinstance(hb, list) or len(hb) != 4:
-            return f"{tag}的监管 ban 位必须正好 4 个"
-        for ch in sb + hb + (h.get("survivor_bans") or []):
-            if not isinstance(ch, str) or not ch.strip():
-                return f"{tag}存在空的角色名"
-        score = str(h.get("score") or "")
-        parts = score.split(":")
-        if len(parts) != 2 or not all(p.strip().isdigit() for p in parts):
-            return f"{tag}的比分 {score!r} 格式不对（应为 求生:监管）"
-        a, b = int(parts[0]), int(parts[1])
-        if str(a) not in s2e or str(b) not in s2e:
-            return f"{tag}的比分 {score} 不在允许取值内"
-        exp_escape, exp_kill = s2e[str(a)], s2e[str(b)]
-        if h.get("escape") != exp_escape or h.get("kill") != exp_kill:
-            return (f"{tag}的 escape/kill 与比分 {score} 对不上"
-                    f"（应为 {exp_escape}/{exp_kill}）")
-
-    # 主客映射：每项的键是两个队名，值必须是这两个队之一
-    hp = meta.get("home_pairs")
-    if hp is not None:
-        if not isinstance(hp, dict):
-            return "meta.home_pairs 必须是对象"
-        for k, v in hp.items():
-            parts = [p for p in str(k).replace("|", ",").split(",") if p]
-            if len(parts) != 2:
-                return f"meta.home_pairs 的键 {k!r} 不是两个队名"
-            if v not in parts:
-                return f"meta.home_pairs 的 {k!r} 主队 {v!r} 不在这两队里"
-    return ""
+    import core_check
+    issues = core_check.check(halves, meta)
+    if not issues:
+        return ""
+    texts = core_check.issues_text(issues)
+    head = f"数据不合逻辑（共 {len(issues)} 处）："
+    detail = "；".join(texts[:5])
+    if len(texts) > 5:
+        detail += f" …… 还有 {len(texts) - 5} 处"
+    return head + detail
 
 
 class Handler(SimpleHTTPRequestHandler):
@@ -163,6 +119,8 @@ class Handler(SimpleHTTPRequestHandler):
             return self._api_recompute()
         if self.path == "/api/core":
             return self._api_core_write()
+        if self.path == "/api/core/check":
+            return self._api_core_check()
         if self.path == "/api/generate":
             return self._api_generate()
         if self.path.startswith("/api/files/list"):
@@ -552,6 +510,25 @@ class Handler(SimpleHTTPRequestHandler):
             self._json(500, {"ok": False, "error": f"{type(e).__name__}: {e}"})
 
     # ── 原始数据 bp_core（读写）────────────────────────────
+    def _api_core_check(self):
+        """逻辑校验（不落盘）：返回每条问题涉及的行号和说明。"""
+        try:
+            data = self._read_json()
+        except Exception as e:
+            return self._json(400, {"ok": False, "error": f"bad json: {e}"})
+        import core_check
+        halves = data.get("halves")
+        if not isinstance(halves, list):
+            return self._json(400, {"ok": False, "error": "halves 必须是数组"})
+        meta = data.get("meta") or {}
+        issues = core_check.check(halves, meta)
+        self._json(200, {
+            "ok": True,
+            "issues": issues,
+            "bad_rows": core_check.bad_rows(issues),
+            "count": len(issues),
+        })
+
     def _api_core_get(self):
         """原始数据：meta + 全部半局 + 主客队映射，给表格页展示。"""
         try:
