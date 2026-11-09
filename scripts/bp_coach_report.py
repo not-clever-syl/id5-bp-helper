@@ -213,6 +213,7 @@ def tree_options(eng, team, player, game, state, gone_hunt=None,
     kind = state["kind"]
     lban, lpick = set(state["lban"]), set(state["lpick"])
     spicks = set(state["spicks"])
+    lineup = None   # 只有 ⑩ 监管选人会填：每个监管各自的阵容分（仅用于展示）
 
     if kind == "hunt_ban":
         cs = eng.ban_candidates_response(team, list(spicks), lban, lpick,
@@ -223,6 +224,20 @@ def tree_options(eng, team, player, game, state, gone_hunt=None,
               if c not in gone and c not in lban and c not in lpick]
         cs.sort(key=lambda c: eng.lineup_score(team, list(spicks), c)
                 if spicks else 0)
+        if width:
+            cs = cs[:width]
+    elif kind == "hunt_pick":
+        # 监管选人：候选是这名选手会掏的监管，与引擎一致。
+        # 不能走下面的求生分支，否则这里会列出一串求生者。
+        cs = [c for c in eng.players[player]["dist"]
+              if c in eng.strength and c not in lban and c not in lpick]
+        # 引擎在这一层用的是「威胁前 3」的期望值，对手具体掏哪个监管
+        # 不改变总评，所以 7 个候选的分完全一样。树上直接显示会像坏了，
+        # 因此额外带一个「若真掏这个监管」的阵容分，只用于展示与排序，
+        # 不参与引擎的总评。
+        lineup = dict((c, eng.lineup_score(team, list(spicks), c) if spicks else 0)
+                      for c in cs)
+        cs.sort(key=lambda c: lineup[c])
         if width:
             cs = cs[:width]
     else:  # surv_pick
@@ -250,9 +265,16 @@ def tree_options(eng, team, player, game, state, gone_hunt=None,
         else:
             nidx, ntaken = idx, taken + 1
         v, _ = run_from(eng, team, player, game, nidx, ntaken, nb, np_, nsp)
-        out.append({"char": c, "value": v, "idx": nidx, "taken": ntaken,
-                    "lban": nb, "lpick": np_, "spicks": nsp, "is_max": is_max})
+        item = {"char": c, "value": v, "idx": nidx, "taken": ntaken,
+                "lban": nb, "lpick": np_, "spicks": nsp, "is_max": is_max}
+        if lineup is not None:
+            item["lineup"] = lineup[c]
+        out.append(item)
     out.sort(key=lambda o: -o["value"] if is_max else o["value"])
+    # ⑩ 监管选人：总评分对每个候选都一样，改按「若真掏这个监管」的
+    # 阵容分排序，让教练一眼看出对手掏谁最伤。
+    if lineup is not None:
+        out.sort(key=lambda o: o["lineup"])
     return out
 
 
@@ -282,12 +304,20 @@ def build_tree(eng, team, player, game, state, depth_left=3,
     if not opts:
         return layer
     best = opts[0]["value"]   # 已按「当前行动方的最优」排在首位
+    # ⑩ 监管选人这一层的总评分对每个候选都相同，树上改显示各自的阵容分。
+    # 排序用的也是阵容分，所以 best 要从同一个口径里取，否则首行不是 0。
+    if kind == "hunt_pick":
+        best = opts[0].get("lineup", opts[0]["value"])
     for o in opts:
         # 不塞 lban/lpick/spicks：每层带 20 个角色名 × 3 份太占体积。
         # 前端从 tree_state 出发，沿路径按 kind 累积就能还原出同样的集合。
-        node = {"char": o["char"], "value": round(o["value"], 4),
-                "delta": round(o["value"] - best, 4),
+        shown = o.get("lineup", o["value"]) if kind == "hunt_pick" else o["value"]
+        node = {"char": o["char"], "value": round(shown, 4),
+                "delta": round(shown - best, 4),
                 "idx": o["idx"], "taken": o["taken"]}
+        if kind == "hunt_pick":
+            # 标记这层分数是「若真掏这个监管」的阵容分，不是总评
+            node["by"] = "lineup"
         nidx = o["idx"]
         deeper = (nidx < len(stages) and stages[nidx][1] != "hunt_pick")
         if deeper and depth_left > 1:
@@ -645,6 +675,9 @@ def one_combo(eng, team, player, game, bans, verbose_steps=True, emit=True,
         "second_pick": second_pick,
         "picks_detail": picks_detail,
         "solid_n": solid_n,
+        # 整套阵容的救人位个数。上面那个 solid_n 只统计前两手，
+        # 页面上的「最终阵容」要的是完整阵容，两个数不能混用。
+        "lineup_solid_n": len(solid),
         "half_value": round(v4, 4),
         "line": line_rows,
         "steps": step_rows,
@@ -758,6 +791,9 @@ def main():
                                 if not manual else list(manual))],
                 "note": "评估单位是局均逃脱，经「最低 3 人」聚合后系统性偏低，"
                         "只用于同一对手下的相对比较。",
+                # 救人位名单：树上「最终阵容」要按当前主线实时数救人位个数，
+                # 前端没有这份名单就算不准，所以随报告一起下发。
+                "solid_chars": sorted(SOLID),
             },
             "combos": results,
         }

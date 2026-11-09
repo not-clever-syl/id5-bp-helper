@@ -6,6 +6,7 @@ GET  /api/player_scores—— 选手榜（每个监管选手 × 求生 × 他用
 GET  /api/maps         —— 各图局数、实测逃脱、监管出场与倍数
 GET  /api/map_scores   —— 某张图的实测表（只含该图出场过的角色）
 GET  /api/halves       —— 按地图/角色/选手筛出的半局明细
+GET  /api/solid        —— 救人位名单（报告页按当前阵容实时计数用）
 POST /api/recompute    —— 「重新搜索」：新建引擎，用当前数据重算
 GET  /api/generate/meta—— 报告生成页的元数据（战队、监管选手、选手折合分、角色池）
 POST /api/generate     —— 生成一份 BP 报告并存进 data/reports/
@@ -124,6 +125,8 @@ class Handler(SimpleHTTPRequestHandler):
             return self._api_matchup()
         if self.path.startswith("/api/tree"):
             return self._api_tree()
+        if self.path.startswith("/api/solid"):
+            return self._api_solid()
         if self.path.startswith("/api/halves"):
             return self._api_halves()
         if self.path.startswith("/api/expect/meta"):
@@ -358,6 +361,16 @@ class Handler(SimpleHTTPRequestHandler):
             import traceback
             traceback.print_exc()
             self._json(500, {"ok": False, "error": f"{type(e).__name__}: {e}"})
+
+    def _api_solid(self):
+        """救人位名单。
+
+        报告页的「最终阵容」要按当前主线阵容实时数「救人位几个」，
+        而早期生成的报告里没有 meta.solid_chars。名单以后端为准下发，
+        页面就不用自己再维护一份。
+        """
+        from bp_search_engine import SOLID
+        self._json(200, {"chars": sorted(SOLID)})
 
     def _api_tree(self):
         """交互树的下一层：给定一个搜索状态，返回该节点的全部候选。
