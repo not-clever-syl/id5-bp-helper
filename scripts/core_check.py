@@ -10,7 +10,6 @@
              局次是不是递增、ban 名额对不对、同场地图有没有重复
     封锁层   按赛制规则看：全局封锁池（该队已用过的角色不能再选也不能再禁）、
              监管选手是不是本队的
-
 ban 语义（见 tmp/docs/rules_v11.md）：
     · 监管方固定 4 个求生 ban 位；求生方 ban 监管的数量逐局递增
       （第 1 局 0、第 2 局 1、第 3 局起 2）。
@@ -249,24 +248,35 @@ def check(halves: list, meta: dict) -> list:
             else:
                 seen_map[mp] = (i, x)
 
-        # ── 封锁层：全局封锁池（按队伍分开算） ──────
+        # ── 封锁层：全局封锁池（按队伍累计） ──────────
         # 规则：ban 与 pick 每半局重算，只有「全局封锁」跨半局保留。
-        # 全局封锁按队伍分开算，两边互不干涉：
-        #     求生队锁自己选过的求生角色（不能再选）
-        #     监管队锁自己用过的监管角色（不能再用）
+        # 全局封锁按队伍累计：该队已经用过的角色，后续不能再选、也不能再被禁。
         used_surv = {}    # 求生队 → 已经选过的求生角色
         used_hunter = {}  # 监管队 → 已经用过的监管角色
         for i, x in m:
             st, ht = x.get("survivor_team"), x.get("hunter_team")
             surv = set(x.get("survivors") or [])
+            hbans = set(x.get("hunter_bans") or [])
             hunter = x.get("hunter") or ""
+            sbans = set(x.get("survivor_bans") or [])
 
-            again = surv & used_surv.get(st, set())
+            locked_s = used_surv.get(st, set())
+            locked_h = used_hunter.get(ht, set())
+
+            again = surv & locked_s
             if again:
                 add([i], tag, f"{st} 之前已经选过 "
                               f"{'、'.join(sorted(again))}，不能再选")
-            if hunter and hunter in used_hunter.get(ht, set()):
+            relock = hbans & locked_s
+            if relock:
+                add([i], tag, f"{st} 之前选过 "
+                              f"{'、'.join(sorted(relock))}，不能再被 ban")
+            if hunter and hunter in locked_h:
                 add([i], tag, f"{ht} 之前已经用过 {hunter}，不能再选")
+            re_lock_h = sbans & locked_h
+            if re_lock_h:
+                add([i], tag, f"{ht} 之前用过 "
+                              f"{'、'.join(sorted(re_lock_h))}，不能再被 ban")
 
             used_surv.setdefault(st, set()).update(surv)
             if hunter:
