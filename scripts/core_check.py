@@ -2,11 +2,21 @@
 """bp_core 原始数据的逻辑校验。
 
 保存前用这里查一遍，把明显不合常理的数据挡下来。
-分两层：
+分三层：
 
-    基础层   单行自身：字段齐不齐、比分和逃脱人数对不对得上、角色有没有重复
+    基础层   单行自身：字段齐不齐、比分和逃脱人数对不对得上、
+             角色数量对不对、有没有既上场又被 ban
     结构层   整场一起看：上下半局是不是互换的、同局地图是不是一致、
-             局次是不是递增、ban 名额对不对
+             局次是不是递增、ban 名额对不对、同场地图有没有重复
+    封锁层   按赛制规则看：全局封锁池（该队已用过的角色不能再选也不能再禁）、
+             监管选手是不是本队的
+
+ban 语义（见 tmp/docs/rules_v11.md）：
+    · 监管方固定 4 个求生 ban 位；求生方 ban 监管的数量逐局递增
+      （第 1 局 0、第 2 局 1、第 3 局起 2）。
+    · ban 与 pick 都是「每半局重算」，只有「全局封锁池」跨半局保留。
+    · 全局封锁按队伍算：该队已经选过的角色，后续不能再选、也不能再被禁。
+    · 一局内上下半局地图必须一致；同一场比赛里不能有两局用同一张图。
 
 结构层需要先按 seq 把行切成「一场」——seq 每场都从 1 重新开始，
 所以 seq 变小就说明上一场结束了。
@@ -29,6 +39,29 @@ CORE = ROOT / "data" / "bp_core.json"
 # 求生方 ban 监管的名额：第 1 局 0 个，第 2 局 1 个，第 3 局起 2 个
 BAN_QUOTA = {1: 0, 2: 1}
 DEFAULT_QUOTA = 2
+
+# 监管方的求生 ban 位：恒定 4 个
+HUNTER_BAN_QUOTA = 4
+
+# 求生阵容固定 4 人，监管方 ban 位固定 4 个
+SURV_PICK_COUNT = 4
+HUNTER_BAN_COUNT = 4
+
+
+def player_teams() -> dict:
+    """监管选手 → 所属队伍。没有映射文件时返回空表（跳过该检查）。"""
+    p = ROOT / "data" / "hunter_players.json"
+    try:
+        d = json.loads(p.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+    out = {}
+    for name, info in (d.get("players") or {}).items():
+        t = (info or {}).get("team")
+        if t:
+            out[name] = t
+    return out
+
 
 
 def split_matches(halves: list) -> list:
@@ -81,14 +114,16 @@ def check(halves: list, meta: dict) -> list:
             add([i], tag, f"game={h.get('game')} 不合法（应为 1~5）")
 
         sb, hb = h.get("survivors"), h.get("hunter_bans")
-        if not isinstance(sb, list) or len(sb) != 4:
-            add([i], tag, "求生阵容必须正好 4 个")
-        if not isinstance(hb, list) or len(hb) != 4:
-            add([i], tag, "求生 ban 位必须正好 4 个")
+        if not isinstance(sb, list) or len(sb) != SURV_PICK_COUNT:
+            add([i], tag, f"求生阵容必须正好 {SURV_PICK_COUNT} 个"
+                        f"（现在 {len(sb) if isinstance(sb, list) else '不是列表'} 个）")
+        if not isinstance(hb, list) or len(hb) != HUNTER_BAN_COUNT:
+            add([i], tag, f"求生 ban 位必须正好 {HUNTER_BAN_COUNT} 个"
+                        f"（现在 {len(hb) if isinstance(hb, list) else '不是列表'} 个）")
         if isinstance(sb, list) and len(sb) == 4:
             if len(set(sb)) != 4:
                 add([i], tag, "求生阵容有重复角色")
-            if isinstance(hb, list) and len(hb) == 4:
+            if isinstance(hb, list):
                 both = set(sb) & set(hb)
                 if both:
                     add([i], tag,
@@ -100,6 +135,15 @@ def check(halves: list, meta: dict) -> list:
             add([i], tag, "监管 ban 位有重复角色")
         if h.get("hunter") and h.get("hunter") in sbans:
             add([i], tag, f"监管角色 {h['hunter']} 既出场又被 ban")
+        # 每个半局监管角色只能有 1 个
+        if not h.get("hunter"):
+            add([i], tag, "缺少监管角色")
+        elif not isinstance(h.get("hunter"), str):
+            add([i], tag, "监管角色应当是 1 个角色的名字")
+        # 同一半局求生队和监管队不能是同一支队
+        if h.get("survivor_team") and \
+                h.get("survivor_team") == h.get("hunter_team"):
+            add([i], tag, f"求生队和监管队都是 {h.get('survivor_team')}")
         for ch in (sb or []) + (hb or []) + sbans:
             if not isinstance(ch, str) or not ch.strip():
                 add([i], tag, "存在空的角色名")
@@ -164,6 +208,14 @@ def check(halves: list, meta: dict) -> list:
         if len(tb) > 2:
             add([i for i, _ in tb], tag, f"加时超过一局（{len(tb)} 个 half）")
 
+        # 这一场里只能是同样的两支队伍
+        pairs = {frozenset((x.get("survivor_team"), x.get("hunter_team")))
+                 for _, x in m}
+        if len(pairs) > 1:
+            names = sorted({t for p in pairs for t in p if t})
+            add(rows, tag, f"这一场里出现了 {len(names)} 支队伍："
+                           f"{'、'.join(names)}，应当始终是同样的两支")
+
         # 求生 ban 监管的名额
         for i, x in m:
             if x.get("tiebreak"):
@@ -174,6 +226,71 @@ def check(halves: list, meta: dict) -> list:
             if got != want:
                 add([i], tag, f"seq {x.get('seq')} 第 {g} 局求生 ban 监管 "
                               f"{got} 个，应为 {want} 个")
+
+        # 监管方的求生 ban 位恒为 4 个
+        for i, x in m:
+            got = len(x.get("hunter_bans") or [])
+            if got != HUNTER_BAN_QUOTA:
+                add([i], tag, f"seq {x.get('seq')} 监管 ban 求生 "
+                              f"{got} 个，应为 {HUNTER_BAN_QUOTA} 个")
+
+        # 同一场比赛里不能有两局用同一张图
+        seen_map = {}
+        for k in range(0, len(m) - 1, 2):
+            i, x = m[k]
+            mp = x.get("map")
+            if not mp:
+                continue
+            if mp in seen_map:
+                i0, _ = seen_map[mp]
+                add([i0, i], tag,
+                    f"这一场里 {mp} 用了两局"
+                    f"（seq {m[i0][1].get('seq')} 和 {x.get('seq')}）")
+            else:
+                seen_map[mp] = (i, x)
+
+        # ── 封锁层：全局封锁池（按队伍分开算） ──────
+        # 规则：ban 与 pick 每半局重算，只有「全局封锁」跨半局保留。
+        # 全局封锁按队伍分开算，两边互不干涉：
+        #     求生队锁自己选过的求生角色（不能再选）
+        #     监管队锁自己用过的监管角色（不能再用）
+        used_surv = {}    # 求生队 → 已经选过的求生角色
+        used_hunter = {}  # 监管队 → 已经用过的监管角色
+        for i, x in m:
+            st, ht = x.get("survivor_team"), x.get("hunter_team")
+            surv = set(x.get("survivors") or [])
+            hunter = x.get("hunter") or ""
+
+            again = surv & used_surv.get(st, set())
+            if again:
+                add([i], tag, f"{st} 之前已经选过 "
+                              f"{'、'.join(sorted(again))}，不能再选")
+            if hunter and hunter in used_hunter.get(ht, set()):
+                add([i], tag, f"{ht} 之前已经用过 {hunter}，不能再选")
+
+            used_surv.setdefault(st, set()).update(surv)
+            if hunter:
+                used_hunter.setdefault(ht, set()).add(hunter)
+
+    # ── 监管选手的队伍 ──────────────────────────────────
+    p2t = player_teams()
+    if p2t:
+        for i, h in enumerate(halves):
+            if not isinstance(h, dict):
+                continue
+            p = h.get("hunter_player")
+            if not p:
+                continue
+            t = p2t.get(p)
+            if t is None:
+                continue
+            if t != h.get("hunter_team"):
+                add([i], f"第 {i + 1} 行",
+                    f"监管选手 {p} 属于 {t}，但这一行监管队是 "
+                    f"{h.get('hunter_team')}")
+            if h.get("survivor_team") == h.get("hunter_team"):
+                add([i], f"第 {i + 1} 行",
+                    f"求生队和监管队都是 {h.get('survivor_team')}")
 
     # ── 主客映射 ────────────────────────────────────────
     hp = meta.get("home_pairs")
