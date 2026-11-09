@@ -150,8 +150,11 @@ button.mini:hover{border-color:var(--accent);color:var(--text)}
   background-image:radial-gradient(circle,rgba(255,255,255,.055) 1px,transparent 1px);
   background-size:22px 22px}
 .treewrap.grabbing{cursor:grabbing}
-/* 世界层：整棵树画在这里，整体平移 + 缩放 */
-.tcanvas{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform}
+/* 世界层：整棵树画在这里，整体平移 + 缩放。
+   这里故意不写 will-change:transform：一旦常驻合成层，浏览器会沿用
+   缩小那一刻的位图，再放大时文字只是把旧位图拉大，笔画发虚。
+   节点数量很少，交给浏览器每次按当前比例重新绘制更清晰。 */
+.tcanvas{position:absolute;left:0;top:0;transform-origin:0 0}
 .trowhead{position:absolute;left:6px;transform:translateY(-50%);
   color:var(--dim);font-size:10px;line-height:1.25;max-width:180px;
   white-space:normal;overflow:hidden;pointer-events:none;opacity:.9}
@@ -542,11 +545,17 @@ let VIEW = {k: 1, x: 0, y: 0, fitted: false};
 let drag = null;
 let dragMoved = false;
 
+/** 缩放比清洗：累积乘 1.12／除 1.12 会留下 0.9999999998 这种脏值，
+ *  浏览器按它重采样文字，笔画就会发虚。极接近 1 时直接归到 1。 */
+function cleanK(k) {
+  return Math.abs(k - 1) < 1e-6 ? 1 : k;
+}
+
 /** 把 VIEW 应用到世界层上，并让左侧的阶段标签跟着更新。 */
 function applyView() {
   const world = document.querySelector('#treeWorld');
   if (!world) return;
-  world.style.transform = `translate(${VIEW.x}px,${VIEW.y}px) scale(${VIEW.k})`;
+  world.style.transform = `translate(${Math.round(VIEW.x)}px,${Math.round(VIEW.y)}px) scale(${cleanK(VIEW.k)})`;
   const rows = document.querySelector('#treeRows');
   if (rows) rows.innerHTML = rowsHtml();
 }
@@ -558,7 +567,7 @@ function zoomTo(k, cx, cy) {
   const r = wrap.getBoundingClientRect();
   const px = cx == null ? r.width / 2 : cx;
   const py = cy == null ? r.height / 2 : cy;
-  const next = Math.max(0.3, Math.min(2.2, k));
+  const next = cleanK(Math.max(0.3, Math.min(2.2, k)));
   // 不动点在世界上对应的坐标，缩放前后要保持落在同一屏幕位置
   const wx = (px - VIEW.x) / VIEW.k;
   const wy = (py - VIEW.y) / VIEW.k;
@@ -575,7 +584,7 @@ function fitView() {
   const w = TREE.world;
   if (!wrap || !w) return;
   const bw = wrap.clientWidth, bh = wrap.clientHeight;
-  const k = Math.max(0.3, Math.min(1, (bw - 40) / w.w, (bh - 40) / w.h));
+  const k = cleanK(Math.max(0.3, Math.min(1, (bw - 40) / w.w, (bh - 40) / w.h)));
   VIEW.k = k;
   VIEW.x = Math.max(10, (bw - w.w * k) / 2);
   VIEW.y = Math.max(10, (bh - w.h * k) / 2);
