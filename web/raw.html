@@ -536,11 +536,8 @@ function render() {
       <td class="opcol"><button class="addbtn" data-addm="${esc(mkey)}" title="在这场后面新建一场比赛">+</button></td>
     </tr>`;
 
-    // 展开：按半局逐行展开
+    // 展开：按半局逐行展开（列与比赛行对齐，6 列）
     if (expanded) {
-      html += `<tr class="srow shead">
-        <td>局次</td><td>队伍</td><td>比分</td><td>地图</td><td>阵容 / 监管</td><td>操作</td>
-      </tr>`;
       for (const x of g) {
         const h = x.h;
         const w = BAD[x.i];
@@ -549,10 +546,20 @@ function render() {
           : `第 ${h.game} 局`;
         html += `<tr class="srow${w ? ' warnrow' : ''}${dirty(x.i) ? ' changed' : ''}" data-i="${x.i}">
           <td class="s-i">${esc(h.side === 'upper' ? '上半' : '下半')} ${gg}</td>
-          <td class="click" data-i="${x.i}">${esc(h.survivor_team || '')}</td>
-          <td class="mono click" data-i="${x.i}">${esc(h.score || '')} <span style="opacity:.6">${h.escape}:${h.kill}</span></td>
+          <td class="click" data-i="${x.i}">
+            <div>${esc(h.survivor_team || '')}</div>
+            <div class="dim">${esc(h.hunter_player || '')}</div>
+          </td>
           <td class="click" data-i="${x.i}">${esc(h.map || '')}</td>
-          <td class="click" data-i="${x.i}">${chipList(h.survivors)} ${h.hunter ? Char.chip(h.hunter, {size: 18}) : ''}</td>
+          <td class="click" data-i="${x.i}">
+            ${chipList(h.survivors)}
+            <div class="dim">求生 ban：${h.hunter_bans.length ? esc(h.hunter_bans.join('、')) : '—'}</div>
+          </td>
+          <td class="click" data-i="${x.i}">
+            ${h.hunter ? Char.chip(h.hunter, {size: 18}) : '—'}
+            <div class="dim">监管 ban：${h.survivor_bans.length ? esc(h.survivor_bans.join('、')) : '—'}</div>
+            <div class="mono">${esc(h.score || '')} <span style="opacity:.6">${h.escape}:${h.kill}</span></div>
+          </td>
           <td class="click s-open" data-i="${x.i}">编辑</td>
         </tr>`;
       }
