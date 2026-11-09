@@ -275,7 +275,19 @@ class Handler(SimpleHTTPRequestHandler):
             "all_hunters": custom_data.all_hunters(),
             "hunter_counts": custom_data.hunter_counts(),
             "survivor_counts": custom_data.survivor_counts(),
+            "player_teams": self._player_teams(),
         })
+
+    @staticmethod
+    def _player_teams() -> dict:
+        """监管选手 → 所属队伍（原始数据页用来收窄选手下拉）。"""
+        try:
+            d = json.loads((ROOT / "data" / "hunter_players.json")
+                           .read_text(encoding="utf-8"))
+        except Exception:
+            return {}
+        return {name: (info or {}).get("team") or ""
+                for name, info in (d.get("players") or {}).items()}
 
     def _api_expect_meta(self):
         self._json(200, {
@@ -584,7 +596,11 @@ class Handler(SimpleHTTPRequestHandler):
         return pool
 
     def _api_core_write(self):
-        """保存原始数据：校验 → 备份 → 写回 bp_core.json → 重建派生数据。
+        """保存原始数据：备份 → 写回 bp_core.json →（数据合法才）重建派生数据。
+
+        数据不合逻辑时照样写盘（用户可以先把半录的数据存下来），
+        但**不重建派生数据**——不合逻辑的数据算出来的分数没有意义。
+        此时下游各页面用的还是上一次重算的结果，页面上会明确警告。
 
         写盘前先把现有 bp_core.json 备份到 bp_core.json.bak，
         万一改错了还能手工还原。
@@ -599,9 +615,7 @@ class Handler(SimpleHTTPRequestHandler):
             return self._json(400, {"ok": False, "error": "halves 必须是非空数组"})
 
         old = json.loads((ROOT / "data" / "bp_core.json").read_text(encoding="utf-8"))
-        err = _validate_core(halves, data.get("meta") or old.get("meta") or {})
-        if err:
-            return self._json(400, {"ok": False, "error": err})
+        meta = data.get("meta") or old.get("meta") or {}
 
         # 备份 → 原子写
         core_path = ROOT / "data" / "bp_core.json"
@@ -617,11 +631,30 @@ class Handler(SimpleHTTPRequestHandler):
         except Exception:
             pass
         tmp = core_path.with_suffix(".json.tmp")
-        tmp.write_text(json.dumps({"meta": data.get("meta") or old.get("meta"),
+        tmp.write_text(json.dumps({"meta": meta,
                                    "halves": halves},
                                   ensure_ascii=False, indent=1),
                        encoding="utf-8")
         tmp.replace(core_path)
+
+        # 数据不合逻辑 → 只存不算。派生数据保持上一次的结果。
+        import core_check
+        issues = core_check.check(halves, meta)
+        if issues:
+            custom_data.clear_cache()
+            return self._json(200, {
+                "ok": True,
+                "halves": len(halves),
+                "valid": False,
+                "rebuilt": False,
+                "issues": issues,
+                "bad_rows": core_check.bad_rows(issues),
+                "count": len(issues),
+                "backup": "data/bp_core.json.bak",
+                "snapshots": "tmp/bp_core_snapshots/",
+                "message": "已保存，但数据不合逻辑，未重算派生数据。"
+                           "其他页面用的还是上一次的结果。",
+            })
 
         # 重建所有派生数据
         try:
@@ -637,6 +670,9 @@ class Handler(SimpleHTTPRequestHandler):
 
         custom_data.clear_cache()
         self._json(200, {"ok": True, "halves": len(halves),
+                         "valid": True,
+                         "rebuilt": True,
+                         "issues": [],
                          "backup": "data/bp_core.json.bak",
                          "snapshots": "tmp/bp_core_snapshots/",
                          "timing": timing})
