@@ -14,8 +14,10 @@
     加时    客队选图（BO3 加赛视同第四局）
 
 所以「某队在第 N 局选了什么图」不能直接按局次统计 —— 必须先知道
-该场他是不是主队，否则主客队的选图会混在一起。这里用 HOME_PAIRS
-记下每场的主队，再按上表判断这一局的图权归谁。
+该场他是不是主队，否则主客队的选图会混在一起。
+
+主客队记在 bp_core.json 的 meta.home_pairs 里（可在「原始数据」页改），
+下面的 HOME_PAIRS 是随项目带来的初始值，只在 core 里没有这一项时兜底。
 
 地图不可重复选择，但可以重复禁用；本页只统计「选择」，不含禁图。
 """
@@ -105,11 +107,36 @@ def _matches(halves):
 
 
 def _slot_of(x):
-    return "加时" if x.get("tiebreak") else "第%d局" % x.get("game", 0)
+    # 加时局的 game 记的是真实局号，但显示上要标出「加时」
+    if x.get("tiebreak"):
+        return "加时"
+    return "第%d局" % x.get("game", 0)
 
 
 def _load():
     return json.loads(CORE.read_text(encoding="utf-8")).get("halves", [])
+
+
+def home_pairs() -> dict:
+    """每场的主队。键是「先排序后用 | 连接」的两队名，值是主队名。
+
+    优先用 bp_core.json 的 meta.home_pairs（页面上可改），
+    没有这一项时退回随项目带来的 HOME_PAIRS。
+    """
+    try:
+        meta = json.loads(CORE.read_text(encoding="utf-8")).get("meta") or {}
+    except Exception:
+        meta = {}
+    raw = meta.get("home_pairs")
+    if isinstance(raw, dict) and raw:
+        out = {}
+        for k, v in raw.items():
+            parts = [p for p in str(k).replace("|", ",").split(",") if p]
+            if len(parts) == 2 and v:
+                out[tuple(sorted(parts))] = v
+        if out:
+            return out
+    return dict(HOME_PAIRS)
 
 
 def stats() -> dict:
@@ -123,6 +150,7 @@ def stats() -> dict:
         seats   {队名: {"home": n, "away": n}}
     """
     halves = _load()
+    pairs = home_pairs()
     teams = set()
     rows = {}
     totals = {}
@@ -131,7 +159,7 @@ def stats() -> dict:
     for m in _matches(halves):
         pair = {m[0]["survivor_team"], m[0]["hunter_team"]}
         key = tuple(sorted(pair))
-        home = HOME_PAIRS.get(key)
+        home = pairs.get(key)
         if not home:
             continue
         away = next(t for t in key if t != home)

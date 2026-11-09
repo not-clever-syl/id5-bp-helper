@@ -29,7 +29,53 @@
    "kill",
    "map"
   ],
-  "map_note": "地图名（如：永眠镇）"
+  "map_note": "地图名（如：永眠镇）",
+  "home_pairs": {
+   "ACT|ASC": "ASC",
+   "ACT|DOU5": "ACT",
+   "ACT|FPX.ZQ": "FPX.ZQ",
+   "ACT|GR": "GR",
+   "ACT|MRC": "ACT",
+   "ACT|TE": "ACT",
+   "ACT|北京WBG": "北京WBG",
+   "ACT|成都GG": "成都GG",
+   "ACT|成都Wolves": "成都Wolves",
+   "ASC|DOU5": "DOU5",
+   "ASC|FPX.ZQ": "ASC",
+   "ASC|GR": "ASC",
+   "ASC|MRC": "ASC",
+   "ASC|TE": "TE",
+   "ASC|北京WBG": "北京WBG",
+   "ASC|成都GG": "ASC",
+   "ASC|成都Wolves": "成都Wolves",
+   "DOU5|FPX.ZQ": "DOU5",
+   "DOU5|GR": "GR",
+   "DOU5|MRC": "DOU5",
+   "DOU5|TE": "TE",
+   "DOU5|北京WBG": "北京WBG",
+   "DOU5|成都GG": "成都GG",
+   "DOU5|成都Wolves": "DOU5",
+   "FPX.ZQ|GR": "GR",
+   "FPX.ZQ|MRC": "MRC",
+   "FPX.ZQ|TE": "TE",
+   "FPX.ZQ|北京WBG": "FPX.ZQ",
+   "FPX.ZQ|成都GG": "FPX.ZQ",
+   "FPX.ZQ|成都Wolves": "FPX.ZQ",
+   "GR|MRC": "GR",
+   "GR|TE": "TE",
+   "GR|北京WBG": "北京WBG",
+   "GR|成都GG": "成都GG",
+   "GR|成都Wolves": "成都Wolves",
+   "MRC|北京WBG": "北京WBG",
+   "MRC|成都GG": "成都GG",
+   "MRC|成都Wolves": "MRC",
+   "TE|北京WBG": "TE",
+   "TE|成都GG": "TE",
+   "TE|成都Wolves": "TE",
+   "北京WBG|成都GG": "成都GG",
+   "北京WBG|成都Wolves": "成都Wolves",
+   "成都GG|成都Wolves": "成都GG"
+  }
  },
  "halves": [
   {
@@ -550,7 +596,7 @@
   },
   {
    "seq": 7,
-   "game": null,
+   "game": 4,
    "side": "upper",
    "tiebreak": true,
    "survivor_team": "MRC",
@@ -580,7 +626,7 @@
   },
   {
    "seq": 8,
-   "game": null,
+   "game": 4,
    "side": "lower",
    "tiebreak": true,
    "survivor_team": "成都GG",
@@ -782,7 +828,7 @@
   },
   {
    "seq": 7,
-   "game": null,
+   "game": 4,
    "side": "upper",
    "tiebreak": true,
    "survivor_team": "GR",
@@ -812,7 +858,7 @@
   },
   {
    "seq": 8,
-   "game": null,
+   "game": 4,
    "side": "lower",
    "tiebreak": true,
    "survivor_team": "TE",
@@ -1014,7 +1060,7 @@
   },
   {
    "seq": 7,
-   "game": null,
+   "game": 4,
    "side": "upper",
    "tiebreak": true,
    "survivor_team": "ACT",
@@ -1044,7 +1090,7 @@
   },
   {
    "seq": 8,
-   "game": null,
+   "game": 4,
    "side": "lower",
    "tiebreak": true,
    "survivor_team": "北京WBG",
@@ -1358,7 +1404,7 @@
   },
   {
    "seq": 7,
-   "game": null,
+   "game": 4,
    "side": "upper",
    "tiebreak": true,
    "survivor_team": "ASC",
@@ -1388,7 +1434,7 @@
   },
   {
    "seq": 8,
-   "game": null,
+   "game": 4,
    "side": "lower",
    "tiebreak": true,
    "survivor_team": "成都GG",
@@ -2330,7 +2376,7 @@
   },
   {
    "seq": 7,
-   "game": null,
+   "game": 4,
    "side": "upper",
    "tiebreak": true,
    "survivor_team": "MRC",
@@ -2360,7 +2406,7 @@
   },
   {
    "seq": 8,
-   "game": null,
+   "game": 4,
    "side": "lower",
    "tiebreak": true,
    "survivor_team": "FPX.ZQ",
@@ -3706,7 +3752,7 @@
   },
   {
    "seq": 7,
-   "game": null,
+   "game": 4,
    "side": "upper",
    "tiebreak": true,
    "survivor_team": "DOU5",
@@ -3736,7 +3782,7 @@
   },
   {
    "seq": 8,
-   "game": null,
+   "game": 4,
    "side": "lower",
    "tiebreak": true,
    "survivor_team": "GR",
@@ -6046,7 +6092,7 @@
   },
   {
    "seq": 7,
-   "game": null,
+   "game": 4,
    "side": "upper",
    "tiebreak": true,
    "survivor_team": "MRC",
@@ -6076,7 +6122,7 @@
   },
   {
    "seq": 8,
-   "game": null,
+   "game": 4,
    "side": "lower",
    "tiebreak": true,
    "survivor_team": "北京WBG",
@@ -6906,7 +6952,7 @@
   },
   {
    "seq": 7,
-   "game": null,
+   "game": 4,
    "side": "upper",
    "tiebreak": true,
    "survivor_team": "成都GG",
@@ -6936,7 +6982,7 @@
   },
   {
    "seq": 8,
-   "game": null,
+   "game": 4,
    "side": "lower",
    "tiebreak": true,
    "survivor_team": "ACT",

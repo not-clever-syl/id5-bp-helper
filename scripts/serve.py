@@ -106,6 +106,8 @@ def _validate_core(halves, meta) -> str:
         g = h.get("game")
         if not h.get("tiebreak") and g not in (1, 2, 3, 4, 5):
             return f"{tag}的 game={g} 不合法（应为 1~5，或加时赛）"
+        if h.get("tiebreak") and g not in (4, 5):
+            return f"{tag}标了加时，game 应为 4 或 5（加时最多一局）"
         sb, hb = h.get("survivors"), h.get("hunter_bans")
         if not isinstance(sb, list) or len(sb) != 4:
             return f"{tag}的求生阵容必须正好 4 个"
@@ -125,6 +127,18 @@ def _validate_core(halves, meta) -> str:
         if h.get("escape") != exp_escape or h.get("kill") != exp_kill:
             return (f"{tag}的 escape/kill 与比分 {score} 对不上"
                     f"（应为 {exp_escape}/{exp_kill}）")
+
+    # 主客映射：每项的键是两个队名，值必须是这两个队之一
+    hp = meta.get("home_pairs")
+    if hp is not None:
+        if not isinstance(hp, dict):
+            return "meta.home_pairs 必须是对象"
+        for k, v in hp.items():
+            parts = [p for p in str(k).replace("|", ",").split(",") if p]
+            if len(parts) != 2:
+                return f"meta.home_pairs 的键 {k!r} 不是两个队名"
+            if v not in parts:
+                return f"meta.home_pairs 的 {k!r} 主队 {v!r} 不在这两队里"
     return ""
 
 
@@ -543,12 +557,16 @@ class Handler(SimpleHTTPRequestHandler):
         try:
             import map_pick
             c = json.loads((ROOT / "data" / "bp_core.json").read_text(encoding="utf-8"))
+            meta = c.get("meta") or {}
+            hp = meta.get("home_pairs")
+            if not isinstance(hp, dict) or not hp:
+                hp = {"|".join(sorted(k)): v
+                      for k, v in map_pick.HOME_PAIRS.items()}
             self._json(200, {
                 "ok": True,
-                "meta": c.get("meta") or {},
+                "meta": meta,
                 "halves": c.get("halves") or [],
-                "home_pairs": {"|".join(sorted(k)): v
-                               for k, v in map_pick.HOME_PAIRS.items()},
+                "home_pairs": hp,
                 "teams": sorted({h["survivor_team"] for h in c.get("halves") or []}
                                 | {h["hunter_team"] for h in c.get("halves") or []}),
                 "maps": sorted({h["map"] for h in c.get("halves") or [] if h.get("map")}),

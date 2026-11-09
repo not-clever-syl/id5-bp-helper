@@ -126,7 +126,8 @@ td.edit:hover{background:var(--panel2);outline:1px dashed var(--accent);
     <b>怎么编辑</b>：点任意一格即可改。角色那几列填角色名，多个用英文逗号隔开；<br>
     <b>求生 ban 位</b>=监管方 ban 掉的求生角色（恒为 4 个），<b>监管 ban 位</b>=求生方 ban 掉的监管角色（第 1 局 0 个，第 2 局起才有）。<br>
     <b>比分</b>=「求生:监管」，5 分制；改完自动算出逃脱/击杀人数，右边小字就是。<br>
-    加时那一行列标为「加时」。<br>
+    <b>局次</b>那一格是下拉：普通局 1~5，或者「加时」（加时最多一局，记真实局号 4 或 5）。<br>
+    <b>主场 vs 客场</b>那一格是下拉，选谁谁就是主队。
     保存后写回 <code>data/bp_core.json</code>（旧文件备份为 <code>bp_core.json.bak</code>），
     并立刻重算分数表、决策树、选手榜、可导入配置等全部下游数据。
   </div>
@@ -137,17 +138,20 @@ td.edit:hover{background:var(--panel2);outline:1px dashed var(--accent);
 const $ = s => document.querySelector(s);
 const esc = Char.esc;
 
-let META = null;        // bp_core 的 meta
+let META = null;        // bp_core 的 meta（含 home_pairs，可编辑）
 let HALVES = [];        // 当前编辑中的半局（引用副本）
 let ORIG = [];          // 原始半局，用于比对 / 撤销
-let HOME_PAIRS = {};    // "队A|队B" → 主队
+let ORIG_META = null;   // 原始 meta
 let SOC = [];           // 求生池（按出场排序），供下拉
 let HUNT = [];          // 监管池
 let TEAMS = [];         // 队伍名
 let MAPS = [];          // 地图名
+let PLAYERS = [];       // 监管选手名
 
 // 多值与单值字段的编辑类型
 const MULTI = { survivors: 1, hunter_bans: 1, survivor_bans: 1 };
+// 自由文本字段（下拉候选来自已有数据）
+const TEXT = { hunter_player: 1, map: 1 };
 
 boot();
 
@@ -159,9 +163,11 @@ async function boot() {
     ]);
     if (!core.ok) throw new Error(core.error || '读取失败');
     META = core.meta || {};
+    ORIG_META = JSON.parse(JSON.stringify(META));
     HALVES = core.halves || [];
     ORIG = JSON.parse(JSON.stringify(HALVES));
-    HOME_PAIRS = core.home_pairs || {};
+    // 主客映射存在 meta 里，跟着原始数据一起编辑
+    if (!META.home_pairs) META.home_pairs = core.home_pairs || {};
     TEAMS = core.teams || [];
     MAPS = core.maps || [];
     SOC = (scores.all_survivors || []).slice();
@@ -171,6 +177,7 @@ async function boot() {
       for (const c of h.survivors.concat(h.hunter_bans)) if (!SOC.includes(c)) SOC.push(c);
       for (const c of h.survivor_bans) if (!HUNT.includes(c)) HUNT.push(c);
       if (h.hunter && !HUNT.includes(h.hunter)) HUNT.push(h.hunter);
+      if (h.hunter_player && !PLAYERS.includes(h.hunter_player)) PLAYERS.push(h.hunter_player);
     }
     $('#sub').textContent = `共 ${HALVES.length} 个半局`;
     bind();
@@ -187,21 +194,47 @@ function bind() {
   $('#save').onclick = save;
   $('#undo').onclick = () => {
     HALVES = JSON.parse(JSON.stringify(ORIG));
+    META = JSON.parse(JSON.stringify(ORIG_META));
     render();
   };
 }
 
-// 主客队：用队名对查 HOME_PAIRS，查不到显示「—」
+// 队名对的键（排序后用 | 连接）
+function pairKey(a, b) {
+  return [a, b].sort().join('|');
+}
+
+// 主客队：用队名对查映射，查不到显示「—」
 function homeOf(h) {
   const a = h.survivor_team, b = h.hunter_team;
-  const key = [a, b].sort().join('|');
-  const home = HOME_PAIRS[key];
+  const home = META.home_pairs[pairKey(a, b)];
   if (!home) return null;
   return home === a ? [a, b] : [b, a];
 }
 
 function dirty(i) {
   return JSON.stringify(HALVES[i]) !== JSON.stringify(ORIG[i]);
+}
+
+// 主客映射也算改动（它存在 meta 里）
+function metaDirty() {
+  return JSON.stringify(META.home_pairs || {}) !==
+         JSON.stringify((ORIG_META && ORIG_META.home_pairs) || {});
+}
+
+function updateStatus() {
+  const n = HALVES.filter((_, i) => dirty(i)).length;
+  const md = metaDirty();
+  const st = $('#status');
+  if (n || md) {
+    st.className = 'status dirty';
+    st.textContent = n ? `${n} 行有未保存的改动` : '主客队有未保存的改动';
+  } else {
+    st.className = 'status';
+    st.textContent = '未修改';
+  }
+  $('#save').disabled = !n && !md;
+  $('#undo').disabled = !n && !md;
 }
 
 function match(h, q) {
@@ -232,14 +265,14 @@ function render() {
       ? `<span class="versus"><b>${esc(pair[0])}</b> vs ${esc(pair[1])}</span>`
       : '<span class="versus">—</span>';
     const g = h.tiebreak
-      ? '<span class="tb">加时</span>'
+      ? `<span class="tb">加时</span> 第 ${h.game} 局`
       : `第 ${h.game} 局`;
     html += `<tr class="${dirty(i) ? 'changed' : ''}" data-i="${i}">
-      <td>${vs}</td>
-      <td class="game">${g}</td>
-      <td>${esc(h.hunter_player || '')}</td>
-      <td>${esc(h.survivor_team || '')}</td>
-      <td>${esc(h.map || '')}</td>
+      <td class="edit" data-f="home">${vs}</td>
+      <td class="game edit" data-f="game">${g}</td>
+      <td class="edit" data-f="hunter_player">${esc(h.hunter_player || '')}</td>
+      <td class="edit" data-f="survivor_team">${esc(h.survivor_team || '')}</td>
+      <td class="edit" data-f="map">${esc(h.map || '')}</td>
       <td class="edit" data-f="survivors">${chipList(h.survivors)}</td>
       <td class="edit" data-f="hunter">${h.hunter ? Char.chip(h.hunter, {size: 20}) : '—'}</td>
       <td class="edit" data-f="hunter_bans">${chipList(h.hunter_bans)}</td>
@@ -253,20 +286,6 @@ function render() {
   updateStatus();
 }
 
-function updateStatus() {
-  const n = HALVES.filter((_, i) => dirty(i)).length;
-  const st = $('#status');
-  if (n) {
-    st.className = 'status dirty';
-    st.textContent = `${n} 行有未保存的改动`;
-  } else {
-    st.className = 'status';
-    st.textContent = '未修改';
-  }
-  $('#save').disabled = n === 0;
-  $('#undo').disabled = n === 0;
-}
-
 // ── 单元格编辑 ──────────────────────────────────────────
 $('#tbl').addEventListener('click', ev => {
   const td = ev.target.closest('td.edit');
@@ -275,15 +294,28 @@ $('#tbl').addEventListener('click', ev => {
 });
 
 function startEdit(td) {
-  if (td.querySelector('input')) return;
+  if (td.querySelector('input, select')) return;
   const tr = td.closest('tr');
   const i = +tr.dataset.i;
   const f = td.dataset.f;
   const h = HALVES[i];
-  const multi = MULTI[f];
-  const pool = (f === 'hunter') ? HUNT : SOC;  const cur = multi ? (h[f] || []).join(',') : (h[f] || '');
 
-  // datalist 给出候选（多值场景下每个 token 各自补全，简单起见给整串候选）
+  // 主客队：这一格是「主队 vs 客队」，改的是该场的主客关系
+  if (f === 'home') return editHome(td, h);
+  // 局次：要能区分「普通第 N 局」和「加时」，用下拉
+  if (f === 'game') return editGame(td, h);
+
+  const multi = MULTI[f];
+  const cur = multi ? (h[f] || []).join(',') : (h[f] || '');
+  // 候选池：角色列给角色，文本列给地图/选手，队名列给队名
+  let pool;
+  if (f === 'hunter') pool = HUNT;
+  else if (f === 'map') pool = MAPS;
+  else if (f === 'survivor_team' || f === 'hunter_team') pool = TEAMS;
+  else if (f === 'hunter_player') pool = PLAYERS;
+  else pool = SOC;
+
+  // datalist 给出候选
   const listId = 'dl_' + f;
   let dl = document.getElementById(listId);
   if (!dl) {
@@ -292,6 +324,7 @@ function startEdit(td) {
     document.body.appendChild(dl);
   }
   dl.innerHTML = pool.map(c => `<option value="${esc(c)}">`).join('');
+
   const input = document.createElement('input');
   input.className = 'cell-edit';
   input.value = cur;
@@ -334,6 +367,77 @@ function startEdit(td) {
   input.addEventListener('blur', () => finish(true));
 }
 
+// 局次：普通局 1~5；加时单独一档（加时最多一局，真实局号是 4 或 5）
+function editGame(td, h) {
+  const sel = document.createElement('select');
+  sel.className = 'cell-edit';
+  const opts = [];
+  for (let n = 1; n <= 5; n++) opts.push([String(n), `第 ${n} 局`, false]);
+  opts.push(['tb4', '加时（第 4 局）', true]);
+  opts.push(['tb5', '加时（第 5 局）', true]);
+  const cur = h.tiebreak ? 'tb' + h.game : String(h.game);
+  for (const [v, label] of opts) {
+    const o = document.createElement('option');
+    o.value = v;
+    o.textContent = label;
+    if (v === cur) o.selected = true;
+    sel.appendChild(o);
+  }
+  td.innerHTML = '';
+  td.appendChild(sel);
+  sel.focus();
+
+  let done = false;
+  const finish = (commit) => {
+    if (done) return;
+    done = true;
+    if (commit) {
+      const v = sel.value;
+      if (v === 'tb4') { h.tiebreak = true; h.game = 4; }
+      else if (v === 'tb5') { h.tiebreak = true; h.game = 5; }
+      else { h.tiebreak = false; h.game = parseInt(v, 10); }
+    }
+    render();
+  };
+  sel.addEventListener('change', () => finish(true));
+  sel.addEventListener('blur', () => finish(true));
+  sel.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { e.preventDefault(); finish(false); }
+  });
+}
+
+// 主客：下拉选主队，选谁谁就是主队
+function editHome(td, h) {
+  const sel = document.createElement('select');
+  sel.className = 'cell-edit';
+  const teams = [h.survivor_team, h.hunter_team];
+  for (const t of teams) {
+    const o = document.createElement('option');
+    o.value = t;
+    o.textContent = t;
+    if (META.home_pairs[pairKey(h.survivor_team, h.hunter_team)] === t) o.selected = true;
+    sel.appendChild(o);
+  }
+  td.innerHTML = '';
+  td.appendChild(sel);
+  sel.focus();
+
+  let done = false;
+  const finish = (commit) => {
+    if (done) return;
+    done = true;
+    if (commit) {
+      META.home_pairs[pairKey(h.survivor_team, h.hunter_team)] = sel.value;
+    }
+    render();
+  };
+  sel.addEventListener('change', () => finish(true));
+  sel.addEventListener('blur', () => finish(true));
+  sel.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { e.preventDefault(); finish(false); }
+  });
+}
+
 // ── 保存 ────────────────────────────────────────────────
 async function save() {
   const st = $('#status');
@@ -355,6 +459,7 @@ async function save() {
     const d = await r.json();
     if (!d.ok) throw new Error(d.error || '保存失败');
     ORIG = JSON.parse(JSON.stringify(HALVES));
+    ORIG_META = JSON.parse(JSON.stringify(META));
     const t = d.timing || {};
     const ms = Object.values(t).reduce((a, b) => a + b, 0) * 1000;
     st.className = 'status ok';

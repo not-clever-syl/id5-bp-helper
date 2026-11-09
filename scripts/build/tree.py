@@ -128,9 +128,13 @@ def build(core=None, hp=None, adj=None, gallery=None):
     ban_all = [{"char": c, "n": k, "p": round(k / n_ban, 4)} for c, k in hb.most_common()]
 
     # 按局次分开统计（① 的数量恒为 2，但战报无法区分批次）
+    # 加时局的 game 是 4/5（真实局号），跟正常局一起统计；
+    # tiebreak 单独记一份，方便页面区分。
     hb_by_game = {}
-    for g in [1, 2, 3, 4]:
-        hs = [h for h in halves if (h["game"] or 4) == g]
+    for g in [1, 2, 3, 4, 5]:
+        hs = [h for h in halves if h.get("game") == g]
+        if not hs:
+            continue
         c = Counter(x for h in hs for x in h["hunter_bans"])
         tot = sum(c.values()) or 1
         hb_by_game[str(g)] = [{"char": k, "n": v, "p": round(v / tot, 4)}
@@ -141,8 +145,10 @@ def build(core=None, hp=None, adj=None, gallery=None):
     n_sb = sum(sb.values()) or 1
     sban_all = [{"char": c, "n": k, "p": round(k / n_sb, 4)} for c, k in sb.most_common()]
     sban_by_game = {}
-    for g in [2, 3, 4]:
-        hs = [h for h in halves if (h["game"] or 4) == g]
+    for g in [2, 3, 4, 5]:
+        hs = [h for h in halves if h.get("game") == g]
+        if not hs:
+            continue
         c = Counter(x for h in hs for x in h["survivor_bans"])
         tot = sum(c.values()) or 1
         sban_by_game[str(g)] = [{"char": k, "n": v, "p": round(v / tot, 4)}
@@ -171,8 +177,8 @@ def build(core=None, hp=None, adj=None, gallery=None):
 
     # ── 局次统计 ────────────────────────────────────────────
     games = {}
-    for g in [1, 2, 3, 4]:
-        hs = [h for h in halves if (h["game"] or 4) == g]
+    for g in [1, 2, 3, 4, 5]:
+        hs = [h for h in halves if h.get("game") == g]
         if not hs:
             continue
         n = len(hs)
@@ -184,12 +190,13 @@ def build(core=None, hp=None, adj=None, gallery=None):
             "decode_rate": round(sum(1 for h in hs if any(typ(c, "破译型") for c in h["survivors"])) / n, 4),
             "escape_avg": round(sum(h["escape"] for h in hs) / n, 3),
             "survivor_ban_quota": 0 if g == 1 else (1 if g == 2 else 2),
+            "tiebreak_n": sum(1 for h in hs if h.get("tiebreak")),
         }
 
     # ── 选手档案 ────────────────────────────────────────────
     by_pg, by_pt = defaultdict(Counter), defaultdict(Counter)
     for h in halves:
-        g = str(h["game"] or 4)
+        g = str(h.get("game") or 4)
         by_pg[(h["hunter_player"], g)][h["hunter"]] += 1
         by_pt[h["hunter_player"]][h["hunter"]] += 1
 

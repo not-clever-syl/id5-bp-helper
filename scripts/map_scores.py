@@ -27,11 +27,9 @@ def _halves() -> list:
 
 
 def _game_no(h: dict) -> int:
-    """局次。加时赛的 game 字段是空的，按第四局算（图权也按第四局走）。"""
+    """局次。加时赛的 game 记的是真实局号（4 或 5），跟正常局一起算。"""
     g = h.get("game")
-    if not g or h.get("tiebreak"):
-        return 4
-    return int(g)
+    return int(g) if g else 4
 
 
 def _mean(vals: list) -> float:

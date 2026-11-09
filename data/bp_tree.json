@@ -91,7 +91,8 @@
    "support_rate": 0.7841,
    "decode_rate": 0.1818,
    "escape_avg": 1.534,
-   "survivor_ban_quota": 0
+   "survivor_ban_quota": 0,
+   "tiebreak_n": 0
   },
   "2": {
    "n": 88,
@@ -100,7 +101,8 @@
    "support_rate": 0.9773,
    "decode_rate": 0.1591,
    "escape_avg": 1.716,
-   "survivor_ban_quota": 1
+   "survivor_ban_quota": 1,
+   "tiebreak_n": 0
   },
   "3": {
    "n": 68,
@@ -109,7 +111,8 @@
    "support_rate": 0.9265,
    "decode_rate": 0.3382,
    "escape_avg": 1.765,
-   "survivor_ban_quota": 2
+   "survivor_ban_quota": 2,
+   "tiebreak_n": 0
   },
   "4": {
    "n": 16,
@@ -118,7 +121,8 @@
    "support_rate": 1.0,
    "decode_rate": 0.75,
    "escape_avg": 1.562,
-   "survivor_ban_quota": 2
+   "survivor_ban_quota": 2,
+   "tiebreak_n": 16
   }
  },
  "teams": {
