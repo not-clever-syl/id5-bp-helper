@@ -97,6 +97,15 @@ footer code{background:var(--panel2);padding:1px 6px;border-radius:4px;
         <div class="tags"><span class="tag">互斥对</span><span class="tag g">赛季行为</span></div>
       </a>
 
+      <a class="card" href="raw.html">
+        <div class="t"><span class="ico">📝</span>原始数据<span class="arrow">→</span></div>
+        <div class="d">
+          所有半局的原始表：主客、局次、阵容、ban 位、比分，都能直接改。
+          保存后自动重算分数表、决策树、选手榜等全部下游数据。
+        </div>
+        <div class="tags"><span class="tag">可编辑</span><span class="tag g">一键重算</span></div>
+      </a>
+
     </div>
   </section>
 
@@ -129,7 +138,7 @@ footer code{background:var(--panel2);padding:1px 6px;border-radius:4px;
   <footer>
     分数单位是「局均逃脱」，2.00 为居中值。<br>
     本地服务：<code>python scripts/serve.py 8766</code>（macOS / Linux 用 <code>python3</code>）。<br>
-    预制数据在 <code>data/</code> 根目录，只读；配置与报告分别放在
+    原始数据在 <code>data/bp_core.json</code>，可在「原始数据」页改；配置与报告分别放在
     <code>data/hunter/</code>、<code>data/survivor/</code>、<code>data/reports/</code>。
   </footer>
 

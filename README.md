@@ -50,6 +50,7 @@ python3 scripts/serve.py 8766
 | BP 报告 | 打开生成的报告，按顺序看：对面先 ban 了谁 → 他可能想拿哪个监管 → 我们该 ban 谁 → 我们先选谁 → 后面怎么走 |
 | 地图偏好 | 选一支队伍，看他第几局都选过哪些图 |
 | 对位情报 | 哪些求生和监管碰在一起时双方都躲着走，以及是对面主动 ban 掉、还是我们自己一直不选 |
+| 原始数据 | 这一季所有半局的原始表，点任意一格就能改。保存后自动重算上面所有页面用的分数表、决策树、选手榜和可导入配置 |
 
 报告里「我们先选谁」只给结论，不再列备选；「后面怎么走」是从上往下的树，白线是主线，同层备选收在「再看一个」里，点一次多放一个。树能拖动、滚轮缩放，右上角有放大缩小和「适配」，点「恢复主线」回到刚打开的样子。
 
@@ -68,12 +69,19 @@ python3 scripts/bp_combo_report.py ACT YuM 3 --map 月亮河公园
 
 地图名按 `data/bp_core.json` 里的写法写；不传 `--map` 就按所有人的平均算。
 
+原始数据页改完保存，`data/bp_core.json` 会被覆盖（旧文件留一份 `bp_core.json.bak`），随后所有派生数据自动重算，不用手工跑任何命令。也可以在命令行里重算：
+
+```bash
+python3 scripts/rebuild.py
+```
+
 ## 目录结构
 
 ```
 启动.bat / start.sh      # 一键启动
 scripts/                  # 后端
   serve.py                # 起本地服务，页面上所有接口都在这
+  rebuild.py              # 从 bp_core.json 重算全部派生数据
   bp_search_engine.py     # 算分的核心
   bp_combo_report.py      # 一次算多组对手 ban 的报告
   bp_coach_report.py      # 算一组对手 ban 的完整推演
@@ -83,7 +91,8 @@ scripts/                  # 后端
   map_scores.py           # 单张地图的实测表，以及某一格的半局明细
   custom_data.py          # 读预置数据
   file_api.py             # 导入 / 导出文件
-web/                      # 七张页面 + 角色头像组件 + avatars/
+  build/                  # 派生数据的生成脚本
+web/                      # 八张页面 + 角色头像组件 + avatars/
 data/
   bp_core.json            # ★ 这一季的比赛记录，其它表都从它算出来
   hunter/                 # 监管选手的配置（每人一份）
@@ -91,4 +100,6 @@ data/
   reports/                # 生成的报告存在这里
 ```
 
-`data/` 根目录下那几个 JSON 是只读的，程序不会去改；`hunter/`、`survivor/`、`reports/` 可以写，页面上的导入导出就是读写这三个目录。
+`data/bp_core.json` 是唯一的数据源，可在页面上改（改前会自动备份）。
+`data/` 根目录下其它 JSON 都是从它算出来的，别手改；要改就改 `bp_core.json` 再重算。
+`hunter/`、`survivor/`、`reports/` 也可以写，页面上的导入导出就是读写这三个目录。

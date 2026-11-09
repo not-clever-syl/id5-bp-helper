@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>原始数据 · IVL 2026 秋</title>
+<link rel="stylesheet" href="char.css">
+<style>
+:root{
+  --bg:#12141a;--panel:#191c24;--panel2:#21252f;--border:#2c313d;
+  --text:#dfe5f0;--dim:#8a93a6;--accent:#6b8cff;
+  --ok:#6dc4a0;--err:#e0837b;--warn:#d8b25f;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+  font:13px/1.6 -apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
+header{padding:14px 20px;border-bottom:1px solid var(--border);
+  background:var(--panel);display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+  position:sticky;top:0;z-index:20}
+header h1{margin:0;font-size:15px;font-weight:600}
+header .sub{color:var(--dim);font-size:12px}
+a.home{color:var(--dim);text-decoration:none;font-size:12.5px;
+  padding:4px 10px;border-radius:6px;border:1px solid var(--border);flex:none}
+a.home:hover{color:var(--text);border-color:var(--accent)}
+header .spacer{flex:1}
+main{padding:16px 20px 80px}
+
+.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.bar input[type=search]{background:var(--panel2);color:var(--text);
+  border:1px solid var(--border);border-radius:6px;padding:6px 10px;
+  font-size:12.5px;min-width:220px}
+.bar label{color:var(--dim);font-size:12px}
+button{background:var(--panel2);color:var(--text);border:1px solid var(--border);
+  border-radius:6px;padding:6px 14px;font-size:12.5px;cursor:pointer}
+button:hover{border-color:var(--accent)}
+button.primary{background:rgba(107,140,255,.18);border-color:var(--accent);
+  color:#cfe0ff;font-weight:600}
+button:disabled{opacity:.4;cursor:not-allowed}
+button.primary:disabled{background:var(--panel2);border-color:var(--border);color:var(--dim)}
+
+.status{font-size:12px;padding:3px 0}
+.status.dirty{color:var(--warn)}
+.status.ok{color:var(--ok)}
+.status.err{color:var(--err)}
+
+.tablewrap{border:1px solid var(--border);border-radius:8px;overflow:auto;
+  max-height:calc(100vh - 190px)}
+
+/* 自定义滚动条：默认的 Windows 滚动条又宽又灰，跟深色面板很违和 */
+.tablewrap::-webkit-scrollbar{width:10px;height:10px}
+.tablewrap::-webkit-scrollbar-track{background:transparent}
+.tablewrap::-webkit-scrollbar-thumb{background:#39404f;border-radius:6px;
+  border:2px solid var(--panel);background-clip:padding-box}
+.tablewrap::-webkit-scrollbar-thumb:hover{background:#4b5468;background-clip:padding-box}
+.tablewrap::-webkit-scrollbar-corner{background:transparent}
+body::-webkit-scrollbar{width:11px;height:11px}
+body::-webkit-scrollbar-track{background:var(--bg)}
+body::-webkit-scrollbar-thumb{background:#333a48;border-radius:6px;
+  border:3px solid var(--bg);background-clip:padding-box}
+body::-webkit-scrollbar-thumb:hover{background:#454e60;background-clip:padding-box}
+body::-webkit-scrollbar-corner{background:var(--bg)}
+*{scrollbar-width:thin;scrollbar-color:#39404f transparent}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:12px}
+th,td{padding:5px 8px;border-bottom:1px solid var(--border);
+  border-right:1px solid var(--border);text-align:left;vertical-align:top}
+th:last-child,td:last-child{border-right:none}
+thead th{background:var(--panel2);color:var(--dim);font-weight:600;font-size:11px;
+  position:sticky;top:0;z-index:10}
+tbody tr:hover td{background:rgba(255,255,255,.025)}
+tbody tr.changed td{background:rgba(216,178,95,.08)}
+td.game{text-align:center;color:var(--dim);font-family:Consolas,monospace}
+td.tb{color:var(--warn);font-weight:600}
+td.mono{font-family:Consolas,monospace;color:var(--dim);
+  cursor:pointer;border-radius:4px}
+td.mono:hover{color:var(--text);background:var(--panel2)}
+td.edit{cursor:pointer}
+td.edit:hover{background:var(--panel2);outline:1px dashed var(--accent);
+  outline-offset:-2px}
+.cell-edit{width:100%;background:var(--panel2);color:var(--text);
+  border:1px solid var(--accent);border-radius:4px;padding:3px 5px;
+  font-size:12px;font-family:Consolas,monospace}
+.chips{display:flex;flex-wrap:wrap;gap:3px}
+.chips .char-chip{font-size:11.5px}
+.chips .char-chip .char-avatar{width:18px;height:18px}
+.chips .char-name{display:none}
+.chips .char-chip:hover .char-name{display:inline}
+.versus{color:var(--dim);font-size:11.5px}
+.versus b{color:var(--text);font-weight:600}
+.note{color:var(--dim);font-size:11.5px;line-height:1.9;margin-top:12px}
+.note b{color:var(--text)}
+</style>
+</head>
+<body>
+<header>
+  <a href="index.html" class="home">← 首页</a>
+  <h1>原始数据</h1>
+  <span class="sub" id="sub">半局基础表，改了直接写回并重算所有下游</span>
+  <span class="spacer"></span>
+  <span class="status" id="status"></span>
+  <button id="undo" disabled>撤销改动</button>
+  <button id="save" class="primary" disabled>保存并重算</button>
+</header>
+
+<main>
+  <div class="bar">
+    <input type="search" id="q" placeholder="搜索队伍 / 角色 / 选手 / 地图…">
+    <label>只显示有改动的行 <input type="checkbox" id="onlyDirty"></label>
+    <span class="spacer" style="flex:1"></span>
+    <span class="status" id="count"></span>
+  </div>
+
+  <div class="tablewrap">
+    <table id="tbl">
+      <thead>
+        <tr>
+          <th>主场 vs 客场</th><th>第几局</th><th>监管选手</th>
+          <th>求生队伍</th><th>地图</th><th>求生阵容</th>
+          <th>监管角色</th><th>求生 ban 位</th><th>监管 ban 位</th><th>比分</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <b>怎么编辑</b>：点任意一格即可改。角色那几列填角色名，多个用英文逗号隔开；<br>
+    <b>求生 ban 位</b>=监管方 ban 掉的求生角色（恒为 4 个），<b>监管 ban 位</b>=求生方 ban 掉的监管角色（第 1 局 0 个，第 2 局起才有）。<br>
+    <b>比分</b>=「求生:监管」，5 分制；改完自动算出逃脱/击杀人数，右边小字就是。<br>
+    加时那一行列标为「加时」。<br>
+    保存后写回 <code>data/bp_core.json</code>（旧文件备份为 <code>bp_core.json.bak</code>），
+    并立刻重算分数表、决策树、选手榜、可导入配置等全部下游数据。
+  </div>
+</main>
+
+<script src="char.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+const esc = Char.esc;
+
+let META = null;        // bp_core 的 meta
+let HALVES = [];        // 当前编辑中的半局（引用副本）
+let ORIG = [];          // 原始半局，用于比对 / 撤销
+let HOME_PAIRS = {};    // "队A|队B" → 主队
+let SOC = [];           // 求生池（按出场排序），供下拉
+let HUNT = [];          // 监管池
+let TEAMS = [];         // 队伍名
+let MAPS = [];          // 地图名
+
+// 多值与单值字段的编辑类型
+const MULTI = { survivors: 1, hunter_bans: 1, survivor_bans: 1 };
+
+boot();
+
+async function boot() {
+  try {
+    const [core, scores] = await Promise.all([
+      fetch('/api/core').then(r => r.json()),
+      fetch('/api/scores').then(r => r.json()).catch(() => ({})),
+    ]);
+    if (!core.ok) throw new Error(core.error || '读取失败');
+    META = core.meta || {};
+    HALVES = core.halves || [];
+    ORIG = JSON.parse(JSON.stringify(HALVES));
+    HOME_PAIRS = core.home_pairs || {};
+    TEAMS = core.teams || [];
+    MAPS = core.maps || [];
+    SOC = (scores.all_survivors || []).slice();
+    HUNT = (scores.all_hunters || []).slice();
+    // 补上数据里出现、但榜单没列的角色，免得下拉里选不到
+    for (const h of HALVES) {
+      for (const c of h.survivors.concat(h.hunter_bans)) if (!SOC.includes(c)) SOC.push(c);
+      for (const c of h.survivor_bans) if (!HUNT.includes(c)) HUNT.push(c);
+      if (h.hunter && !HUNT.includes(h.hunter)) HUNT.push(h.hunter);
+    }
+    $('#sub').textContent = `共 ${HALVES.length} 个半局`;
+    bind();
+    render();
+  } catch (e) {
+    $('#status').className = 'status err';
+    $('#status').textContent = '读取失败：' + e.message;
+  }
+}
+
+function bind() {
+  $('#q').oninput = render;
+  $('#onlyDirty').onchange = render;
+  $('#save').onclick = save;
+  $('#undo').onclick = () => {
+    HALVES = JSON.parse(JSON.stringify(ORIG));
+    render();
+  };
+}
+
+// 主客队：用队名对查 HOME_PAIRS，查不到显示「—」
+function homeOf(h) {
+  const a = h.survivor_team, b = h.hunter_team;
+  const key = [a, b].sort().join('|');
+  const home = HOME_PAIRS[key];
+  if (!home) return null;
+  return home === a ? [a, b] : [b, a];
+}
+
+function dirty(i) {
+  return JSON.stringify(HALVES[i]) !== JSON.stringify(ORIG[i]);
+}
+
+function match(h, q) {
+  if (!q) return true;
+  q = q.toLowerCase();
+  const parts = [h.survivor_team, h.hunter_team, h.hunter_player, h.map, h.hunter]
+    .concat(h.survivors, h.hunter_bans, h.survivor_bans);
+  return parts.some(p => p && String(p).toLowerCase().includes(q));
+}
+
+function chipList(list, pool) {
+  if (!list || !list.length) return '<span class="versus">—</span>';
+  return '<div class="chips">' + list.map(c => Char.chip(c, {size: 18})).join('') + '</div>';
+}
+
+function render() {
+  const q = $('#q').value.trim();
+  const onlyDirty = $('#onlyDirty').checked;
+  const tb = $('#tbl tbody');
+  let html = '';
+  let shown = 0;
+  HALVES.forEach((h, i) => {
+    if (onlyDirty && !dirty(i)) return;
+    if (!match(h, q)) return;
+    shown++;
+    const pair = homeOf(h);
+    const vs = pair
+      ? `<span class="versus"><b>${esc(pair[0])}</b> vs ${esc(pair[1])}</span>`
+      : '<span class="versus">—</span>';
+    const g = h.tiebreak
+      ? '<span class="tb">加时</span>'
+      : `第 ${h.game} 局`;
+    html += `<tr class="${dirty(i) ? 'changed' : ''}" data-i="${i}">
+      <td>${vs}</td>
+      <td class="game">${g}</td>
+      <td>${esc(h.hunter_player || '')}</td>
+      <td>${esc(h.survivor_team || '')}</td>
+      <td>${esc(h.map || '')}</td>
+      <td class="edit" data-f="survivors">${chipList(h.survivors)}</td>
+      <td class="edit" data-f="hunter">${h.hunter ? Char.chip(h.hunter, {size: 20}) : '—'}</td>
+      <td class="edit" data-f="hunter_bans">${chipList(h.hunter_bans)}</td>
+      <td class="edit" data-f="survivor_bans">${chipList(h.survivor_bans)}</td>
+      <td class="edit mono" data-f="score">${esc(h.score || '')}
+        <span style="opacity:.6">${h.escape}:${h.kill}</span></td>
+    </tr>`;
+  });
+  tb.innerHTML = html || '<tr><td colspan="10" style="color:var(--dim);padding:20px">没有匹配的行</td></tr>';
+  $('#count').textContent = `显示 ${shown} / ${HALVES.length} 行`;
+  updateStatus();
+}
+
+function updateStatus() {
+  const n = HALVES.filter((_, i) => dirty(i)).length;
+  const st = $('#status');
+  if (n) {
+    st.className = 'status dirty';
+    st.textContent = `${n} 行有未保存的改动`;
+  } else {
+    st.className = 'status';
+    st.textContent = '未修改';
+  }
+  $('#save').disabled = n === 0;
+  $('#undo').disabled = n === 0;
+}
+
+// ── 单元格编辑 ──────────────────────────────────────────
+$('#tbl').addEventListener('click', ev => {
+  const td = ev.target.closest('td.edit');
+  if (!td) return;
+  startEdit(td);
+});
+
+function startEdit(td) {
+  if (td.querySelector('input')) return;
+  const tr = td.closest('tr');
+  const i = +tr.dataset.i;
+  const f = td.dataset.f;
+  const h = HALVES[i];
+  const multi = MULTI[f];
+  const pool = (f === 'hunter') ? HUNT : SOC;  const cur = multi ? (h[f] || []).join(',') : (h[f] || '');
+
+  // datalist 给出候选（多值场景下每个 token 各自补全，简单起见给整串候选）
+  const listId = 'dl_' + f;
+  let dl = document.getElementById(listId);
+  if (!dl) {
+    dl = document.createElement('datalist');
+    dl.id = listId;
+    document.body.appendChild(dl);
+  }
+  dl.innerHTML = pool.map(c => `<option value="${esc(c)}">`).join('');
+  const input = document.createElement('input');
+  input.className = 'cell-edit';
+  input.value = cur;
+  if (!multi) input.setAttribute('list', listId);
+  td.innerHTML = '';
+  td.appendChild(input);
+  input.focus();
+  input.select();
+
+  let done = false;
+  const finish = (commit) => {
+    if (done) return;
+    done = true;
+    if (commit) {
+      const raw = input.value.trim();
+      if (f === 'score') {
+        // 比分是 5 分制的「求生:监管」，改了自动算出逃脱/击杀人数
+        const m = /^(\d+)\s*:\s*(\d+)$/.exec(raw);
+        if (m) {
+          const s2e = META.score_to_escape || {'0':0,'1':1,'2':2,'3':3,'5':4};
+          const a = m[1], b = m[2];
+          if (s2e[a] !== undefined && s2e[b] !== undefined) {
+            h.score = `${a}:${b}`;
+            h.escape = s2e[a];
+            h.kill = s2e[b];
+          }
+        }
+      } else if (multi) {
+        h[f] = raw ? raw.split(/[,，]/).map(s => s.trim()).filter(Boolean) : [];
+      } else {
+        h[f] = raw;
+      }
+    }
+    render();
+  };
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); finish(true); }
+    else if (e.key === 'Escape') { e.preventDefault(); finish(false); }
+  });
+  input.addEventListener('blur', () => finish(true));
+}
+
+// ── 保存 ────────────────────────────────────────────────
+async function save() {
+  const st = $('#status');
+  const bad = validate();
+  if (bad) {
+    st.className = 'status err';
+    st.textContent = '校验不通过：' + bad;
+    return;
+  }
+  $('#save').disabled = true;
+  st.className = 'status';
+  st.textContent = '保存中……';
+  try {
+    const r = await fetch('/api/core', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({meta: META, halves: HALVES}),
+    });
+    const d = await r.json();
+    if (!d.ok) throw new Error(d.error || '保存失败');
+    ORIG = JSON.parse(JSON.stringify(HALVES));
+    const t = d.timing || {};
+    const ms = Object.values(t).reduce((a, b) => a + b, 0) * 1000;
+    st.className = 'status ok';
+    st.textContent = `已保存并重算（${Math.round(ms)} ms）`;
+    render();
+  } catch (e) {
+    st.className = 'status err';
+    st.textContent = '保存失败：' + e.message;
+  }
+}
+
+// 前端先做一层基本校验，省得每次都跑一趟服务端
+function validate() {
+  const s2e = META.score_to_escape || {'0':0,'1':1,'2':2,'3':3,'5':4};
+  for (let i = 0; i < HALVES.length; i++) {
+    const h = HALVES[i];
+    if (!h.survivor_team || !h.hunter_team) return `第 ${i+1} 行队伍为空`;
+    if (!h.hunter_player) return `第 ${i+1} 行监管选手为空`;
+    if (!h.map) return `第 ${i+1} 行地图为空`;
+    if (!h.survivors || h.survivors.length !== 4) return `第 ${i+1} 行求生阵容必须 4 个`;
+    if (!h.hunter_bans || h.hunter_bans.length !== 4) return `第 ${i+1} 行求生 ban 位必须 4 个`;
+    const parts = String(h.score || '').split(':');
+    if (parts.length !== 2) return `第 ${i+1} 行比分格式不对`;
+    const a = parseInt(parts[0], 10), b = parseInt(parts[1], 10);
+    if (s2e[String(a)] === undefined || s2e[String(b)] === undefined)
+      return `第 ${i+1} 行比分 ${h.score} 不在允许取值内`;
+    if (h.escape !== s2e[String(a)] || h.kill !== s2e[String(b)])
+      return `第 ${i+1} 行 escape/kill 与比分 ${h.score} 对不上`;
+  }
+  return '';
+}
+</script>
+</body>
+</html>

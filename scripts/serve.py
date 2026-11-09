@@ -80,6 +80,54 @@ def _list_reports() -> list:
     return out
 
 
+def _validate_core(halves, meta) -> str:
+    """校验原始数据。返回错误字符串，通过则返回空串。
+
+    score 是 5 分制原始比分（形如 "2:2"），escape/kill 是逃脱/击杀人数。
+    escape 必须与 score 对得上，否则下游算出来的分全是错的。
+    """
+    s2e = (meta.get("score_to_escape") or
+           {"0": 0, "1": 1, "2": 2, "3": 3, "5": 4})
+    s2e = {str(k): int(v) for k, v in s2e.items()}
+    seen_key = set()
+    for i, h in enumerate(halves):
+        tag = f"第 {i + 1} 行"
+        if not isinstance(h, dict):
+            return f"{tag}不是对象"
+        for f in ("seq", "side", "survivor_team", "hunter_team", "map"):
+            if not h.get(f):
+                return f"{tag}缺少 {f}"
+        # seq 是「同场比赛内」的序号，不同场次会重复，
+        # 所以唯一性要看 (seq, 求生队, 监管队) 这个组合。
+        key = (h.get("seq"), h.get("survivor_team"), h.get("hunter_team"))
+        if key in seen_key:
+            return f"{tag}与前面某行重复（seq={key[0]}，{key[1]} vs {key[2]}）"
+        seen_key.add(key)
+        g = h.get("game")
+        if not h.get("tiebreak") and g not in (1, 2, 3, 4, 5):
+            return f"{tag}的 game={g} 不合法（应为 1~5，或加时赛）"
+        sb, hb = h.get("survivors"), h.get("hunter_bans")
+        if not isinstance(sb, list) or len(sb) != 4:
+            return f"{tag}的求生阵容必须正好 4 个"
+        if not isinstance(hb, list) or len(hb) != 4:
+            return f"{tag}的监管 ban 位必须正好 4 个"
+        for ch in sb + hb + (h.get("survivor_bans") or []):
+            if not isinstance(ch, str) or not ch.strip():
+                return f"{tag}存在空的角色名"
+        score = str(h.get("score") or "")
+        parts = score.split(":")
+        if len(parts) != 2 or not all(p.strip().isdigit() for p in parts):
+            return f"{tag}的比分 {score!r} 格式不对（应为 求生:监管）"
+        a, b = int(parts[0]), int(parts[1])
+        if str(a) not in s2e or str(b) not in s2e:
+            return f"{tag}的比分 {score} 不在允许取值内"
+        exp_escape, exp_kill = s2e[str(a)], s2e[str(b)]
+        if h.get("escape") != exp_escape or h.get("kill") != exp_kill:
+            return (f"{tag}的 escape/kill 与比分 {score} 对不上"
+                    f"（应为 {exp_escape}/{exp_kill}）")
+    return ""
+
+
 class Handler(SimpleHTTPRequestHandler):
     # 端口探测靠 bind 试错，服务器本身也必须用同样的判定，
     # 否则探测说「可用」但实际 bind 失败，会退回到硬报错。
@@ -99,6 +147,8 @@ class Handler(SimpleHTTPRequestHandler):
     def do_POST(self):
         if self.path == "/api/recompute":
             return self._api_recompute()
+        if self.path == "/api/core":
+            return self._api_core_write()
         if self.path == "/api/generate":
             return self._api_generate()
         if self.path.startswith("/api/files/list"):
@@ -129,6 +179,8 @@ class Handler(SimpleHTTPRequestHandler):
             return self._api_solid()
         if self.path.startswith("/api/halves"):
             return self._api_halves()
+        if self.path.startswith("/api/core"):
+            return self._api_core_get()
         if self.path.startswith("/api/expect/meta"):
             return self._api_expect_meta()
         if self.path.startswith("/api/generate/meta"):
@@ -484,6 +536,75 @@ class Handler(SimpleHTTPRequestHandler):
             self._json(404, {"ok": False, "error": str(e)})
         except Exception as e:
             self._json(500, {"ok": False, "error": f"{type(e).__name__}: {e}"})
+
+    # ── 原始数据 bp_core（读写）────────────────────────────
+    def _api_core_get(self):
+        """原始数据：meta + 全部半局 + 主客队映射，给表格页展示。"""
+        try:
+            import map_pick
+            c = json.loads((ROOT / "data" / "bp_core.json").read_text(encoding="utf-8"))
+            self._json(200, {
+                "ok": True,
+                "meta": c.get("meta") or {},
+                "halves": c.get("halves") or [],
+                "home_pairs": {"|".join(sorted(k)): v
+                               for k, v in map_pick.HOME_PAIRS.items()},
+                "teams": sorted({h["survivor_team"] for h in c.get("halves") or []}
+                                | {h["hunter_team"] for h in c.get("halves") or []}),
+                "maps": sorted({h["map"] for h in c.get("halves") or [] if h.get("map")}),
+            })
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            self._json(500, {"ok": False, "error": f"{type(e).__name__}: {e}"})
+
+    def _api_core_write(self):
+        """保存原始数据：校验 → 备份 → 写回 bp_core.json → 重建派生数据。
+
+        写盘前先把现有 bp_core.json 备份到 bp_core.json.bak，
+        万一改错了还能手工还原。
+        """
+        try:
+            data = self._read_json()
+        except Exception as e:
+            return self._json(400, {"ok": False, "error": f"bad json: {e}"})
+
+        halves = data.get("halves")
+        if not isinstance(halves, list) or not halves:
+            return self._json(400, {"ok": False, "error": "halves 必须是非空数组"})
+
+        old = json.loads((ROOT / "data" / "bp_core.json").read_text(encoding="utf-8"))
+        err = _validate_core(halves, data.get("meta") or old.get("meta") or {})
+        if err:
+            return self._json(400, {"ok": False, "error": err})
+
+        # 备份 → 原子写
+        core_path = ROOT / "data" / "bp_core.json"
+        bak = ROOT / "data" / "bp_core.json.bak"
+        bak.write_text(core_path.read_text(encoding="utf-8"), encoding="utf-8")
+        tmp = core_path.with_suffix(".json.tmp")
+        tmp.write_text(json.dumps({"meta": data.get("meta") or old.get("meta"),
+                                   "halves": halves},
+                                  ensure_ascii=False, indent=1),
+                       encoding="utf-8")
+        tmp.replace(core_path)
+
+        # 重建所有派生数据
+        try:
+            import rebuild
+            timing = rebuild.rebuild()
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            return self._json(500, {
+                "ok": False,
+                "error": f"已写回 bp_core，但重建派生数据失败：{type(e).__name__}: {e}",
+                "backup": "data/bp_core.json.bak"})
+
+        custom_data.clear_cache()
+        self._json(200, {"ok": True, "halves": len(halves),
+                         "backup": "data/bp_core.json.bak",
+                         "timing": timing})
 
     def _api_player_scores(self):
         """选手榜：每个监管选手 × 求生角色 × 他用过的监管 的 实测/全局/折合。"""

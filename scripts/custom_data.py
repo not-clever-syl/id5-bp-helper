@@ -9,8 +9,10 @@ _QUERY = None
 _DS = None
 
 
-def _tree():
+def _tree(tree=None):
     global _TREE
+    if tree is not None:
+        return tree
     if _TREE is None:
         p = ROOT / "data" / "bp_tree.json"
         _TREE = json.loads(p.read_text(encoding="utf-8"))
@@ -46,6 +48,18 @@ def _query():
         p = ROOT / "data" / "bp_query.json"
         _QUERY = json.loads(p.read_text(encoding="utf-8"))
     return _QUERY
+
+
+def clear_cache() -> None:
+    """原始数据被页面改过以后调用，让下次读取重新落到磁盘。
+
+    bp_core 是这三份表的共同来源；页面把它写回之后，如果还留着
+    这里的缓存，分数表、角色池会继续拿改之前的那份。
+    """
+    global _TREE, _QUERY, _DS
+    _TREE = None
+    _QUERY = None
+    _DS = None
 
 
 # ── 基础查询（只读）──────────────────────────────────────
@@ -90,7 +104,7 @@ def all_teams() -> list:
     return list(_tree()["teams"].keys())
 
 
-def all_survivors() -> list:
+def all_survivors(tree=None) -> list:
     """榜上要显示的求生角色：各队角色池的并集。
 
     图鉴里 53 个求生，有 10 个从没进过任何战队的角色池（击球手、小女孩、
@@ -100,7 +114,7 @@ def all_survivors() -> list:
     否则找「佣兵」要扫很久。
     """
     cnt = _survivor_counts()
-    t = _tree()
+    t = _tree(tree)
     union = set()
     for v in t["teams"].values():
         union |= set(v["roster"])
@@ -109,14 +123,14 @@ def all_survivors() -> list:
                   key=lambda c: (-cnt.get(c, 0), order.get(c, 10 ** 6)))
 
 
-def all_hunters() -> list:
+def all_hunters(tree=None) -> list:
     """榜上要显示的监管角色：选手实际用过的那些，按本季出场次数降序。
 
     图鉴里 36 个监管，19 个本季无人使用，分数全是空值。
     只保留出现在选手分布 dist 里的角色。
     """
     cnt = hunter_counts()
-    t = _tree()
+    t = _tree(tree)
     used = set()
     for info in t["players"].values():
         used |= set(info.get("dist") or {})
