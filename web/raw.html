@@ -251,6 +251,57 @@ tr.srow:hover td{background:rgba(255,255,255,.03)}
   </div>
 </div>
 
+<!-- 改两支队伍 -->
+<div class="mask" id="renMask">
+  <div class="dialog" style="max-width:340px">
+    <div class="dlg-head"><h3>改这一场的队伍</h3>
+      <button class="x" id="rnClose" title="关闭">×</button>
+    </div>
+    <div class="dlg-body">
+      <div class="fgrid" style="grid-template-columns:1fr">
+        <div class="field">
+          <label>求生方</label>
+          <select id="rnSurv"></select>
+        </div>
+        <div class="field">
+          <label>监管方</label>
+          <select id="rnHunt"></select>
+        </div>
+        <div class="field">
+          <label>主队（第一局有图权）</label>
+          <select id="rnHome"></select>
+        </div>
+      </div>
+    </div>
+    <div class="dlg-foot">
+      <button id="rnCancel">取消</button>
+      <button id="rnOk" class="primary">确定</button>
+    </div>
+  </div>
+</div>
+
+<!-- 改主客 -->
+<div class="mask" id="homeMask">
+  <div class="dialog" style="max-width:340px">
+    <div class="dlg-head"><h3>改主客队</h3>
+      <button class="x" id="hmClose" title="关闭">×</button>
+    </div>
+    <div class="dlg-body">
+      <div class="fgrid" style="grid-template-columns:1fr">
+        <div class="field">
+          <label>主队（第一局有图权）</label>
+          <select id="hmHome"></select>
+          <span class="hint" id="hmHint"></span>
+        </div>
+      </div>
+    </div>
+    <div class="dlg-foot">
+      <button id="hmCancel">取消</button>
+      <button id="hmOk" class="primary">确定</button>
+    </div>
+  </div>
+</div>
+
 <!-- 新建一场 -->
 <div class="mask" id="mask">
   <div class="dialog" style="max-width:380px">
@@ -361,6 +412,7 @@ function bind() {
   $('#onlyDirty').onchange = render;
   $('#save').onclick = save;
   $('#newMatch').onclick = () => openNewMatch(null);
+  $('#undo').onclick = undo;
   $('#nmCancel').onclick = () => $('#mask').classList.remove('on');
   $('#nmOk').onclick = async () => {
     const surv = $('#nmSurv').value;
@@ -378,6 +430,41 @@ function bind() {
   };
   $('#dClose').onclick = closeDetail;
   $('#dCancel').onclick = closeDetail;
+  $('#hmClose').onclick = closeHome;
+  $('#hmCancel').onclick = closeHome;
+  $('#rnClose').onclick = closeRename;
+  $('#rnCancel').onclick = closeRename;
+  $('#rnOk').onclick = async () => {
+    const idx = HALVES.findIndex(h => h._id === RN_ID);
+    if (idx < 0) { closeRename(); return; }
+    const surv = $('#rnSurv').value, hunt = $('#rnHunt').value;
+    if (!surv || !hunt || surv === hunt) { alert('两支队伍不能相同'); return; }
+    pushUndo();
+    const [ms, me] = matchOf(idx);
+    // 这一场里上下半局的队伍要互换着改
+    HALVES.slice(ms, me + 1).forEach((x) => {
+      if (x.side === 'upper') { x.survivor_team = surv; x.hunter_team = hunt; }
+      else { x.survivor_team = hunt; x.hunter_team = surv; }
+    });
+    META.home_pairs[pairKey(surv, hunt)] = $('#rnHome').value;
+    closeRename();
+    await refreshCheck();
+  };
+  $('#renMask').addEventListener('click', ev => {
+    if (ev.target === $('#renMask')) closeRename();
+  });
+  $('#hmOk').onclick = async () => {
+    const idx = HALVES.findIndex(h => h._id === HM_ID);
+    if (idx < 0) { closeHome(); return; }
+    const h = HALVES[idx];
+    pushUndo();
+    META.home_pairs[pairKey(h.survivor_team, h.hunter_team)] = $('#hmHome').value;
+    closeHome();
+    await refreshCheck();
+  };
+  $('#homeMask').addEventListener('click', ev => {
+    if (ev.target === $('#homeMask')) closeHome();
+  });
   $('#dOk').onclick = async () => { await commitDetail(); closeDetail(); };
   $('#detailMask').addEventListener('click', ev => {
     if (ev.target === $('#detailMask')) closeDetail();
@@ -399,6 +486,15 @@ function homeOf(h) {
   const home = META.home_pairs[pairKey(a, b)];
   if (!home) return null;
   return home === a ? [a, b] : [b, a];
+}
+
+// 有没有改动：新增、删除、或某个字段被改
+function anyChanged() {
+  if (metaDirty()) return true;
+  if (HALVES.length !== ORIG.length) return true;
+  const ids = new Set(HALVES.map(h => h._id));
+  for (const id of Object.keys(ORIG_BY_ID)) if (!ids.has(+id)) return true;
+  return HALVES.some((_, i) => dirty(i));
 }
 
 function dirty(i) {
@@ -424,19 +520,20 @@ function updateStatus() {
   const n = HALVES.filter((_, i) => dirty(i)).length;
   const md = metaDirty();
   const bad = Object.keys(BAD).length;
+  const chg = anyChanged();
   const st = $('#status');
   if (bad) {
     st.className = 'status err';
     st.textContent = `${bad} 行不合逻辑，不能保存`;
-  } else if (n || md) {
+  } else if (chg) {
     st.className = 'status dirty';
-    st.textContent = n ? `${n} 行有未保存的改动` : '主客队有未保存的改动';
+    st.textContent = n ? `${n} 行有未保存的改动` : '有未保存的改动';
   } else {
     st.className = 'status';
     st.textContent = '未修改';
   }
-  $('#save').disabled = (!n && !md) || bad > 0;
-  $('#undo').disabled = !n && !md;
+  $('#save').disabled = !chg || bad > 0;
+  $('#undo').disabled = !UNDO;
 
   const wb = $('#warnbox');
   if (bad) {
@@ -543,7 +640,12 @@ function render() {
       <td class="mono click" data-m="${esc(mkey)}">${esc(bigTxt)}</td>
       <td class="mono click" data-m="${esc(mkey)}">${esc(smallTxt)}</td>
       <td class="click" data-m="${esc(mkey)}">${st}</td>
-      <td class="opcol"><button class="addbtn" data-addm="${esc(mkey)}" title="在这场后面新建一场比赛">+</button></td>
+      <td class="opcol">
+        <button class="addbtn" data-addm="${esc(mkey)}" title="在这场后面新建一场比赛">+</button>
+        <button class="addbtn" data-renm="${esc(mkey)}" title="改这一场的两支队伍">队伍</button>
+        <button class="addbtn" data-homem="${esc(mkey)}" title="改这一场的主客队">主客</button>
+        <button class="addbtn" data-delm="${esc(mkey)}" title="删掉这一整场比赛">−</button>
+      </td>
     </tr>`;
 
     // 展开：用一个嵌套表格，按之前的半局明细格式（一行一半局，带表头）
@@ -573,12 +675,17 @@ function render() {
           <td class="edit" data-i="${x.i}">${chipList(h.hunter_bans)}</td>
           <td class="edit" data-i="${x.i}">${chipList(h.survivor_bans)}</td>
           <td class="edit mono" data-i="${x.i}">${esc(h.score || '')} <span style="opacity:.6">${h.escape}:${h.kill}</span></td>
+          <td class="s-del">
+            <button class="addbtn" data-delgame="${x.i}" title="删掉这一局（上下半局一起删）">−</button>
+          </td>
         </tr>`;
       }
       html += `</tbody></table>
         <div class="s-foot">
           <span class="dim">共 ${g.length} 个半局</span>
           <button class="lnk" data-addhalf="${esc(mkey)}">+ 加一局</button>
+          <button class="lnk" data-delgame2="${esc(mkey)}">− 减一局</button>
+          <button class="lnk" data-delm="${esc(mkey)}">− 删掉整场</button>
         </div>
       </td></tr>`;
     }
@@ -645,16 +752,6 @@ function picker(field, pool, listId) {
 
 function buildDetail() {
   const h = DRAFT;
-  // 主客
-  const teams = [h.survivor_team, h.hunter_team].filter(Boolean);
-  const homeOpts = teams.map(t => [t, t]);
-  if (!homeOpts.length) homeOpts.push(['', '—']);
-
-  // 局次：普通局 1~5 + 加时
-  const gOpts = [];
-  for (let n = 1; n <= 5; n++) gOpts.push([String(n), `第 ${n} 局`]);
-  gOpts.push(['tb4', '加时（第 4 局）'], ['tb5', '加时（第 5 局）']);
-  const gVal = h.tiebreak ? 'tb' + h.game : String(h.game);
 
   // 比分：两个下拉
   const s2e = META.score_to_escape || {'0':0,'1':1,'2':2,'3':3,'5':4};
@@ -666,23 +763,20 @@ function buildDetail() {
   const banQuota = h.game === 1 ? 0 : (h.game === 2 ? 1 : 2);
 
   // 单选下拉：候选里加上当前值（数据里可能有列表外的值）
-  function dd(options, value) {
+  function dd(options, value, id) {
     const vs = options.map(o => o[0]);
     if (value !== '' && !vs.includes(String(value))) {
       options = [[String(value), String(value)]].concat(options);
     }
-    return sel(options, value);
+    return sel(options, value, id);
   }
 
   let html = '';
-  html += fld('主场 / 客场', sel(homeOpts, h.home, 'dHome'),
-             '选谁谁就是主队（第一局有图权）');
-  html += fld('第几局', sel(gOpts, gVal, 'dGame'),
-             h.tiebreak ? '加时最多一局' : '普通局');
-  html += fld('监管选手', dd(PLAYERS.map(p => [p, p]), h.hunter_player), '');
-  html += fld('求生队伍', dd(TEAMS.map(t => [t, t]), h.survivor_team), '');
-  html += fld('地图', dd(MAPS.map(m => [m, m]), h.map), '');
-  html += fld('监管角色', dd(HUNT.map(c => [c, c]), h.hunter), '');
+  // 主场 / 第几局 属于整场比赛，不在单个半局里改
+  html += fld('监管选手', dd(PLAYERS.map(p => [p, p]), h.hunter_player, 'dPlayer'), '');
+  html += fld('求生队伍', dd(TEAMS.map(t => [t, t]), h.survivor_team, 'dTeam'), '');
+  html += fld('地图', dd(MAPS.map(m => [m, m]), h.map, 'dMap'), '');
+  html += fld('监管角色', dd(HUNT.map(c => [c, c]), h.hunter, 'dHunter'), '');
   html += fld('求生阵容（4 个）', picker('survivors', SOC),
              '上场角色', true);
   html += fld('求生 ban 位（4 个）', picker('hunter_bans', SOC),
@@ -711,14 +805,7 @@ function updateScoreRes() {
 // 弹窗里的交互
 $('#dFields').addEventListener('change', ev => {
   const t = ev.target;
-  if (t.id === 'dHome') { DRAFT.home = t.value; }
-  else if (t.id === 'dGame') {
-    const v = t.value;
-    if (v === 'tb4') { DRAFT.tiebreak = true; DRAFT.game = 4; }
-    else if (v === 'tb5') { DRAFT.tiebreak = true; DRAFT.game = 5; }
-    else { DRAFT.tiebreak = false; DRAFT.game = parseInt(v, 10); }
-  }
-  else if (t.id === 'dPlayer') DRAFT.hunter_player = t.value.trim();
+  if (t.id === 'dPlayer') DRAFT.hunter_player = t.value.trim();
   else if (t.id === 'dTeam') DRAFT.survivor_team = t.value.trim();
   else if (t.id === 'dMap') DRAFT.map = t.value.trim();
   else if (t.id === 'dHunter') DRAFT.hunter = t.value.trim();
@@ -769,6 +856,7 @@ async function commitDetail() {
                    'survivor_bans', 'score', 'escape', 'kill']) {
     h[f] = d[f];
   }
+  pushUndo();
   await refreshCheck();
 }
 
@@ -814,6 +902,71 @@ function addMatchPair(firstIdx) {
   HALVES.slice(s2, e2 + 1).forEach((h, k) => { h.seq = k + 1; });
 }
 
+// 删掉这一场的最后一局（上下两个半局一起删）
+function deleteLastGame(firstIdx) {
+  const [s, e] = matchOf(firstIdx);
+  const inMatch = HALVES.slice(s, e + 1);
+  const lastGame = Math.max(...inMatch.map(x => x.game));
+  const idxs = [];
+  for (let i = s; i <= e; i++) if (HALVES[i].game === lastGame) idxs.push(i);
+  if (!idxs.length) return;
+  if (!confirm(`删掉第 ${lastGame} 局？共 ${idxs.length} 个半局。`)) return;
+  pushUndo();
+  for (const i of idxs.sort((a, b) => b - a)) HALVES.splice(i, 1);
+  renumberSeq(s);
+}
+
+// 删掉一整场比赛（这一场的所有半局）
+function deleteMatch(firstIdx) {
+  const [s, e] = matchOf(firstIdx);
+  const n = e - s + 1;
+  if (!confirm(`删掉这一整场比赛？共 ${n} 个半局。`)) return;
+  pushUndo();
+  HALVES.splice(s, n);
+  renumberSeq(s);
+}
+
+// 删掉一局（上下两个半局一起删），并把这一场的 seq 重排
+function deleteGame(halfIdx) {
+  const [ms, me] = matchOf(halfIdx);
+  const h = HALVES[halfIdx];
+  // 找到同一局（game 相同）的另一半
+  let other = -1;
+  for (let i = ms; i <= me; i++) {
+    if (i !== halfIdx && HALVES[i].game === h.game) other = i;
+  }
+  const idxs = other >= 0 ? [halfIdx, other] : [halfIdx];
+  if (!confirm(`删掉第 ${h.game} 局？共 ${idxs.length} 个半局。`)) return;
+  pushUndo();
+  for (const i of idxs.sort((a, b) => b - a)) HALVES.splice(i, 1);
+  renumberSeq(ms);
+}
+
+// 从某一行开始，把所在场的 seq 重排成 1 起连续
+function renumberSeq(from) {
+  const i = Math.max(0, Math.min(from, HALVES.length - 1));
+  if (!HALVES.length) return;
+  const [s, e] = matchOf(i);
+  HALVES.slice(s, e + 1).forEach((h, k) => { h.seq = k + 1; });
+}
+
+// ── 撤销 ────────────────────────────────────────────────
+let UNDO = null;   // 上一步的整份快照
+
+function pushUndo() {
+  UNDO = {halves: JSON.parse(JSON.stringify(HALVES)),
+          meta: JSON.parse(JSON.stringify(META))};
+}
+
+function undo() {
+  if (!UNDO) return;
+  HALVES = UNDO.halves;
+  META = UNDO.meta;
+  UNDO = null;
+  OPEN.clear();
+  checkLogic().then(render);
+}
+
 // 新建一整场：3 局 = 6 行。afterIdx 之后插入（-1 表示追加到末尾）
 function addMatch(survTeam, huntTeam, home, afterIdx) {
   META.home_pairs[pairKey(survTeam, huntTeam)] = home;
@@ -837,6 +990,71 @@ function addMatch(survTeam, huntTeam, home, afterIdx) {
   if (afterIdx === undefined || afterIdx < 0) HALVES.push(...rows);
   else HALVES.splice(afterIdx + 1, 0, ...rows);
   return rows[0]._id;
+}
+
+// ── 改这一场的两支队伍 ──────────────────────────────────
+let RN_ID = null;
+function openRename(firstIdx) {
+  const h = HALVES[firstIdx];
+  if (!h) return;
+  RN_ID = h._id;
+  const fill = (el, cur) => {
+    el.innerHTML = '';
+    for (const t of TEAMS) {
+      const o = document.createElement('option');
+      o.value = t; o.textContent = t;
+      if (t === cur) o.selected = true;
+      el.appendChild(o);
+    }
+  };
+  fill($('#rnSurv'), h.survivor_team);
+  fill($('#rnHunt'), h.hunter_team);
+  const syncHome = () => {
+    const s = $('#rnSurv').value, t = $('#rnHunt').value;
+    const cur = $('#rnHome').value;
+    const el = $('#rnHome');
+    el.innerHTML = '';
+    for (const x of [s, t]) {
+      const o = document.createElement('option');
+      o.value = x; o.textContent = x;
+      if (x === (cur === t ? s : cur)) o.selected = true;
+      el.appendChild(o);
+    }
+  };
+  syncHome();
+  $('#rnSurv').onchange = syncHome;
+  $('#rnHunt').onchange = syncHome;
+  $('#renMask').classList.add('on');
+}
+
+function closeRename() {
+  $('#renMask').classList.remove('on');
+  RN_ID = null;
+}
+
+// ── 改主客 ──────────────────────────────────────────────
+let HM_ID = null;
+function openHome(firstIdx) {
+  const h = HALVES[firstIdx];
+  if (!h) return;
+  HM_ID = h._id;
+  const teams = [...new Set([h.survivor_team, h.hunter_team].filter(Boolean))];
+  const cur = META.home_pairs[pairKey(h.survivor_team, h.hunter_team)] || '';
+  const el = $('#hmHome');
+  el.innerHTML = '';
+  for (const t of teams) {
+    const o = document.createElement('option');
+    o.value = t; o.textContent = t;
+    if (t === cur) o.selected = true;
+    el.appendChild(o);
+  }
+  $('#hmHint').textContent = teams.join(' vs ');
+  $('#homeMask').classList.add('on');
+}
+
+function closeHome() {
+  $('#homeMask').classList.remove('on');
+  HM_ID = null;
 }
 
 // 打开「新建比赛」对话框。afterId 不为空时，新比赛插到那一场之后
@@ -888,6 +1106,44 @@ $('#tbl').addEventListener('click', ev => {
   if (ah) {
     const idx = HALVES.findIndex(h => h._id === +ah.dataset.addhalf);
     if (idx >= 0) addMatchPair(idx);
+    refreshCheck();
+    return;
+  }
+  // 删一局（上下半局一起删）
+  const dg = ev.target.closest('[data-delgame]');
+  if (dg) {
+    const idx = HALVES.findIndex(h => h._id === +dg.dataset.delgame);
+    if (idx >= 0) deleteGame(idx);
+    refreshCheck();
+    return;
+  }
+  // 改这一场的两支队伍
+  const rn = ev.target.closest('[data-renm]');
+  if (rn) {
+    const idx = HALVES.findIndex(h => h._id === +rn.dataset.renm);
+    if (idx >= 0) openRename(idx);
+    return;
+  }
+  // 改这一场的主客队
+  const hm = ev.target.closest('[data-homem]');
+  if (hm) {
+    const idx = HALVES.findIndex(h => h._id === +hm.dataset.homem);
+    if (idx >= 0) openHome(idx);
+    return;
+  }
+  // 减一局：删掉这一场的最后一局
+  const dg2 = ev.target.closest('[data-delgame2]');
+  if (dg2) {
+    const idx = HALVES.findIndex(h => h._id === +dg2.dataset.delgame2);
+    if (idx >= 0) deleteLastGame(idx);
+    refreshCheck();
+    return;
+  }
+  // 删一整场比赛
+  const dm = ev.target.closest('[data-delm]');
+  if (dm) {
+    const idx = HALVES.findIndex(h => h._id === +dm.dataset.delm);
+    if (idx >= 0) deleteMatch(idx);
     refreshCheck();
     return;
   }
