@@ -8,6 +8,8 @@ test/
 # 本地 AI 助手约定（个人调试用，不入库）
 AGENTS.md
 
+static_web_ver/
+
 # 本地生成的测试报告（含预制报告，都是本机测试产物）
 data/reports/
 
