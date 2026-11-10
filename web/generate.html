@@ -203,6 +203,19 @@ button.danger{border-color:#5c3330;color:#e0a09a}
       <div class="row">
         <span class="msg" id="s1Msg"></span>
       </div>
+      <div class="row" id="betaRow" style="display:none;align-items:flex-start;
+          background:var(--panel2);border:1px solid var(--border);
+          border-radius:8px;padding:9px 12px">
+        <label class="lb" style="flex:none;margin-top:3px">对手熟练度修正</label>
+        <div style="flex:1;min-width:220px">
+          <input type="range" id="betaScale" min="0" max="1" step="0.1" value="0"
+            style="width:100%">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--dim)">
+            <span>0 = 抹平（行业口径）</span><span id="betaVal">0.0</span><span>1 = 全信他的实际水平</span>
+          </div>
+          <div id="betaPreview" style="font-size:11.5px;margin-top:5px"></div>
+        </div>
+      </div>
       <div class="sheet"><table id="s1Table"></table></div>
     </div>
   </section>
@@ -317,6 +330,7 @@ const ST = {
   scoresDirty: false,
   scoresSource: '',  // 第 1 步：当前分数表来源（'' = 预编辑基准）
   scoresMeta: null, // 第 1 步：导入的监管配置里的元信息（player / hunters）
+  betaScale: 0,     // 对手熟练度回补系数（0~1），默认抹平
   roster: [],          // 第 2 步：我方战队的求生角色列表
   rosterDirty: false,
   rosterSource: '',  // 第 2 步：当前角色池来源（'' = 预编辑基准）
@@ -466,7 +480,10 @@ function renderScores() {
     const tds = hunt.map(h => {
       const v = row[h];
       if (v === undefined) return '<td class="na">—</td>';
-      const sc = (typeof v === 'number') ? v : v.score;
+      const base = (typeof v === 'number') ? v : v.score;
+      // 显示 = 抹平分 + 熟练度回补。存储口径保持抹平（回补由后端按
+      // beta_scale 再算一遍），所以这里只加不减地「展示」出来。
+      const sc = base + betaAdj(h);
       // 底色表达「这套阵容好不好打」：偏红 = 求生方吃亏，偏绿 = 占便宜
       return `<td style="background:${scoreBg(sc)}">`
         + `<input data-c="${esc(c)}" data-h="${esc(h)}" value="${f2(sc)}"`
@@ -482,15 +499,19 @@ function renderScores() {
     el.onchange = () => {
       const c = el.dataset.c, h = el.dataset.h;
       const v = parseFloat(el.value);
-      if (!isFinite(v) || v < 0 || v > 4) {
+      // 输入框里显示的是「含熟练度回补」的值；存储时剥掉回补部分，
+      // 保持 ST.scores 是抹平口径（回补由滑杆 + 后端统一控制）。
+      const adj = betaAdj(h);
+      const stored = v - adj;
+      if (!isFinite(stored) || stored < 0 || stored > 4) {
         setMsg('#s1Msg', `${c} / ${h} 的分数必须在 0~4`, 'err');
         const old = (ST.scores[c] || {})[h];
-        if (old !== undefined) el.value = f2(typeof old === 'number' ? old : old.score);
+        if (old !== undefined) el.value = f2((typeof old === 'number' ? old : old.score) + adj);
         return;
       }
       ST.scores[c] = ST.scores[c] || {};
       const old = ST.scores[c][h];
-      ST.scores[c][h] = { score: v, n: (old && old.n) || 0 };
+      ST.scores[c][h] = { score: Math.round(stored * 100) / 100, n: (old && old.n) || 0 };
       ST.scoresDirty = true;
       // 改完立刻重新染色，颜色和值必须一致
       const td = el.parentElement;
@@ -501,6 +522,13 @@ function renderScores() {
     };
   });
   renderS1Stat();
+}
+
+/** 当前选手在监管 h 上的熟练度回补量（已乘滑杆系数）。
+ *  与后端 beta_of 同口径：负 = 绝活（分数下调），0 = 抹平/无数据。 */
+function betaAdj(h) {
+  const b = (META.player_beta || {})[opponent()] || {};
+  return Math.round((ST.betaScale || 0) * (b[h] || 0) * 100) / 100;
 }
 
 function renderS1Stat() {
@@ -537,6 +565,38 @@ function syncPlayerInfo() {
   el.innerHTML = n
     ? `本季用过 <b>${n}</b> 个监管，他的英雄池会决定搜索重点`
     : (p ? '本季出场记录很少，结论的可信度会下降' : '在第 1 步导入监管数据配置');
+  renderBetaRow();
+}
+
+/* ── 对手熟练度修正（β 回补） ─────────────────────────────── */
+
+/**
+ * 第 1 步的滑杆：把导入表里抹掉的该选手熟练度按比例加回去。
+ * 0 = 抹平（默认，与旧行为一致）；1 = 完全按他的实际水平。
+ * β 数据来自 META.player_beta（adjusted_scores.json 的 player_char_adjust）。
+ */
+function renderBetaRow() {
+  const p = opponent();
+  const row = $('#betaRow');
+  if (!row) return;
+  const betas = (META.player_beta || {})[p] || {};
+  const has = p && Object.keys(betas).length > 0;
+  row.style.display = has ? '' : 'none';
+  if (!has) return;
+  // 预览该选手有 β 的角色：负 = 绝活（分数下调），正 = 打得差
+  const items = Object.entries(betas).sort((a, b) => a[1] - b[1]);
+  $('#betaPreview').innerHTML = '该选手的熟练度偏离（负 = 绝活，正 = 打得差）：'
+    + items.map(([h, v]) => {
+      const cls = v < 0 ? 'var(--ok)' : (v > 0 ? 'var(--err)' : 'inherit');
+      return `${Char.esc(h)} <b style="color:${cls}">${v > 0 ? '+' : ''}${v.toFixed(2)}</b>`;
+    }).join('　');
+  syncBetaState();
+}
+
+function syncBetaState() {
+  if (!$('#betaRow') || $('#betaRow').style.display === 'none') return;
+  ST.betaScale = Number($('#betaScale').value) || 0;
+  $('#betaVal').textContent = ST.betaScale.toFixed(1);
 }
 
 /**
@@ -1032,6 +1092,7 @@ async function startGenerate() {
         pool: ST.roster || [],
         scores_source: ST.scoresSource || '',
         roster_source: ST.rosterSource || '',
+        beta_scale: ST.betaScale || 0,
       }),
     });
     clearInterval(tick);
@@ -1130,6 +1191,8 @@ async function boot() {
   // ST.player 已经在上面载入配置时同步好了，这里不要再清空。
   // 组合数上限 16：输入时即时钳位并刷新预计耗时
   $('#s4Combos').oninput = renderCombosHint;
+  // 熟练度滑杆：拖动即更新 ST.betaScale，并重画表格让回补看得见
+  $('#betaScale').oninput = () => { syncBetaState(); renderScores(); };
   syncPlayerInfo();
   renderGban();
   renderMapPick();

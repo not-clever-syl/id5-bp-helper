@@ -107,7 +107,8 @@ def ban_quota(game: int) -> int:
 class Engine:
     def __init__(self, cand_ban_surv: int = 6, cand_ban_hunt: int = 4,
                  scores_override: dict = None,
-                 pool_override: dict = None):
+                 pool_override: dict = None,
+                 beta_scale: float = 0.0):
         """引擎的三份数据来源，优先级从高到低：
 
         scores_override：本次生成用的分数表（导入的监管选手配置 + 页面上
@@ -115,6 +116,13 @@ class Engine:
             引擎直接用，不再二次收缩。引擎只读，不落盘。
         pool_override：本次生成用的角色池，{队伍名: [角色, ...]}。
             同样优先级最高，覆盖引擎内置的赛季出场角色池。
+        beta_scale：选手熟练度回补系数（0~1）。导入的选手折合分表
+            是把该选手的熟练度（β）抹平到行业标准后的结果；这个系数
+            决定把多少 β 加回去：0 = 抹平（默认，与旧行为一致），
+            1 = 完全按他的实际水平，0.5 = 折半信。
+            只影响 scores_override 里的格子；β 数据来自
+            adjusted_scores.json 的 player_char_adjust（本身带
+            n/(n+λ) 收缩和 ±MAX_ADJUST 截断，不会产生极端值）。
         bp_core.json / bp_query.json：预编辑表，只读，是兜底来源。
 
         没有「用户自定义数据」那一层了（旧的 data/custom/ 机制已下线）：
@@ -124,6 +132,24 @@ class Engine:
         q = json.loads((ROOT / "data" / "bp_query.json").read_text(encoding="utf-8"))
         self.sc = q["scores"]
         self.teams = self.tree["teams"]
+
+        # 选手熟练度回补：{监管角色: adjust}（adjust = clip(-β)，正值 =
+        # 该选手用这个角色让求生多得分 = 他打得差）。来自
+        # adjusted_scores.json，本身已收缩，beta_scale 只控制加回多少。
+        self.beta_scale = max(0.0, min(1.0, float(beta_scale or 0.0)))
+        self.beta_adjust = {}
+        if self.beta_scale > 0:
+            try:
+                a = json.loads((ROOT / "data" / "adjusted_scores.json")
+                               .read_text(encoding="utf-8"))
+                # 具体选手在 load_player_scores / _beta_for 时按名字过滤
+                self._beta_all = {k: v.get("adjust", 0.0)
+                                  for k, v in (a.get("player_char_adjust") or {}).items()}
+            except Exception:
+                self._beta_all = {}
+        else:
+            self._beta_all = {}
+        self._beta_player = ""
 
         # 报告生成页传进来的最终分数表（最高优先级，不落盘）
         self.scores_override = {}
@@ -474,7 +500,8 @@ class Engine:
         # ① 本次生成导入的监管配置（页面上的最终分数表）
         ov = self.scores_override.get(char)
         if ov is not None and hunter in ov:
-            v = ov[hunter]
+            # 熟练度回补：把导入表里抹掉的该选手 β 按比例加回来
+            v = ov[hunter] + self.beta_of(hunter)
             self._cell_cache[key] = v
             return v
 
@@ -529,6 +556,8 @@ class Engine:
                 cells[canon(c)] = row
         if cells:
             self.scores_override = cells
+            # 记下这是哪位选手的表：beta_scale > 0 时 cell() 要用他的 β 回补
+            self._beta_player = player
             # override 变了，所有缓存作废
             self._cell_cache.clear()
             self._lineup_cache.clear()
@@ -539,6 +568,17 @@ class Engine:
             self._score_cache.clear()
             self._top3_cache.clear()
             self._ban_hunt_cache.clear()
+
+    def beta_of(self, hunter: str) -> float:
+        """当前选手用某监管角色的熟练度回补量（已乘 beta_scale）。
+
+        adjust = clip(-β)：正 = 他打得比行业标准差（求生得分应上调），
+        负 = 他打得更好（求生得分应下调）。0 表示抹平口径或无数据。
+        """
+        if self.beta_scale <= 0 or not self._beta_player:
+            return 0.0
+        return round(self.beta_scale
+                     * self._beta_all.get(f"{self._beta_player}@{hunter}", 0.0), 4)
 
     def lineup_score(self, team: str, chars, hunter: str) -> float:
         """阵容对某监管的评分：最低 3 个各权重 0.3 + 最高 1 个权重 0.1，加结构项。

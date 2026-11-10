@@ -58,6 +58,30 @@ def _combos_arg(raw) -> int:
     return max(1, min(16, n))
 
 
+def _player_betas() -> dict:
+    """每位选手的熟练度修正预览：{选手: {监管角色: adjust}}。
+
+    数据来自 adjusted_scores.json 的 player_char_adjust，
+    adjust = clip(-β)：负 = 该选手这个角色是绝活（求生分应下调），
+    正 = 他打得比行业标准差。只取 β ≠ 0 的角色。
+    """
+    p = ROOT / "data" / "adjusted_scores.json"
+    if not p.exists():
+        return {}
+    try:
+        d = json.loads(p.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+    out = {}
+    for k, v in (d.get("player_char_adjust") or {}).items():
+        who, _, c = k.partition("@")
+        adj = v.get("adjust") or 0.0
+        if not who or not c or adj == 0.0:
+            continue
+        out.setdefault(who, {})[c] = round(float(adj), 3)
+    return out
+
+
 def _list_reports() -> list:
     """列出 data/reports/ 下已有的报告（只取 meta，够生成页显示数量了）。
 
@@ -959,6 +983,9 @@ class Handler(SimpleHTTPRequestHandler):
                 "player_hunters": player_hunters,
             },
             "reports": reports,
+            # 选手熟练度（β）预览：{选手: {监管角色: adjust}}。
+            # adjust = clip(-β)：负 = 绝活（求生分应下调），正 = 打得差。
+            "player_beta": _player_betas(),
         })
 
     def _hunter_files(self):
@@ -1063,13 +1090,22 @@ class Handler(SimpleHTTPRequestHandler):
                         scores_ov[c] = row
             # pool_override：本次生成选的求生角色池配置
             pool_ov = {team: list(pool)} if pool else None
-            eng = Engine(scores_override=scores_ov, pool_override=pool_ov)
+            # 选手熟练度回补系数（0~1）：0 = 抹平（默认），1 = 完全按他的实际水平
+            try:
+                beta_scale = float(data.get("beta_scale") or 0.0)
+            except (TypeError, ValueError):
+                beta_scale = 0.0
+            eng = Engine(scores_override=scores_ov, pool_override=pool_ov,
+                         beta_scale=beta_scale)
             # 本局地图：只影响候选排序与加权，不改任何分数格。
             # 传空串或未传 = 不按地图加权，与旧行为一致。
             map_name = data.get("map") or ""
             if map_name and map_name not in eng.maps():
                 return self._json(400, {"ok": False,
                                         "error": f"未知地图 {map_name}"})
+            if scores_ov:
+                # beta 回补要认得这份表是哪位选手的
+                eng._beta_player = player
             res = bp_compute(eng, team, player, game, n_hunters, bantop,
                              n_combos=_combos_arg(data.get("combos")),
                              global_ban_surv=gban_s, global_ban_hunt=gban_h,
