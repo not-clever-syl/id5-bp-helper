@@ -1,7 +1,7 @@
 {
  "meta": {
   "season": "IVL 2026 秋季赛",
-  "halves": 260,
+  "halves": 310,
   "escape_unit": "逃脱人数（0~4 人），2.00 为平局线",
   "score_unit": "原始半局比分，5 分制（求生:监管）",
   "score_to_escape": {
@@ -30,227 +30,435 @@
    "map"
   ],
   "map_note": "地图名（如：永眠镇）",
-  "home_pairs": {
-   "ACT|ASC": "ASC",
-   "ACT|DOU5": "ACT",
-   "ACT|FPX.ZQ": "FPX.ZQ",
-   "ACT|GR": "GR",
-   "ACT|MRC": "ACT",
-   "ACT|TE": "ACT",
-   "ACT|北京WBG": "北京WBG",
-   "ACT|成都GG": "成都GG",
-   "ACT|成都Wolves": "成都Wolves",
-   "ASC|DOU5": "DOU5",
-   "ASC|FPX.ZQ": "ASC",
-   "ASC|GR": "ASC",
-   "ASC|MRC": "ASC",
-   "ASC|TE": "TE",
-   "ASC|北京WBG": "北京WBG",
-   "ASC|成都GG": "ASC",
-   "ASC|成都Wolves": "成都Wolves",
-   "DOU5|FPX.ZQ": "DOU5",
-   "DOU5|GR": "GR",
-   "DOU5|MRC": "DOU5",
-   "DOU5|TE": "TE",
-   "DOU5|北京WBG": "北京WBG",
-   "DOU5|成都GG": "成都GG",
-   "DOU5|成都Wolves": "DOU5",
-   "FPX.ZQ|GR": "GR",
-   "FPX.ZQ|MRC": "MRC",
-   "FPX.ZQ|TE": "TE",
-   "FPX.ZQ|北京WBG": "FPX.ZQ",
-   "FPX.ZQ|成都GG": "FPX.ZQ",
-   "FPX.ZQ|成都Wolves": "FPX.ZQ",
-   "GR|MRC": "GR",
-   "GR|TE": "TE",
-   "GR|北京WBG": "北京WBG",
-   "GR|成都GG": "成都GG",
-   "GR|成都Wolves": "成都Wolves",
-   "MRC|北京WBG": "北京WBG",
-   "MRC|成都GG": "成都GG",
-   "MRC|成都Wolves": "MRC",
-   "TE|北京WBG": "TE",
-   "TE|成都GG": "TE",
-   "TE|成都Wolves": "TE",
-   "北京WBG|成都GG": "成都GG",
-   "北京WBG|成都Wolves": "成都Wolves",
-   "成都GG|成都Wolves": "成都GG",
-   "MRC|TE": "MRC"
-  }
+  "matches_note": "matches 一场一项，home 是主队、away 是客队，按比赛先后排列"
  },
+ "matches": [
+  {
+   "home": "FPX.ZQ",
+   "away": "ACT",
+   "teams": [
+    "ACT",
+    "FPX.ZQ"
+   ]
+  },
+  {
+   "home": "北京WBG",
+   "away": "GR",
+   "teams": [
+    "北京WBG",
+    "GR"
+   ]
+  },
+  {
+   "home": "成都GG",
+   "away": "MRC",
+   "teams": [
+    "成都GG",
+    "MRC"
+   ]
+  },
+  {
+   "home": "成都Wolves",
+   "away": "ASC",
+   "teams": [
+    "ASC",
+    "成都Wolves"
+   ]
+  },
+  {
+   "home": "TE",
+   "away": "GR",
+   "teams": [
+    "TE",
+    "GR"
+   ]
+  },
+  {
+   "home": "北京WBG",
+   "away": "ACT",
+   "teams": [
+    "ACT",
+    "北京WBG"
+   ]
+  },
+  {
+   "home": "TE",
+   "away": "FPX.ZQ",
+   "teams": [
+    "TE",
+    "FPX.ZQ"
+   ]
+  },
+  {
+   "home": "DOU5",
+   "away": "MRC",
+   "teams": [
+    "DOU5",
+    "MRC"
+   ]
+  },
+  {
+   "home": "ASC",
+   "away": "成都GG",
+   "teams": [
+    "ASC",
+    "成都GG"
+   ]
+  },
+  {
+   "home": "成都Wolves",
+   "away": "ACT",
+   "teams": [
+    "ACT",
+    "成都Wolves"
+   ]
+  },
+  {
+   "home": "成都GG",
+   "away": "DOU5",
+   "teams": [
+    "成都GG",
+    "DOU5"
+   ]
+  },
+  {
+   "home": "TE",
+   "away": "ASC",
+   "teams": [
+    "TE",
+    "ASC"
+   ]
+  },
+  {
+   "home": "MRC",
+   "away": "FPX.ZQ",
+   "teams": [
+    "MRC",
+    "FPX.ZQ"
+   ]
+  },
+  {
+   "home": "ACT",
+   "away": "TE",
+   "teams": [
+    "TE",
+    "ACT"
+   ]
+  },
+  {
+   "home": "北京WBG",
+   "away": "DOU5",
+   "teams": [
+    "北京WBG",
+    "DOU5"
+   ]
+  },
+  {
+   "home": "ASC",
+   "away": "GR",
+   "teams": [
+    "ASC",
+    "GR"
+   ]
+  },
+  {
+   "home": "MRC",
+   "away": "成都Wolves",
+   "teams": [
+    "成都Wolves",
+    "MRC"
+   ]
+  },
+  {
+   "home": "FPX.ZQ",
+   "away": "成都GG",
+   "teams": [
+    "FPX.ZQ",
+    "成都GG"
+   ]
+  },
+  {
+   "home": "GR",
+   "away": "DOU5",
+   "teams": [
+    "GR",
+    "DOU5"
+   ]
+  },
+  {
+   "home": "TE",
+   "away": "成都GG",
+   "teams": [
+    "TE",
+    "成都GG"
+   ]
+  },
+  {
+   "home": "ACT",
+   "away": "MRC",
+   "teams": [
+    "ACT",
+    "MRC"
+   ]
+  },
+  {
+   "home": "GR",
+   "away": "FPX.ZQ",
+   "teams": [
+    "GR",
+    "FPX.ZQ"
+   ]
+  },
+  {
+   "home": "成都Wolves",
+   "away": "北京WBG",
+   "teams": [
+    "成都Wolves",
+    "北京WBG"
+   ]
+  },
+  {
+   "home": "ACT",
+   "away": "DOU5",
+   "teams": [
+    "ACT",
+    "DOU5"
+   ]
+  },
+  {
+   "home": "成都GG",
+   "away": "北京WBG",
+   "teams": [
+    "成都GG",
+    "北京WBG"
+   ]
+  },
+  {
+   "home": "ASC",
+   "away": "MRC",
+   "teams": [
+    "ASC",
+    "MRC"
+   ]
+  },
+  {
+   "home": "FPX.ZQ",
+   "away": "成都Wolves",
+   "teams": [
+    "成都Wolves",
+    "FPX.ZQ"
+   ]
+  },
+  {
+   "home": "TE",
+   "away": "DOU5",
+   "teams": [
+    "TE",
+    "DOU5"
+   ]
+  },
+  {
+   "home": "FPX.ZQ",
+   "away": "北京WBG",
+   "teams": [
+    "FPX.ZQ",
+    "北京WBG"
+   ]
+  },
+  {
+   "home": "GR",
+   "away": "ACT",
+   "teams": [
+    "ACT",
+    "GR"
+   ]
+  },
+  {
+   "home": "TE",
+   "away": "成都Wolves",
+   "teams": [
+    "成都Wolves",
+    "TE"
+   ]
+  },
+  {
+   "home": "ASC",
+   "away": "ACT",
+   "teams": [
+    "ACT",
+    "ASC"
+   ]
+  },
+  {
+   "home": "成都GG",
+   "away": "GR",
+   "teams": [
+    "成都GG",
+    "GR"
+   ]
+  },
+  {
+   "home": "北京WBG",
+   "away": "MRC",
+   "teams": [
+    "北京WBG",
+    "MRC"
+   ]
+  },
+  {
+   "home": "ASC",
+   "away": "FPX.ZQ",
+   "teams": [
+    "ASC",
+    "FPX.ZQ"
+   ]
+  },
+  {
+   "home": "DOU5",
+   "away": "成都Wolves",
+   "teams": [
+    "成都Wolves",
+    "DOU5"
+   ]
+  },
+  {
+   "home": "DOU5",
+   "away": "ASC",
+   "teams": [
+    "DOU5",
+    "ASC"
+   ]
+  },
+  {
+   "home": "成都Wolves",
+   "away": "GR",
+   "teams": [
+    "GR",
+    "成都Wolves"
+   ]
+  },
+  {
+   "home": "TE",
+   "away": "北京WBG",
+   "teams": [
+    "TE",
+    "北京WBG"
+   ]
+  },
+  {
+   "home": "成都GG",
+   "away": "ACT",
+   "teams": [
+    "ACT",
+    "成都GG"
+   ]
+  },
+  {
+   "home": "DOU5",
+   "away": "FPX.ZQ",
+   "teams": [
+    "DOU5",
+    "FPX.ZQ"
+   ]
+  },
+  {
+   "home": "MRC",
+   "away": "TE",
+   "teams": [
+    "MRC",
+    "TE"
+   ]
+  },
+  {
+   "home": "北京WBG",
+   "away": "ASC",
+   "teams": [
+    "ASC",
+    "北京WBG"
+   ]
+  },
+  {
+   "home": "成都GG",
+   "away": "成都Wolves",
+   "teams": [
+    "成都Wolves",
+    "成都GG"
+   ]
+  },
+  {
+   "home": "GR",
+   "away": "MRC",
+   "teams": [
+    "MRC",
+    "GR"
+   ]
+  },
+  {
+   "home": "DOU5",
+   "away": "TE",
+   "teams": [
+    "DOU5",
+    "TE"
+   ]
+  },
+  {
+   "home": "GR",
+   "away": "ASC",
+   "teams": [
+    "ASC",
+    "GR"
+   ]
+  },
+  {
+   "home": "FPX.ZQ",
+   "away": "MRC",
+   "teams": [
+    "MRC",
+    "FPX.ZQ"
+   ]
+  },
+  {
+   "home": "ACT",
+   "away": "成都GG",
+   "teams": [
+    "ACT",
+    "成都GG"
+   ]
+  },
+  {
+   "home": "MRC",
+   "away": "北京WBG",
+   "teams": [
+    "MRC",
+    "北京WBG"
+   ]
+  },
+  {
+   "home": "GR",
+   "away": "TE",
+   "teams": [
+    "GR",
+    "TE"
+   ]
+  },
+  {
+   "home": "ACT",
+   "away": "ASC",
+   "teams": [
+    "ASC",
+    "ACT"
+   ]
+  },
+  {
+   "home": "北京WBG",
+   "away": "FPX.ZQ",
+   "teams": [
+    "FPX.ZQ",
+    "北京WBG"
+   ]
+  }
+ ],
  "halves": [
-  {
-   "seq": 1,
-   "game": 1,
-   "side": "upper",
-   "tiebreak": false,
-   "survivor_team": "北京WBG",
-   "hunter_team": "GR",
-   "survivors": [
-    "古董商",
-    "祭司",
-    "木偶师",
-    "大副"
-   ],
-   "hunter": "牙医",
-   "hunter_player": "mhxm",
-   "hunter_bans": [
-    "守墓人",
-    "幻灯师",
-    "逃脱大师",
-    "野人"
-   ],
-   "survivor_bans": [],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "永眠镇"
-  },
-  {
-   "seq": 2,
-   "game": 1,
-   "side": "lower",
-   "tiebreak": false,
-   "survivor_team": "GR",
-   "hunter_team": "北京WBG",
-   "survivors": [
-    "古董商",
-    "作曲家",
-    "逃脱大师",
-    "飞行家"
-   ],
-   "hunter": "女王蜂",
-   "hunter_player": "NonSept",
-   "hunter_bans": [
-    "幸运儿",
-    "幻灯师",
-    "弓箭手",
-    "气象学家"
-   ],
-   "survivor_bans": [],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "永眠镇"
-  },
-  {
-   "seq": 3,
-   "game": 2,
-   "side": "upper",
-   "tiebreak": false,
-   "survivor_team": "GR",
-   "hunter_team": "北京WBG",
-   "survivors": [
-    "幻灯师",
-    "默剧艺人",
-    "园丁",
-    "佣兵"
-   ],
-   "hunter": "歌剧演员",
-   "hunter_player": "N1e",
-   "hunter_bans": [
-    "弓箭手",
-    "斗牛士",
-    "气象学家",
-    "病患"
-   ],
-   "survivor_bans": [
-    "跛脚羊"
-   ],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "月亮河公园"
-  },
-  {
-   "seq": 4,
-   "game": 2,
-   "side": "lower",
-   "tiebreak": false,
-   "survivor_team": "北京WBG",
-   "hunter_team": "GR",
-   "survivors": [
-    "病患",
-    "玩具商",
-    "斗牛士",
-    "佣兵"
-   ],
-   "hunter": "歌剧演员",
-   "hunter_player": "mhxm",
-   "hunter_bans": [
-    "弓箭手",
-    "心理学家",
-    "气象学家",
-    "逃脱大师"
-   ],
-   "survivor_bans": [
-    "跛脚羊"
-   ],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "月亮河公园"
-  },
-  {
-   "seq": 5,
-   "game": 3,
-   "side": "upper",
-   "tiebreak": false,
-   "survivor_team": "北京WBG",
-   "hunter_team": "GR",
-   "survivors": [
-    "弓箭手",
-    "心理学家",
-    "法罗女士",
-    "守墓人"
-   ],
-   "hunter": "杂货商",
-   "hunter_player": "mhxm",
-   "hunter_bans": [
-    "幸运儿",
-    "教授",
-    "逃脱大师",
-    "飞行家"
-   ],
-   "survivor_bans": [
-    "女王蜂",
-    "跛脚羊"
-   ],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "红教堂"
-  },
-  {
-   "seq": 6,
-   "game": 3,
-   "side": "lower",
-   "tiebreak": false,
-   "survivor_team": "GR",
-   "hunter_team": "北京WBG",
-   "survivors": [
-    "弓箭手",
-    "气象学家",
-    "心理学家",
-    "大副"
-   ],
-   "hunter": "跛脚羊",
-   "hunter_player": "N1e",
-   "hunter_bans": [
-    "先知",
-    "咒术师",
-    "幸运儿",
-    "木偶师"
-   ],
-   "survivor_bans": [
-    "26号守卫",
-    "牙医"
-   ],
-   "score": "5:0",
-   "escape": 4,
-   "kill": 0,
-   "map": "红教堂"
-  },
   {
    "seq": 1,
    "game": 1,
@@ -259,18 +467,18 @@
    "survivor_team": "ACT",
    "hunter_team": "FPX.ZQ",
    "survivors": [
-    "祭司",
+    "气象学家",
     "野人",
     "古董商",
-    "气象学家"
+    "祭司"
    ],
    "hunter": "喧嚣",
    "hunter_player": "Qx",
    "hunter_bans": [
-    "幸运儿",
     "幻灯师",
+    "飞行家",
     "弓箭手",
-    "飞行家"
+    "幸运儿"
    ],
    "survivor_bans": [],
    "score": "2:2",
@@ -295,9 +503,9 @@
    "hunter_player": "zz9",
    "hunter_bans": [
     "古董商",
-    "大副",
     "木偶师",
-    "逃脱大师"
+    "逃脱大师",
+    "大副"
    ],
    "survivor_bans": [],
    "score": "0:5",
@@ -314,17 +522,17 @@
    "hunter_team": "ACT",
    "survivors": [
     "前锋",
-    "祭司",
     "医生",
+    "祭司",
     "心理学家"
    ],
    "hunter": "歌剧演员",
    "hunter_player": "zz9",
    "hunter_bans": [
-    "作曲家",
     "古董商",
-    "园丁",
-    "木偶师"
+    "木偶师",
+    "作曲家",
+    "园丁"
    ],
    "survivor_bans": [
     "牙医"
@@ -342,10 +550,10 @@
    "survivor_team": "ACT",
    "hunter_team": "FPX.ZQ",
    "survivors": [
+    "作曲家",
     "拉拉队员",
     "前锋",
-    "幸运儿",
-    "作曲家"
+    "幸运儿"
    ],
    "hunter": "女王蜂",
    "hunter_player": "DongX",
@@ -371,22 +579,22 @@
    "survivor_team": "FPX.ZQ",
    "hunter_team": "ACT",
    "survivors": [
-    "幻灯师",
-    "咒术师",
     "先知",
-    "佣兵"
+    "幻灯师",
+    "佣兵",
+    "咒术师"
    ],
    "hunter": "鹿头",
    "hunter_player": "zz9",
    "hunter_bans": [
     "古董商",
     "斗牛士",
-    "空军",
-    "逃脱大师"
+    "逃脱大师",
+    "空军"
    ],
    "survivor_bans": [
-    "牙医",
-    "跛脚羊"
+    "跛脚羊",
+    "牙医"
    ],
    "score": "0:5",
    "escape": 0,
@@ -401,10 +609,10 @@
    "survivor_team": "ACT",
    "hunter_team": "FPX.ZQ",
    "survivors": [
-    "守墓人",
-    "咒术师",
     "医生",
-    "斗牛士"
+    "斗牛士",
+    "咒术师",
+    "守墓人"
    ],
    "hunter": "鹿头",
    "hunter_player": "DongX",
@@ -415,8 +623,8 @@
     "逃脱大师"
    ],
    "survivor_bans": [
-    "歌剧演员",
-    "牙医"
+    "牙医",
+    "歌剧演员"
    ],
    "score": "0:5",
    "escape": 0,
@@ -428,21 +636,193 @@
    "game": 1,
    "side": "upper",
    "tiebreak": false,
+   "survivor_team": "北京WBG",
+   "hunter_team": "GR",
+   "survivors": [
+    "祭司",
+    "木偶师",
+    "古董商",
+    "大副"
+   ],
+   "hunter": "牙医",
+   "hunter_player": "mhxm",
+   "hunter_bans": [
+    "幻灯师",
+    "逃脱大师",
+    "守墓人",
+    "野人"
+   ],
+   "survivor_bans": [],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "永眠镇"
+  },
+  {
+   "seq": 2,
+   "game": 1,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "GR",
+   "hunter_team": "北京WBG",
+   "survivors": [
+    "逃脱大师",
+    "古董商",
+    "飞行家",
+    "作曲家"
+   ],
+   "hunter": "女王蜂",
+   "hunter_player": "NonSept",
+   "hunter_bans": [
+    "弓箭手",
+    "幻灯师",
+    "气象学家",
+    "幸运儿"
+   ],
+   "survivor_bans": [],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "永眠镇"
+  },
+  {
+   "seq": 3,
+   "game": 2,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "GR",
+   "hunter_team": "北京WBG",
+   "survivors": [
+    "幻灯师",
+    "佣兵",
+    "园丁",
+    "默剧艺人"
+   ],
+   "hunter": "歌剧演员",
+   "hunter_player": "N1e",
+   "hunter_bans": [
+    "弓箭手",
+    "气象学家",
+    "斗牛士",
+    "病患"
+   ],
+   "survivor_bans": [
+    "跛脚羊"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "月亮河公园"
+  },
+  {
+   "seq": 4,
+   "game": 2,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "北京WBG",
+   "hunter_team": "GR",
+   "survivors": [
+    "病患",
+    "斗牛士",
+    "玩具商",
+    "佣兵"
+   ],
+   "hunter": "歌剧演员",
+   "hunter_player": "mhxm",
+   "hunter_bans": [
+    "弓箭手",
+    "气象学家",
+    "心理学家",
+    "逃脱大师"
+   ],
+   "survivor_bans": [
+    "跛脚羊"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "月亮河公园"
+  },
+  {
+   "seq": 5,
+   "game": 3,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "北京WBG",
+   "hunter_team": "GR",
+   "survivors": [
+    "守墓人",
+    "法罗女士",
+    "弓箭手",
+    "心理学家"
+   ],
+   "hunter": "杂货商",
+   "hunter_player": "mhxm",
+   "hunter_bans": [
+    "逃脱大师",
+    "幸运儿",
+    "飞行家",
+    "教授"
+   ],
+   "survivor_bans": [
+    "女王蜂",
+    "跛脚羊"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "红教堂"
+  },
+  {
+   "seq": 6,
+   "game": 3,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "GR",
+   "hunter_team": "北京WBG",
+   "survivors": [
+    "大副",
+    "弓箭手",
+    "气象学家",
+    "心理学家"
+   ],
+   "hunter": "跛脚羊",
+   "hunter_player": "N1e",
+   "hunter_bans": [
+    "幸运儿",
+    "咒术师",
+    "先知",
+    "木偶师"
+   ],
+   "survivor_bans": [
+    "26号守卫",
+    "牙医"
+   ],
+   "score": "5:0",
+   "escape": 4,
+   "kill": 0,
+   "map": "红教堂"
+  },
+  {
+   "seq": 1,
+   "game": 1,
+   "side": "upper",
+   "tiebreak": false,
    "survivor_team": "成都GG",
    "hunter_team": "MRC",
    "survivors": [
-    "守墓人",
     "飞行家",
     "弓箭手",
+    "守墓人",
     "气象学家"
    ],
    "hunter": "牙医",
    "hunter_player": "Mort1s",
    "hunter_bans": [
+    "逃脱大师",
     "幻灯师",
-    "拉拉队员",
     "调香师",
-    "逃脱大师"
+    "拉拉队员"
    ],
    "survivor_bans": [],
    "score": "2:2",
@@ -458,18 +838,18 @@
    "survivor_team": "MRC",
    "hunter_team": "成都GG",
    "survivors": [
-    "拉拉队员",
-    "古董商",
     "守墓人",
-    "气象学家"
+    "气象学家",
+    "古董商",
+    "拉拉队员"
    ],
    "hunter": "台球手",
    "hunter_player": "YuM",
    "hunter_bans": [
-    "幸运儿",
+    "逃脱大师",
     "幻灯师",
     "弓箭手",
-    "逃脱大师"
+    "幸运儿"
    ],
    "survivor_bans": [],
    "score": "2:2",
@@ -485,18 +865,18 @@
    "survivor_team": "MRC",
    "hunter_team": "成都GG",
    "survivors": [
-    "心理学家",
-    "咒术师",
     "逃脱大师",
-    "飞行家"
+    "飞行家",
+    "咒术师",
+    "心理学家"
    ],
    "hunter": "牙医",
    "hunter_player": "YuM",
    "hunter_bans": [
+    "祭司",
     "幻灯师",
     "弓箭手",
-    "木偶师",
-    "祭司"
+    "木偶师"
    ],
    "survivor_bans": [
     "女王蜂"
@@ -514,18 +894,18 @@
    "survivor_team": "成都GG",
    "hunter_team": "MRC",
    "survivors": [
-    "大副",
-    "木偶师",
     "古董商",
-    "祭司"
+    "大副",
+    "祭司",
+    "木偶师"
    ],
    "hunter": "破轮",
    "hunter_player": "Mort1s",
    "hunter_bans": [
     "先知",
-    "幸运儿",
+    "逃脱大师",
     "幻灯师",
-    "逃脱大师"
+    "幸运儿"
    ],
    "survivor_bans": [
     "女王蜂"
@@ -543,8 +923,8 @@
    "survivor_team": "MRC",
    "hunter_team": "成都GG",
    "survivors": [
-    "幸运儿",
     "先知",
+    "幸运儿",
     "前锋",
     "调酒师"
    ],
@@ -552,13 +932,13 @@
    "hunter_player": "YuM",
    "hunter_bans": [
     "幻灯师",
+    "祭司",
     "弓箭手",
-    "木偶师",
-    "祭司"
+    "木偶师"
    ],
    "survivor_bans": [
-    "女王蜂",
-    "歌剧演员"
+    "歌剧演员",
+    "女王蜂"
    ],
    "score": "2:2",
    "escape": 2,
@@ -573,22 +953,22 @@
    "survivor_team": "成都GG",
    "hunter_team": "MRC",
    "survivors": [
-    "拉拉队员",
-    "作曲家",
     "前锋",
+    "作曲家",
+    "拉拉队员",
     "病患"
    ],
    "hunter": "小丑",
    "hunter_player": "Mort1s",
    "hunter_bans": [
     "先知",
+    "逃脱大师",
     "幸运儿",
-    "斗牛士",
-    "逃脱大师"
+    "斗牛士"
    ],
    "survivor_bans": [
-    "歌剧演员",
-    "跛脚羊"
+    "跛脚羊",
+    "歌剧演员"
    ],
    "score": "2:2",
    "escape": 2,
@@ -603,17 +983,17 @@
    "survivor_team": "MRC",
    "hunter_team": "成都GG",
    "survivors": [
+    "冒险家",
     "幻灯师",
     "小说家",
-    "哭泣小丑",
-    "冒险家"
+    "哭泣小丑"
    ],
    "hunter": "跛脚羊",
    "hunter_player": "YuM",
    "hunter_bans": [
     "作曲家",
-    "弓箭手",
     "法罗女士",
+    "弓箭手",
     "野人"
    ],
    "survivor_bans": [
@@ -633,22 +1013,22 @@
    "survivor_team": "成都GG",
    "hunter_team": "MRC",
    "survivors": [
+    "先知",
     "野人",
     "幸运儿",
-    "先知",
     "邮差"
    ],
    "hunter": "26号守卫",
    "hunter_player": "Mort1s",
    "hunter_bans": [
-    "幻灯师",
-    "机械师",
+    "逃脱大师",
     "法罗女士",
-    "逃脱大师"
+    "机械师",
+    "幻灯师"
    ],
    "survivor_bans": [
-    "喧嚣",
-    "歌剧演员"
+    "歌剧演员",
+    "喧嚣"
    ],
    "score": "2:2",
    "escape": 2,
@@ -660,21 +1040,133 @@
    "game": 1,
    "side": "upper",
    "tiebreak": false,
+   "survivor_team": "ASC",
+   "hunter_team": "成都Wolves",
+   "survivors": [
+    "守墓人",
+    "调香师",
+    "古董商",
+    "气象学家"
+   ],
+   "hunter": "牙医",
+   "hunter_player": "CyanX",
+   "hunter_bans": [
+    "幻灯师",
+    "逃脱大师",
+    "拉拉队员",
+    "飞行家"
+   ],
+   "survivor_bans": [],
+   "score": "1:3",
+   "escape": 1,
+   "kill": 3,
+   "map": "不归林"
+  },
+  {
+   "seq": 2,
+   "game": 1,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "成都Wolves",
+   "hunter_team": "ASC",
+   "survivors": [
+    "飞行家",
+    "古董商",
+    "守墓人",
+    "拉拉队员"
+   ],
+   "hunter": "记录员",
+   "hunter_player": "Tear",
+   "hunter_bans": [
+    "幻灯师",
+    "弓箭手",
+    "逃脱大师",
+    "幸运儿"
+   ],
+   "survivor_bans": [],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "不归林"
+  },
+  {
+   "seq": 3,
+   "game": 2,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "成都Wolves",
+   "hunter_team": "ASC",
+   "survivors": [
+    "大副",
+    "咒术师",
+    "木偶师",
+    "斗牛士"
+   ],
+   "hunter": "歌剧演员",
+   "hunter_player": "Tear",
+   "hunter_bans": [
+    "气象学家",
+    "弓箭手",
+    "幸运儿",
+    "幻灯师"
+   ],
+   "survivor_bans": [
+    "牙医"
+   ],
+   "score": "3:1",
+   "escape": 3,
+   "kill": 1,
+   "map": "里奥的回忆"
+  },
+  {
+   "seq": 4,
+   "game": 2,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "ASC",
+   "hunter_team": "成都Wolves",
+   "survivors": [
+    "逃脱大师",
+    "咒术师",
+    "病患",
+    "作曲家"
+   ],
+   "hunter": "台球手",
+   "hunter_player": "ChoAi",
+   "hunter_bans": [
+    "先知",
+    "弓箭手",
+    "斗牛士",
+    "幻灯师"
+   ],
+   "survivor_bans": [
+    "跛脚羊"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "里奥的回忆"
+  },
+  {
+   "seq": 1,
+   "game": 1,
+   "side": "upper",
+   "tiebreak": false,
    "survivor_team": "TE",
    "hunter_team": "GR",
    "survivors": [
     "幸运儿",
-    "飞行家",
     "守墓人",
+    "飞行家",
     "弓箭手"
    ],
    "hunter": "牙医",
    "hunter_player": "mhxm",
    "hunter_bans": [
-    "古董商",
+    "逃脱大师",
     "幻灯师",
     "气象学家",
-    "逃脱大师"
+    "古董商"
    ],
    "survivor_bans": [],
    "score": "1:3",
@@ -690,18 +1182,18 @@
    "survivor_team": "GR",
    "hunter_team": "TE",
    "survivors": [
-    "弓箭手",
     "气象学家",
     "飞行家",
-    "守墓人"
+    "守墓人",
+    "弓箭手"
    ],
    "hunter": "牙医",
    "hunter_player": "ppei",
    "hunter_bans": [
-    "古董商",
-    "幸运儿",
+    "野人",
     "幻灯师",
-    "野人"
+    "幸运儿",
+    "古董商"
    ],
    "survivor_bans": [],
    "score": "1:3",
@@ -746,18 +1238,18 @@
    "survivor_team": "TE",
    "hunter_team": "GR",
    "survivors": [
-    "法罗女士",
+    "咒术师",
     "气象学家",
     "大副",
-    "咒术师"
+    "法罗女士"
    ],
    "hunter": "歌剧演员",
    "hunter_player": "mhxm",
    "hunter_bans": [
     "古董商",
     "幻灯师",
-    "心理学家",
-    "逃脱大师"
+    "逃脱大师",
+    "心理学家"
    ],
    "survivor_bans": [
     "女王蜂"
@@ -775,18 +1267,18 @@
    "survivor_team": "TE",
    "hunter_team": "GR",
    "survivors": [
-    "心理学家",
     "斗牛士",
     "佣兵",
+    "心理学家",
     "空军"
    ],
    "hunter": "杂货商",
    "hunter_player": "mhxm",
    "hunter_bans": [
-    "作曲家",
+    "逃脱大师",
     "古董商",
     "幻灯师",
-    "逃脱大师"
+    "作曲家"
    ],
    "survivor_bans": [
     "女王蜂",
@@ -805,18 +1297,18 @@
    "survivor_team": "GR",
    "hunter_team": "TE",
    "survivors": [
-    "勘探员",
+    "大副",
     "火灾调查员",
     "幸运儿",
-    "大副"
+    "勘探员"
    ],
    "hunter": "台球手",
    "hunter_player": "ppei",
    "hunter_bans": [
-    "先知",
     "前锋",
+    "机械师",
     "斗牛士",
-    "机械师"
+    "先知"
    ],
    "survivor_bans": [
     "女王蜂",
@@ -835,22 +1327,22 @@
    "survivor_team": "GR",
    "hunter_team": "TE",
    "survivors": [
-    "入殓师",
+    "逃脱大师",
     "作曲家",
     "园丁",
-    "逃脱大师"
+    "入殓师"
    ],
    "hunter": "记录员",
    "hunter_player": "ppei",
    "hunter_bans": [
-    "先知",
+    "机械师",
     "古董商",
     "斗牛士",
-    "机械师"
+    "先知"
    ],
    "survivor_bans": [
-    "女王蜂",
-    "跛脚羊"
+    "跛脚羊",
+    "女王蜂"
    ],
    "score": "2:2",
    "escape": 2,
@@ -865,18 +1357,18 @@
    "survivor_team": "TE",
    "hunter_team": "GR",
    "survivors": [
-    "昆虫学者",
-    "火灾调查员",
+    "古董商",
     "逃脱大师",
-    "古董商"
+    "火灾调查员",
+    "昆虫学者"
    ],
    "hunter": "女王蜂",
    "hunter_player": "mhxm",
    "hunter_bans": [
-    "幻灯师",
     "机械师",
-    "玩具商",
-    "病患"
+    "幻灯师",
+    "病患",
+    "玩具商"
    ],
    "survivor_bans": [
     "台球手",
@@ -896,17 +1388,17 @@
    "hunter_team": "北京WBG",
    "survivors": [
     "逃脱大师",
-    "古董商",
     "飞行家",
+    "古董商",
     "气象学家"
    ],
    "hunter": "牙医",
    "hunter_player": "NonSept",
    "hunter_bans": [
-    "幸运儿",
     "幻灯师",
+    "野人",
     "祭司",
-    "野人"
+    "幸运儿"
    ],
    "survivor_bans": [],
    "score": "2:2",
@@ -922,18 +1414,18 @@
    "survivor_team": "北京WBG",
    "hunter_team": "ACT",
    "survivors": [
-    "咒术师",
-    "飞行家",
     "幻灯师",
-    "守墓人"
+    "飞行家",
+    "守墓人",
+    "咒术师"
    ],
    "hunter": "跛脚羊",
    "hunter_player": "zz9",
    "hunter_bans": [
     "古董商",
-    "弓箭手",
     "木偶师",
-    "逃脱大师"
+    "逃脱大师",
+    "弓箭手"
    ],
    "survivor_bans": [],
    "score": "2:2",
@@ -949,18 +1441,18 @@
    "survivor_team": "ACT",
    "hunter_team": "北京WBG",
    "survivors": [
-    "调酒师",
     "前锋",
+    "斗牛士",
     "木偶师",
-    "斗牛士"
+    "调酒师"
    ],
    "hunter": "女王蜂",
    "hunter_player": "N1e",
    "hunter_bans": [
-    "医生",
     "弓箭手",
+    "默剧艺人",
     "病患",
-    "默剧艺人"
+    "医生"
    ],
    "survivor_bans": [
     "跛脚羊"
@@ -979,9 +1471,9 @@
    "hunter_team": "ACT",
    "survivors": [
     "气象学家",
+    "大副",
     "默剧艺人",
-    "法罗女士",
-    "大副"
+    "法罗女士"
    ],
    "hunter": "鹿头",
    "hunter_player": "zz9",
@@ -1021,8 +1513,8 @@
     "默剧艺人"
    ],
    "survivor_bans": [
-    "歌剧演员",
-    "跛脚羊"
+    "跛脚羊",
+    "歌剧演员"
    ],
    "score": "2:2",
    "escape": 2,
@@ -1045,14 +1537,14 @@
    "hunter": "时空之影",
    "hunter_player": "zz9",
    "hunter_bans": [
-    "作曲家",
     "古董商",
     "弓箭手",
-    "斗牛士"
+    "斗牛士",
+    "作曲家"
    ],
    "survivor_bans": [
-    "台球手",
-    "牙医"
+    "牙医",
+    "台球手"
    ],
    "score": "2:2",
    "escape": 2,
@@ -1067,18 +1559,18 @@
    "survivor_team": "ACT",
    "hunter_team": "北京WBG",
    "survivors": [
-    "佣兵",
-    "弓箭手",
+    "法罗女士",
     "医生",
-    "法罗女士"
+    "弓箭手",
+    "佣兵"
    ],
    "hunter": "26号守卫",
    "hunter_player": "N1e",
    "hunter_bans": [
-    "咒术师",
-    "大副",
+    "幻灯师",
     "幸运儿",
-    "幻灯师"
+    "咒术师",
+    "大副"
    ],
    "survivor_bans": [
     "歌剧演员",
@@ -1097,22 +1589,22 @@
    "survivor_team": "北京WBG",
    "hunter_team": "ACT",
    "survivors": [
+    "野人",
     "斗牛士",
     "邮差",
-    "火灾调查员",
-    "野人"
+    "火灾调查员"
    ],
    "hunter": "喧嚣",
    "hunter_player": "zz9",
    "hunter_bans": [
-    "作曲家",
     "古董商",
     "弓箭手",
+    "作曲家",
     "病患"
    ],
    "survivor_bans": [
-    "台球手",
-    "梦之女巫"
+    "梦之女巫",
+    "台球手"
    ],
    "score": "2:2",
    "escape": 2,
@@ -1124,26 +1616,26 @@
    "game": 1,
    "side": "upper",
    "tiebreak": false,
-   "survivor_team": "ASC",
-   "hunter_team": "成都Wolves",
+   "survivor_team": "TE",
+   "hunter_team": "FPX.ZQ",
    "survivors": [
-    "气象学家",
-    "调香师",
-    "古董商",
-    "守墓人"
+    "飞行家",
+    "幸运儿",
+    "大副",
+    "弓箭手"
    ],
    "hunter": "牙医",
-   "hunter_player": "CyanX",
+   "hunter_player": "Qx",
    "hunter_bans": [
     "幻灯师",
-    "拉拉队员",
     "逃脱大师",
-    "飞行家"
+    "野人",
+    "古董商"
    ],
    "survivor_bans": [],
-   "score": "1:3",
-   "escape": 1,
-   "kill": 3,
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
    "map": "不归林"
   },
   {
@@ -1151,21 +1643,21 @@
    "game": 1,
    "side": "lower",
    "tiebreak": false,
-   "survivor_team": "成都Wolves",
-   "hunter_team": "ASC",
+   "survivor_team": "FPX.ZQ",
+   "hunter_team": "TE",
    "survivors": [
     "守墓人",
-    "拉拉队员",
-    "古董商",
-    "飞行家"
-   ],
-   "hunter": "记录员",
-   "hunter_player": "Tear",
-   "hunter_bans": [
     "幸运儿",
+    "园丁",
+    "古董商"
+   ],
+   "hunter": "牙医",
+   "hunter_player": "ppei",
+   "hunter_bans": [
     "幻灯师",
-    "弓箭手",
-    "逃脱大师"
+    "野人",
+    "飞行家",
+    "弓箭手"
    ],
    "survivor_bans": [],
    "score": "2:2",
@@ -1178,50 +1670,21 @@
    "game": 2,
    "side": "upper",
    "tiebreak": false,
-   "survivor_team": "成都Wolves",
-   "hunter_team": "ASC",
+   "survivor_team": "FPX.ZQ",
+   "hunter_team": "TE",
    "survivors": [
-    "大副",
-    "斗牛士",
-    "咒术师",
-    "木偶师"
-   ],
-   "hunter": "歌剧演员",
-   "hunter_player": "Tear",
-   "hunter_bans": [
-    "幸运儿",
-    "幻灯师",
+    "气象学家",
     "弓箭手",
-    "气象学家"
-   ],
-   "survivor_bans": [
-    "牙医"
-   ],
-   "score": "3:1",
-   "escape": 3,
-   "kill": 1,
-   "map": "里奥的回忆"
-  },
-  {
-   "seq": 4,
-   "game": 2,
-   "side": "lower",
-   "tiebreak": false,
-   "survivor_team": "ASC",
-   "hunter_team": "成都Wolves",
-   "survivors": [
-    "病患",
-    "逃脱大师",
     "作曲家",
-    "咒术师"
+    "佣兵"
    ],
-   "hunter": "台球手",
-   "hunter_player": "ChoAi",
+   "hunter": "女王蜂",
+   "hunter_player": "ppei",
    "hunter_bans": [
     "先知",
-    "幻灯师",
-    "弓箭手",
-    "斗牛士"
+    "斗牛士",
+    "木偶师",
+    "大副"
    ],
    "survivor_bans": [
     "跛脚羊"
@@ -1229,7 +1692,208 @@
    "score": "2:2",
    "escape": 2,
    "kill": 2,
-   "map": "里奥的回忆"
+   "map": "湖景村"
+  },
+  {
+   "seq": 4,
+   "game": 2,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "TE",
+   "hunter_team": "FPX.ZQ",
+   "survivors": [
+    "气象学家",
+    "古董商",
+    "心理学家",
+    "守墓人"
+   ],
+   "hunter": "鹿头",
+   "hunter_player": "DongX",
+   "hunter_bans": [
+    "先知",
+    "幻灯师",
+    "斗牛士",
+    "佣兵"
+   ],
+   "survivor_bans": [
+    "女王蜂"
+   ],
+   "score": "0:5",
+   "escape": 0,
+   "kill": 4,
+   "map": "湖景村"
+  },
+  {
+   "seq": 5,
+   "game": 3,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "FPX.ZQ",
+   "hunter_team": "TE",
+   "survivors": [
+    "入殓师",
+    "飞行家",
+    "前锋",
+    "心理学家"
+   ],
+   "hunter": "渔女",
+   "hunter_player": "ppei",
+   "hunter_bans": [
+    "祭司",
+    "逃脱大师",
+    "空军",
+    "木偶师"
+   ],
+   "survivor_bans": [
+    "台球手",
+    "跛脚羊"
+   ],
+   "score": "0:5",
+   "escape": 0,
+   "kill": 4,
+   "map": "永眠镇"
+  },
+  {
+   "seq": 6,
+   "game": 3,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "TE",
+   "hunter_team": "FPX.ZQ",
+   "survivors": [
+    "咒术师",
+    "佣兵",
+    "斗牛士",
+    "医生"
+   ],
+   "hunter": "蜡像师",
+   "hunter_player": "DongX",
+   "hunter_bans": [
+    "祭司",
+    "幻灯师",
+    "法罗女士",
+    "作曲家"
+   ],
+   "survivor_bans": [
+    "跛脚羊",
+    "女王蜂"
+   ],
+   "score": "3:1",
+   "escape": 3,
+   "kill": 1,
+   "map": "永眠镇"
+  },
+  {
+   "seq": 1,
+   "game": 1,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "DOU5",
+   "hunter_team": "MRC",
+   "survivors": [
+    "飞行家",
+    "古董商",
+    "逃脱大师",
+    "幸运儿"
+   ],
+   "hunter": "破轮",
+   "hunter_player": "Mort1s",
+   "hunter_bans": [
+    "祭司",
+    "幻灯师",
+    "守墓人",
+    "气象学家"
+   ],
+   "survivor_bans": [],
+   "score": "3:1",
+   "escape": 3,
+   "kill": 1,
+   "map": "永眠镇"
+  },
+  {
+   "seq": 2,
+   "game": 1,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "MRC",
+   "hunter_team": "DOU5",
+   "survivors": [
+    "守墓人",
+    "气象学家",
+    "作曲家",
+    "小说家"
+   ],
+   "hunter": "牙医",
+   "hunter_player": "Qiu",
+   "hunter_bans": [
+    "祭司",
+    "幻灯师",
+    "古董商",
+    "弓箭手"
+   ],
+   "survivor_bans": [],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "永眠镇"
+  },
+  {
+   "seq": 3,
+   "game": 2,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "MRC",
+   "hunter_team": "DOU5",
+   "survivors": [
+    "弓箭手",
+    "幻灯师",
+    "默剧艺人",
+    "野人"
+   ],
+   "hunter": "蜡像师",
+   "hunter_player": "Qiu",
+   "hunter_bans": [
+    "佣兵",
+    "逃脱大师",
+    "飞行家",
+    "骑士"
+   ],
+   "survivor_bans": [
+    "女王蜂"
+   ],
+   "score": "1:3",
+   "escape": 1,
+   "kill": 3,
+   "map": "不归林"
+  },
+  {
+   "seq": 4,
+   "game": 2,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "DOU5",
+   "hunter_team": "MRC",
+   "survivors": [
+    "前锋",
+    "幻灯师",
+    "心理学家",
+    "作曲家"
+   ],
+   "hunter": "女王蜂",
+   "hunter_player": "Mort1s",
+   "hunter_bans": [
+    "咒术师",
+    "弓箭手",
+    "气象学家",
+    "木偶师"
+   ],
+   "survivor_bans": [
+    "牙医"
+   ],
+   "score": "3:1",
+   "escape": 3,
+   "kill": 1,
+   "map": "不归林"
   },
   {
    "seq": 1,
@@ -1239,18 +1903,18 @@
    "survivor_team": "ASC",
    "hunter_team": "成都GG",
    "survivors": [
-    "气象学家",
-    "幸运儿",
+    "守墓人",
     "弓箭手",
-    "守墓人"
+    "气象学家",
+    "幸运儿"
    ],
    "hunter": "牙医",
    "hunter_player": "YuM",
    "hunter_bans": [
     "幻灯师",
-    "调香师",
     "逃脱大师",
-    "飞行家"
+    "飞行家",
+    "调香师"
    ],
    "survivor_bans": [],
    "score": "2:2",
@@ -1267,17 +1931,17 @@
    "hunter_team": "ASC",
    "survivors": [
     "野人",
-    "飞行家",
     "古董商",
+    "飞行家",
     "默剧艺人"
    ],
    "hunter": "喧嚣",
    "hunter_player": "Tear",
    "hunter_bans": [
-    "幸运儿",
-    "幻灯师",
     "弓箭手",
-    "气象学家"
+    "幻灯师",
+    "气象学家",
+    "幸运儿"
    ],
    "survivor_bans": [],
    "score": "1:3",
@@ -1293,18 +1957,18 @@
    "survivor_team": "ASC",
    "hunter_team": "成都GG",
    "survivors": [
+    "古董商",
     "飞行家",
     "大副",
-    "心理学家",
-    "古董商"
+    "心理学家"
    ],
    "hunter": "鹿头",
    "hunter_player": "YuM",
    "hunter_bans": [
-    "先知",
     "幻灯师",
-    "斗牛士",
-    "逃脱大师"
+    "先知",
+    "逃脱大师",
+    "斗牛士"
    ],
    "survivor_bans": [
     "跛脚羊"
@@ -1322,18 +1986,18 @@
    "survivor_team": "成都GG",
    "hunter_team": "ASC",
    "survivors": [
-    "斗牛士",
-    "逃脱大师",
     "先知",
-    "幸运儿"
+    "幸运儿",
+    "斗牛士",
+    "逃脱大师"
    ],
    "hunter": "女王蜂",
    "hunter_player": "Tear",
    "hunter_bans": [
-    "佣兵",
-    "守墓人",
     "弓箭手",
-    "气象学家"
+    "气象学家",
+    "守墓人",
+    "佣兵"
    ],
    "survivor_bans": [
     "牙医"
@@ -1351,17 +2015,17 @@
    "survivor_team": "ASC",
    "hunter_team": "成都GG",
    "survivors": [
-    "木偶师",
     "逃脱大师",
     "作曲家",
-    "咒术师"
+    "咒术师",
+    "木偶师"
    ],
    "hunter": "歌剧演员",
    "hunter_player": "YuM",
    "hunter_bans": [
     "幻灯师",
-    "斗牛士",
     "法罗女士",
+    "斗牛士",
     "火灾调查员"
    ],
    "survivor_bans": [
@@ -1381,18 +2045,18 @@
    "survivor_team": "成都GG",
    "hunter_team": "ASC",
    "survivors": [
-    "大副",
     "冒险家",
+    "气象学家",
     "咒术师",
-    "气象学家"
+    "大副"
    ],
    "hunter": "台球手",
    "hunter_player": "Tear",
    "hunter_bans": [
     "前锋",
     "勘探员",
-    "守墓人",
-    "弓箭手"
+    "弓箭手",
+    "守墓人"
    ],
    "survivor_bans": [
     "牙医",
@@ -1411,22 +2075,22 @@
    "survivor_team": "ASC",
    "hunter_team": "成都GG",
    "survivors": [
-    "空军",
-    "佣兵",
     "法罗女士",
-    "斗牛士"
+    "斗牛士",
+    "佣兵",
+    "空军"
    ],
    "hunter": "小丑",
    "hunter_player": "YuM",
    "hunter_bans": [
-    "先知",
     "医生",
     "幻灯师",
-    "野人"
+    "野人",
+    "先知"
    ],
    "survivor_bans": [
-    "台球手",
-    "跛脚羊"
+    "跛脚羊",
+    "台球手"
    ],
    "score": "0:5",
    "escape": 0,
@@ -1441,22 +2105,22 @@
    "survivor_team": "成都GG",
    "hunter_team": "ASC",
    "survivors": [
-    "作曲家",
+    "弓箭手",
     "拉拉队员",
     "前锋",
-    "弓箭手"
+    "作曲家"
    ],
    "hunter": "跛脚羊",
    "hunter_player": "Tear",
    "hunter_bans": [
-    "入殓师",
     "勘探员",
+    "祭司",
     "守墓人",
-    "祭司"
+    "入殓师"
    ],
    "survivor_bans": [
-    "歌剧演员",
-    "牙医"
+    "牙医",
+    "歌剧演员"
    ],
    "score": "1:3",
    "escape": 1,
@@ -1468,21 +2132,21 @@
    "game": 1,
    "side": "upper",
    "tiebreak": false,
-   "survivor_team": "DOU5",
-   "hunter_team": "MRC",
+   "survivor_team": "ACT",
+   "hunter_team": "成都Wolves",
    "survivors": [
+    "野人",
+    "飞行家",
     "古董商",
-    "逃脱大师",
-    "幸运儿",
-    "飞行家"
+    "斗牛士"
    ],
-   "hunter": "破轮",
-   "hunter_player": "Mort1s",
+   "hunter": "女王蜂",
+   "hunter_player": "CyanX",
    "hunter_bans": [
-    "守墓人",
+    "逃脱大师",
     "幻灯师",
     "气象学家",
-    "祭司"
+    "幸运儿"
    ],
    "survivor_bans": [],
    "score": "3:1",
@@ -1495,21 +2159,21 @@
    "game": 1,
    "side": "lower",
    "tiebreak": false,
-   "survivor_team": "MRC",
-   "hunter_team": "DOU5",
+   "survivor_team": "成都Wolves",
+   "hunter_team": "ACT",
    "survivors": [
-    "作曲家",
-    "小说家",
+    "弓箭手",
+    "飞行家",
     "守墓人",
-    "气象学家"
+    "教授"
    ],
-   "hunter": "牙医",
-   "hunter_player": "Qiu",
+   "hunter": "时空之影",
+   "hunter_player": "zz9",
    "hunter_bans": [
     "古董商",
-    "幻灯师",
-    "弓箭手",
-    "祭司"
+    "木偶师",
+    "逃脱大师",
+    "幻灯师"
    ],
    "survivor_bans": [],
    "score": "2:2",
@@ -1522,342 +2186,118 @@
    "game": 2,
    "side": "upper",
    "tiebreak": false,
-   "survivor_team": "MRC",
-   "hunter_team": "DOU5",
+   "survivor_team": "成都Wolves",
+   "hunter_team": "ACT",
    "survivors": [
-    "幻灯师",
-    "弓箭手",
-    "野人",
-    "默剧艺人"
+    "木偶师",
+    "气象学家",
+    "大副",
+    "作曲家"
    ],
-   "hunter": "蜡像师",
-   "hunter_player": "Qiu",
-   "hunter_bans": [
-    "佣兵",
-    "逃脱大师",
-    "飞行家",
-    "骑士"
-   ],
-   "survivor_bans": [
-    "女王蜂"
-   ],
-   "score": "1:3",
-   "escape": 1,
-   "kill": 3,
-   "map": "不归林"
-  },
-  {
-   "seq": 4,
-   "game": 2,
-   "side": "lower",
-   "tiebreak": false,
-   "survivor_team": "DOU5",
-   "hunter_team": "MRC",
-   "survivors": [
-    "作曲家",
-    "前锋",
-    "幻灯师",
-    "心理学家"
-   ],
-   "hunter": "女王蜂",
-   "hunter_player": "Mort1s",
+   "hunter": "跛脚羊",
+   "hunter_player": "zz9",
    "hunter_bans": [
     "咒术师",
-    "弓箭手",
-    "木偶师",
-    "气象学家"
-   ],
-   "survivor_bans": [
-    "牙医"
-   ],
-   "score": "3:1",
-   "escape": 3,
-   "kill": 1,
-   "map": "不归林"
-  },
-  {
-   "seq": 1,
-   "game": 1,
-   "side": "upper",
-   "tiebreak": false,
-   "survivor_team": "TE",
-   "hunter_team": "FPX.ZQ",
-   "survivors": [
+    "古董商",
     "幸运儿",
-    "飞行家",
-    "大副",
-    "弓箭手"
-   ],
-   "hunter": "牙医",
-   "hunter_player": "Qx",
-   "hunter_bans": [
-    "古董商",
-    "幻灯师",
-    "逃脱大师",
-    "野人"
-   ],
-   "survivor_bans": [],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "不归林"
-  },
-  {
-   "seq": 2,
-   "game": 1,
-   "side": "lower",
-   "tiebreak": false,
-   "survivor_team": "FPX.ZQ",
-   "hunter_team": "TE",
-   "survivors": [
-    "古董商",
-    "园丁",
-    "幸运儿",
-    "守墓人"
-   ],
-   "hunter": "牙医",
-   "hunter_player": "ppei",
-   "hunter_bans": [
-    "幻灯师",
-    "弓箭手",
-    "野人",
-    "飞行家"
-   ],
-   "survivor_bans": [],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "不归林"
-  },
-  {
-   "seq": 3,
-   "game": 2,
-   "side": "upper",
-   "tiebreak": false,
-   "survivor_team": "FPX.ZQ",
-   "hunter_team": "TE",
-   "survivors": [
-    "弓箭手",
-    "气象学家",
-    "作曲家",
-    "佣兵"
-   ],
-   "hunter": "女王蜂",
-   "hunter_player": "ppei",
-   "hunter_bans": [
-    "先知",
-    "大副",
-    "斗牛士",
-    "木偶师"
-   ],
-   "survivor_bans": [
-    "跛脚羊"
-   ],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "湖景村"
-  },
-  {
-   "seq": 4,
-   "game": 2,
-   "side": "lower",
-   "tiebreak": false,
-   "survivor_team": "TE",
-   "hunter_team": "FPX.ZQ",
-   "survivors": [
-    "心理学家",
-    "守墓人",
-    "古董商",
-    "气象学家"
-   ],
-   "hunter": "鹿头",
-   "hunter_player": "DongX",
-   "hunter_bans": [
-    "佣兵",
-    "先知",
-    "幻灯师",
     "斗牛士"
    ],
    "survivor_bans": [
-    "女王蜂"
+    "歌剧演员"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "红教堂"
+  },
+  {
+   "seq": 4,
+   "game": 2,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "ACT",
+   "hunter_team": "成都Wolves",
+   "survivors": [
+    "拉拉队员",
+    "作曲家",
+    "弓箭手",
+    "大副"
+   ],
+   "hunter": "跛脚羊",
+   "hunter_player": "ChoAi",
+   "hunter_bans": [
+    "先知",
+    "气象学家",
+    "逃脱大师",
+    "守墓人"
+   ],
+   "survivor_bans": [
+    "歌剧演员"
    ],
    "score": "0:5",
    "escape": 0,
    "kill": 4,
-   "map": "湖景村"
+   "map": "红教堂"
   },
   {
    "seq": 5,
    "game": 3,
    "side": "upper",
    "tiebreak": false,
-   "survivor_team": "FPX.ZQ",
-   "hunter_team": "TE",
+   "survivor_team": "ACT",
+   "hunter_team": "成都Wolves",
    "survivors": [
+    "幸运儿",
     "前锋",
-    "飞行家",
-    "入殓师",
-    "心理学家"
-   ],
-   "hunter": "渔女",
-   "hunter_player": "ppei",
-   "hunter_bans": [
     "木偶师",
-    "祭司",
-    "空军",
-    "逃脱大师"
+    "调酒师"
+   ],
+   "hunter": "喧嚣",
+   "hunter_player": "ChoAi",
+   "hunter_bans": [
+    "先知",
+    "气象学家",
+    "法罗女士",
+    "幻灯师"
    ],
    "survivor_bans": [
-    "台球手",
-    "跛脚羊"
+    "歌剧演员",
+    "牙医"
    ],
-   "score": "0:5",
-   "escape": 0,
-   "kill": 4,
-   "map": "永眠镇"
+   "score": "3:1",
+   "escape": 3,
+   "kill": 1,
+   "map": "里奥的回忆"
   },
   {
    "seq": 6,
    "game": 3,
    "side": "lower",
    "tiebreak": false,
-   "survivor_team": "TE",
-   "hunter_team": "FPX.ZQ",
+   "survivor_team": "成都Wolves",
+   "hunter_team": "ACT",
    "survivors": [
-    "医生",
-    "斗牛士",
-    "佣兵",
-    "咒术师"
-   ],
-   "hunter": "蜡像师",
-   "hunter_player": "DongX",
-   "hunter_bans": [
-    "作曲家",
-    "幻灯师",
-    "法罗女士",
-    "祭司"
-   ],
-   "survivor_bans": [
-    "女王蜂",
-    "跛脚羊"
-   ],
-   "score": "3:1",
-   "escape": 3,
-   "kill": 1,
-   "map": "永眠镇"
-  },
-  {
-   "seq": 1,
-   "game": 1,
-   "side": "upper",
-   "tiebreak": false,
-   "survivor_team": "TE",
-   "hunter_team": "ASC",
-   "survivors": [
+    "逃脱大师",
     "幸运儿",
-    "飞行家",
-    "守墓人",
-    "古董商"
+    "斗牛士",
+    "法罗女士"
    ],
-   "hunter": "牙医",
-   "hunter_player": "Tear",
+   "hunter": "女王蜂",
+   "hunter_player": "zz9",
    "hunter_bans": [
+    "古董商",
+    "咒术师",
     "幻灯师",
-    "弓箭手",
-    "气象学家",
-    "野人"
-   ],
-   "survivor_bans": [],
-   "score": "1:3",
-   "escape": 1,
-   "kill": 3,
-   "map": "不归林"
-  },
-  {
-   "seq": 2,
-   "game": 1,
-   "side": "lower",
-   "tiebreak": false,
-   "survivor_team": "ASC",
-   "hunter_team": "TE",
-   "survivors": [
-    "调香师",
-    "守墓人",
-    "气象学家",
-    "古董商"
-   ],
-   "hunter": "牙医",
-   "hunter_player": "ppei",
-   "hunter_bans": [
-    "幻灯师",
-    "弓箭手",
-    "逃脱大师",
-    "飞行家"
-   ],
-   "survivor_bans": [],
-   "score": "0:5",
-   "escape": 0,
-   "kill": 4,
-   "map": "不归林"
-  },
-  {
-   "seq": 3,
-   "game": 2,
-   "side": "upper",
-   "tiebreak": false,
-   "survivor_team": "ASC",
-   "hunter_team": "TE",
-   "survivors": [
-    "病患",
-    "逃脱大师",
-    "先知",
-    "咒术师"
-   ],
-   "hunter": "歌剧演员",
-   "hunter_player": "ppei",
-   "hunter_bans": [
-    "佣兵",
-    "大副",
-    "弓箭手",
-    "飞行家"
+    "囚徒"
    ],
    "survivor_bans": [
-    "女王蜂"
-   ],
-   "score": "1:3",
-   "escape": 1,
-   "kill": 3,
-   "map": "湖景村"
-  },
-  {
-   "seq": 4,
-   "game": 2,
-   "side": "lower",
-   "tiebreak": false,
-   "survivor_team": "TE",
-   "hunter_team": "ASC",
-   "survivors": [
-    "法罗女士",
-    "气象学家",
-    "大副",
-    "咒术师"
-   ],
-   "hunter": "喧嚣",
-   "hunter_player": "Tear",
-   "hunter_bans": [
-    "先知",
-    "幻灯师",
-    "弓箭手",
-    "斗牛士"
-   ],
-   "survivor_bans": [
-    "女王蜂"
+    "歌剧演员",
+    "台球手"
    ],
    "score": "2:2",
    "escape": 2,
    "kill": 2,
-   "map": "湖景村"
+   "map": "里奥的回忆"
   },
   {
    "seq": 1,
@@ -1868,17 +2308,17 @@
    "hunter_team": "DOU5",
    "survivors": [
     "野人",
-    "默剧艺人",
     "弓箭手",
-    "气象学家"
+    "气象学家",
+    "默剧艺人"
    ],
    "hunter": "跛脚羊",
    "hunter_player": "Qiu",
    "hunter_bans": [
-    "冒险家",
     "幻灯师",
-    "斗牛士",
-    "飞行家"
+    "冒险家",
+    "飞行家",
+    "斗牛士"
    ],
    "survivor_bans": [],
    "score": "2:2",
@@ -1894,18 +2334,18 @@
    "survivor_team": "DOU5",
    "hunter_team": "成都GG",
    "survivors": [
-    "弓箭手",
-    "逃脱大师",
+    "飞行家",
     "默剧艺人",
-    "飞行家"
+    "弓箭手",
+    "逃脱大师"
    ],
    "hunter": "跛脚羊",
    "hunter_player": "YuM",
    "hunter_bans": [
-    "古董商",
-    "守墓人",
     "幻灯师",
-    "气象学家"
+    "气象学家",
+    "古董商",
+    "守墓人"
    ],
    "survivor_bans": [],
    "score": "2:2",
@@ -1921,18 +2361,18 @@
    "survivor_team": "DOU5",
    "hunter_team": "成都GG",
    "survivors": [
-    "斗牛士",
-    "佣兵",
     "病患",
-    "心理学家"
+    "心理学家",
+    "斗牛士",
+    "佣兵"
    ],
    "hunter": "歌剧演员",
    "hunter_player": "YuM",
    "hunter_bans": [
-    "古董商",
-    "守墓人",
     "幻灯师",
-    "气象学家"
+    "气象学家",
+    "古董商",
+    "守墓人"
    ],
    "survivor_bans": [
     "牙医"
@@ -1950,18 +2390,18 @@
    "survivor_team": "成都GG",
    "hunter_team": "DOU5",
    "survivors": [
-    "火灾调查员",
-    "病患",
     "前锋",
-    "医生"
+    "病患",
+    "医生",
+    "火灾调查员"
    ],
    "hunter": "歌剧演员",
    "hunter_player": "Qiu",
    "hunter_bans": [
     "古董商",
-    "幸运儿",
     "幻灯师",
-    "心理学家"
+    "心理学家",
+    "幸运儿"
    ],
    "survivor_bans": [
     "牙医"
@@ -1979,22 +2419,22 @@
    "survivor_team": "DOU5",
    "hunter_team": "成都GG",
    "survivors": [
-    "咒术师",
-    "前锋",
     "气象学家",
-    "幸运儿"
+    "幸运儿",
+    "前锋",
+    "咒术师"
    ],
    "hunter": "台球手",
    "hunter_player": "YuM",
    "hunter_bans": [
     "先知",
-    "医生",
+    "幻灯师",
     "守墓人",
-    "幻灯师"
+    "医生"
    ],
    "survivor_bans": [
-    "女王蜂",
-    "牙医"
+    "牙医",
+    "女王蜂"
    ],
    "score": "1:3",
    "escape": 1,
@@ -2011,16 +2451,16 @@
    "survivors": [
     "守墓人",
     "幻灯师",
-    "勘探员",
-    "祭司"
+    "祭司",
+    "勘探员"
    ],
    "hunter": "26号守卫",
    "hunter_player": "Qiu",
    "hunter_bans": [
-    "心理学家",
-    "斗牛士",
     "逃脱大师",
-    "飞行家"
+    "飞行家",
+    "心理学家",
+    "斗牛士"
    ],
    "survivor_bans": [
     "牙医",
@@ -2036,172 +2476,112 @@
    "game": 1,
    "side": "upper",
    "tiebreak": false,
-   "survivor_team": "ACT",
-   "hunter_team": "成都Wolves",
+   "survivor_team": "TE",
+   "hunter_team": "ASC",
    "survivors": [
-    "野人",
-    "古董商",
-    "飞行家",
-    "斗牛士"
-   ],
-   "hunter": "女王蜂",
-   "hunter_player": "CyanX",
-   "hunter_bans": [
+    "守墓人",
     "幸运儿",
+    "古董商",
+    "飞行家"
+   ],
+   "hunter": "牙医",
+   "hunter_player": "Tear",
+   "hunter_bans": [
     "幻灯师",
-    "气象学家",
-    "逃脱大师"
+    "野人",
+    "弓箭手",
+    "气象学家"
    ],
    "survivor_bans": [],
-   "score": "3:1",
-   "escape": 3,
-   "kill": 1,
-   "map": "永眠镇"
+   "score": "1:3",
+   "escape": 1,
+   "kill": 3,
+   "map": "不归林"
   },
   {
    "seq": 2,
    "game": 1,
    "side": "lower",
    "tiebreak": false,
-   "survivor_team": "成都Wolves",
-   "hunter_team": "ACT",
+   "survivor_team": "ASC",
+   "hunter_team": "TE",
    "survivors": [
     "守墓人",
-    "教授",
+    "调香师",
+    "古董商",
+    "气象学家"
+   ],
+   "hunter": "牙医",
+   "hunter_player": "ppei",
+   "hunter_bans": [
+    "逃脱大师",
+    "幻灯师",
     "弓箭手",
     "飞行家"
    ],
-   "hunter": "时空之影",
-   "hunter_player": "zz9",
-   "hunter_bans": [
-    "古董商",
-    "幻灯师",
-    "木偶师",
-    "逃脱大师"
-   ],
    "survivor_bans": [],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "永眠镇"
+   "score": "0:5",
+   "escape": 0,
+   "kill": 4,
+   "map": "不归林"
   },
   {
    "seq": 3,
    "game": 2,
    "side": "upper",
    "tiebreak": false,
-   "survivor_team": "成都Wolves",
-   "hunter_team": "ACT",
+   "survivor_team": "ASC",
+   "hunter_team": "TE",
    "survivors": [
-    "大副",
-    "气象学家",
-    "作曲家",
-    "木偶师"
-   ],
-   "hunter": "跛脚羊",
-   "hunter_player": "zz9",
-   "hunter_bans": [
-    "古董商",
+    "先知",
     "咒术师",
-    "幸运儿",
-    "斗牛士"
+    "病患",
+    "逃脱大师"
+   ],
+   "hunter": "歌剧演员",
+   "hunter_player": "ppei",
+   "hunter_bans": [
+    "佣兵",
+    "弓箭手",
+    "飞行家",
+    "大副"
    ],
    "survivor_bans": [
-    "歌剧演员"
+    "女王蜂"
    ],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "红教堂"
+   "score": "1:3",
+   "escape": 1,
+   "kill": 3,
+   "map": "湖景村"
   },
   {
    "seq": 4,
    "game": 2,
    "side": "lower",
    "tiebreak": false,
-   "survivor_team": "ACT",
-   "hunter_team": "成都Wolves",
+   "survivor_team": "TE",
+   "hunter_team": "ASC",
    "survivors": [
     "大副",
-    "弓箭手",
-    "拉拉队员",
-    "作曲家"
-   ],
-   "hunter": "跛脚羊",
-   "hunter_player": "ChoAi",
-   "hunter_bans": [
-    "先知",
-    "守墓人",
-    "气象学家",
-    "逃脱大师"
-   ],
-   "survivor_bans": [
-    "歌剧演员"
-   ],
-   "score": "0:5",
-   "escape": 0,
-   "kill": 4,
-   "map": "红教堂"
-  },
-  {
-   "seq": 5,
-   "game": 3,
-   "side": "upper",
-   "tiebreak": false,
-   "survivor_team": "ACT",
-   "hunter_team": "成都Wolves",
-   "survivors": [
-    "调酒师",
-    "前锋",
-    "幸运儿",
-    "木偶师"
+    "咒术师",
+    "法罗女士",
+    "气象学家"
    ],
    "hunter": "喧嚣",
-   "hunter_player": "ChoAi",
+   "hunter_player": "Tear",
    "hunter_bans": [
     "先知",
+    "弓箭手",
     "幻灯师",
-    "气象学家",
-    "法罗女士"
+    "斗牛士"
    ],
    "survivor_bans": [
-    "歌剧演员",
-    "牙医"
-   ],
-   "score": "3:1",
-   "escape": 3,
-   "kill": 1,
-   "map": "里奥的回忆"
-  },
-  {
-   "seq": 6,
-   "game": 3,
-   "side": "lower",
-   "tiebreak": false,
-   "survivor_team": "成都Wolves",
-   "hunter_team": "ACT",
-   "survivors": [
-    "逃脱大师",
-    "法罗女士",
-    "斗牛士",
-    "幸运儿"
-   ],
-   "hunter": "女王蜂",
-   "hunter_player": "zz9",
-   "hunter_bans": [
-    "古董商",
-    "咒术师",
-    "囚徒",
-    "幻灯师"
-   ],
-   "survivor_bans": [
-    "台球手",
-    "歌剧演员"
+    "女王蜂"
    ],
    "score": "2:2",
    "escape": 2,
    "kill": 2,
-   "map": "里奥的回忆"
+   "map": "湖景村"
   },
   {
    "seq": 1,
@@ -2211,18 +2591,18 @@
    "survivor_team": "MRC",
    "hunter_team": "FPX.ZQ",
    "survivors": [
-    "默剧艺人",
-    "心理学家",
+    "守墓人",
     "弓箭手",
-    "守墓人"
+    "默剧艺人",
+    "心理学家"
    ],
    "hunter": "牙医",
    "hunter_player": "Qx",
    "hunter_bans": [
     "幸运儿",
-    "气象学家",
     "逃脱大师",
-    "飞行家"
+    "飞行家",
+    "气象学家"
    ],
    "survivor_bans": [],
    "score": "2:2",
@@ -2238,18 +2618,18 @@
    "survivor_team": "FPX.ZQ",
    "hunter_team": "MRC",
    "survivors": [
-    "古董商",
-    "飞行家",
     "幸运儿",
-    "守墓人"
+    "守墓人",
+    "古董商",
+    "飞行家"
    ],
    "hunter": "牙医",
    "hunter_player": "Mort1s",
    "hunter_bans": [
     "幻灯师",
+    "逃脱大师",
     "弓箭手",
-    "气象学家",
-    "逃脱大师"
+    "气象学家"
    ],
    "survivor_bans": [],
    "score": "2:2",
@@ -2265,18 +2645,18 @@
    "survivor_team": "MRC",
    "hunter_team": "FPX.ZQ",
    "survivors": [
+    "逃脱大师",
     "飞行家",
-    "气象学家",
     "古董商",
-    "逃脱大师"
+    "气象学家"
    ],
    "hunter": "台球手",
    "hunter_player": "DongX",
    "hunter_bans": [
-    "医生",
-    "幸运儿",
+    "斗牛士",
     "幻灯师",
-    "斗牛士"
+    "幸运儿",
+    "医生"
    ],
    "survivor_bans": [
     "女王蜂"
@@ -2294,18 +2674,18 @@
    "survivor_team": "FPX.ZQ",
    "hunter_team": "MRC",
    "survivors": [
-    "咒术师",
-    "魔术师",
     "医生",
-    "大副"
+    "咒术师",
+    "大副",
+    "魔术师"
    ],
    "hunter": "喧嚣",
    "hunter_player": "Mort1s",
    "hunter_bans": [
-    "作曲家",
+    "逃脱大师",
     "弓箭手",
     "气象学家",
-    "逃脱大师"
+    "作曲家"
    ],
    "survivor_bans": [
     "女王蜂"
@@ -2324,17 +2704,17 @@
    "hunter_team": "MRC",
    "survivors": [
     "前锋",
-    "幻灯师",
+    "病患",
     "拉拉队员",
-    "病患"
+    "幻灯师"
    ],
    "hunter": "破轮",
    "hunter_player": "Mort1s",
    "hunter_bans": [
-    "作曲家",
     "弓箭手",
+    "祭司",
     "气象学家",
-    "祭司"
+    "作曲家"
    ],
    "survivor_bans": [
     "女王蜂",
@@ -2353,22 +2733,22 @@
    "survivor_team": "MRC",
    "hunter_team": "FPX.ZQ",
    "survivors": [
-    "幸运儿",
     "祭司",
-    "小说家",
-    "佣兵"
+    "幸运儿",
+    "佣兵",
+    "小说家"
    ],
    "hunter": "鹿头",
    "hunter_player": "DongX",
    "hunter_bans": [
-    "先知",
     "医生",
     "幻灯师",
-    "斗牛士"
+    "斗牛士",
+    "先知"
    ],
    "survivor_bans": [
-    "女王蜂",
-    "跛脚羊"
+    "跛脚羊",
+    "女王蜂"
    ],
    "score": "1:3",
    "escape": 1,
@@ -2391,10 +2771,10 @@
    "hunter": "时空之影",
    "hunter_player": "DongX",
    "hunter_bans": [
-    "幻灯师",
     "斗牛士",
-    "木偶师",
-    "空军"
+    "幻灯师",
+    "空军",
+    "木偶师"
    ],
    "survivor_bans": [
     "女王蜂",
@@ -2415,20 +2795,20 @@
    "survivors": [
     "作曲家",
     "斗牛士",
-    "空军",
-    "野人"
+    "野人",
+    "空军"
    ],
    "hunter": "女王蜂",
    "hunter_player": "Mort1s",
    "hunter_bans": [
-    "囚徒",
-    "机械师",
     "法罗女士",
-    "逃脱大师"
+    "囚徒",
+    "逃脱大师",
+    "机械师"
    ],
    "survivor_bans": [
-    "歌剧演员",
-    "跛脚羊"
+    "跛脚羊",
+    "歌剧演员"
    ],
    "score": "2:2",
    "escape": 2,
@@ -2443,18 +2823,18 @@
    "survivor_team": "TE",
    "hunter_team": "ACT",
    "survivors": [
-    "机械师",
     "飞行家",
     "守墓人",
-    "弓箭手"
+    "弓箭手",
+    "机械师"
    ],
    "hunter": "牙医",
    "hunter_player": "moonlight",
    "hunter_bans": [
-    "作曲家",
-    "古董商",
+    "野人",
     "幻灯师",
-    "野人"
+    "古董商",
+    "作曲家"
    ],
    "survivor_bans": [],
    "score": "2:2",
@@ -2470,18 +2850,18 @@
    "survivor_team": "ACT",
    "hunter_team": "TE",
    "survivors": [
-    "守墓人",
-    "古董商",
     "飞行家",
-    "幸运儿"
+    "古董商",
+    "幸运儿",
+    "守墓人"
    ],
    "hunter": "牙医",
    "hunter_player": "ppei",
    "hunter_bans": [
-    "大副",
+    "野人",
     "幻灯师",
     "逃脱大师",
-    "野人"
+    "大副"
    ],
    "survivor_bans": [],
    "score": "2:2",
@@ -2497,18 +2877,18 @@
    "survivor_team": "TE",
    "hunter_team": "ACT",
    "survivors": [
-    "法罗女士",
     "气象学家",
+    "法罗女士",
     "佣兵",
     "心理学家"
    ],
    "hunter": "歌剧演员",
    "hunter_player": "moonlight",
    "hunter_bans": [
-    "古董商",
     "咒术师",
-    "斗牛士",
-    "空军"
+    "古董商",
+    "空军",
+    "斗牛士"
    ],
    "survivor_bans": [
     "跛脚羊"
@@ -2526,10 +2906,10 @@
    "survivor_team": "ACT",
    "hunter_team": "TE",
    "survivors": [
+    "心理学家",
     "逃脱大师",
     "弓箭手",
-    "病患",
-    "心理学家"
+    "病患"
    ],
    "hunter": "歌剧演员",
    "hunter_player": "ppei",
@@ -2555,22 +2935,22 @@
    "survivor_team": "ACT",
    "hunter_team": "TE",
    "survivors": [
-    "野人",
-    "作曲家",
     "斗牛士",
-    "幻灯师"
+    "作曲家",
+    "幻灯师",
+    "野人"
    ],
    "hunter": "喧嚣",
    "hunter_player": "ppei",
    "hunter_bans": [
-    "佣兵",
     "前锋",
-    "大副",
-    "拉拉队员"
+    "拉拉队员",
+    "佣兵",
+    "大副"
    ],
    "survivor_bans": [
-    "女王蜂",
-    "跛脚羊"
+    "跛脚羊",
+    "女王蜂"
    ],
    "score": "1:3",
    "escape": 1,
@@ -2585,22 +2965,22 @@
    "survivor_team": "TE",
    "hunter_team": "ACT",
    "survivors": [
-    "默剧艺人",
     "斗牛士",
     "大副",
-    "古董商"
+    "古董商",
+    "默剧艺人"
    ],
    "hunter": "喧嚣",
    "hunter_player": "moonlight",
    "hunter_bans": [
+    "逃脱大师",
     "作曲家",
     "幸运儿",
-    "木偶师",
-    "逃脱大师"
+    "木偶师"
    ],
    "survivor_bans": [
-    "女王蜂",
-    "跛脚羊"
+    "跛脚羊",
+    "女王蜂"
    ],
    "score": "2:2",
    "escape": 2,
@@ -2615,18 +2995,18 @@
    "survivor_team": "北京WBG",
    "hunter_team": "DOU5",
    "survivors": [
-    "古董商",
+    "野人",
     "飞行家",
-    "作曲家",
-    "野人"
+    "古董商",
+    "作曲家"
    ],
    "hunter": "女王蜂",
    "hunter_player": "Qiu",
    "hunter_bans": [
+    "逃脱大师",
     "幻灯师",
     "弓箭手",
-    "气象学家",
-    "逃脱大师"
+    "气象学家"
    ],
    "survivor_bans": [],
    "score": "2:2",
@@ -2642,18 +3022,18 @@
    "survivor_team": "DOU5",
    "hunter_team": "北京WBG",
    "survivors": [
-    "古董商",
     "逃脱大师",
-    "幸运儿",
-    "飞行家"
+    "飞行家",
+    "古董商",
+    "幸运儿"
    ],
    "hunter": "跛脚羊",
    "hunter_player": "NonSept",
    "hunter_bans": [
-    "作曲家",
     "幻灯师",
+    "野人",
     "弓箭手",
-    "野人"
+    "作曲家"
    ],
    "survivor_bans": [],
    "score": "2:2",
@@ -2669,18 +3049,18 @@
    "survivor_team": "DOU5",
    "hunter_team": "北京WBG",
    "survivors": [
-    "心理学家",
-    "守墓人",
     "病患",
-    "幻灯师"
+    "心理学家",
+    "幻灯师",
+    "守墓人"
    ],
    "hunter": "歌剧演员",
    "hunter_player": "NonSept",
    "hunter_bans": [
-    "佣兵",
     "弓箭手",
+    "气象学家",
     "斗牛士",
-    "气象学家"
+    "佣兵"
    ],
    "survivor_bans": [
     "牙医"
@@ -2698,18 +3078,18 @@
    "survivor_team": "北京WBG",
    "hunter_team": "DOU5",
    "survivors": [
-    "斗牛士",
     "病患",
-    "法罗女士",
-    "守墓人"
+    "守墓人",
+    "斗牛士",
+    "法罗女士"
    ],
    "hunter": "牙医",
    "hunter_player": "Qiu",
    "hunter_bans": [
-    "幻灯师",
+    "气象学家",
     "弓箭手",
-    "木偶师",
-    "气象学家"
+    "幻灯师",
+    "木偶师"
    ],
    "survivor_bans": [
     "跛脚羊"
@@ -2728,21 +3108,21 @@
    "hunter_team": "DOU5",
    "survivors": [
     "弓箭手",
-    "入殓师",
     "幻灯师",
-    "佣兵"
+    "佣兵",
+    "入殓师"
    ],
    "hunter": "喧嚣",
    "hunter_player": "Qiu",
    "hunter_bans": [
+    "逃脱大师",
     "先知",
-    "幸运儿",
     "气象学家",
-    "逃脱大师"
+    "幸运儿"
    ],
    "survivor_bans": [
-    "歌剧演员",
-    "跛脚羊"
+    "跛脚羊",
+    "歌剧演员"
    ],
    "score": "3:1",
    "escape": 3,
@@ -2757,22 +3137,22 @@
    "survivor_team": "DOU5",
    "hunter_team": "北京WBG",
    "survivors": [
-    "咒术师",
-    "前锋",
     "祭司",
-    "小说家"
+    "小说家",
+    "咒术师",
+    "前锋"
    ],
    "hunter": "台球手",
    "hunter_player": "NonSept",
    "hunter_bans": [
-    "佣兵",
-    "勘探员",
     "医生",
-    "弓箭手"
+    "弓箭手",
+    "勘探员",
+    "佣兵"
    ],
    "survivor_bans": [
-    "使徒",
-    "牙医"
+    "牙医",
+    "使徒"
    ],
    "score": "3:1",
    "escape": 3,
@@ -2795,8 +3175,8 @@
    "hunter": "女王蜂",
    "hunter_player": "mhxm",
    "hunter_bans": [
-    "守墓人",
     "幻灯师",
+    "守墓人",
     "弓箭手",
     "飞行家"
    ],
@@ -2814,18 +3194,18 @@
    "survivor_team": "GR",
    "hunter_team": "ASC",
    "survivors": [
-    "弓箭手",
     "幻灯师",
-    "木偶师",
-    "逃脱大师"
+    "弓箭手",
+    "逃脱大师",
+    "木偶师"
    ],
    "hunter": "女王蜂",
    "hunter_player": "Tear",
    "hunter_bans": [
-    "守墓人",
-    "幸运儿",
+    "飞行家",
     "气象学家",
-    "飞行家"
+    "守墓人",
+    "幸运儿"
    ],
    "survivor_bans": [],
    "score": "1:3",
@@ -2841,18 +3221,18 @@
    "survivor_team": "ASC",
    "hunter_team": "GR",
    "survivors": [
-    "飞行家",
     "守墓人",
+    "飞行家",
     "作曲家",
     "斗牛士"
    ],
    "hunter": "跛脚羊",
    "hunter_player": "mhxm",
    "hunter_bans": [
-    "先知",
-    "咒术师",
     "弓箭手",
-    "木偶师"
+    "咒术师",
+    "木偶师",
+    "先知"
    ],
    "survivor_bans": [
     "牙医"
@@ -2870,18 +3250,18 @@
    "survivor_team": "GR",
    "hunter_team": "ASC",
    "survivors": [
+    "幸运儿",
     "古董商",
     "气象学家",
-    "幸运儿",
     "佣兵"
    ],
    "hunter": "台球手",
    "hunter_player": "Tear",
    "hunter_bans": [
     "先知",
-    "前锋",
     "守墓人",
-    "飞行家"
+    "飞行家",
+    "前锋"
    ],
    "survivor_bans": [
     "牙医"
@@ -2899,22 +3279,22 @@
    "survivor_team": "ASC",
    "hunter_team": "GR",
    "survivors": [
-    "心理学家",
     "前锋",
+    "心理学家",
     "教授",
     "拉拉队员"
    ],
    "hunter": "鹿头",
    "hunter_player": "mhxm",
    "hunter_bans": [
+    "逃脱大师",
     "幻灯师",
     "法罗女士",
-    "火灾调查员",
-    "逃脱大师"
+    "火灾调查员"
    ],
    "survivor_bans": [
-    "台球手",
-    "牙医"
+    "牙医",
+    "台球手"
    ],
    "score": "2:2",
    "escape": 2,
@@ -2929,18 +3309,18 @@
    "survivor_team": "GR",
    "hunter_team": "ASC",
    "survivors": [
-    "咒术师",
     "默剧艺人",
     "入殓师",
+    "咒术师",
     "前锋"
    ],
    "hunter": "喧嚣",
    "hunter_player": "Tear",
    "hunter_bans": [
-    "勘探员",
-    "哭泣小丑",
     "拉拉队员",
-    "祭司"
+    "祭司",
+    "勘探员",
+    "哭泣小丑"
    ],
    "survivor_bans": [
     "牙医",
@@ -2956,193 +3336,21 @@
    "game": 1,
    "side": "upper",
    "tiebreak": false,
-   "survivor_team": "FPX.ZQ",
-   "hunter_team": "成都GG",
-   "survivors": [
-    "古董商",
-    "飞行家",
-    "祭司",
-    "守墓人"
-   ],
-   "hunter": "牙医",
-   "hunter_player": "YuM",
-   "hunter_bans": [
-    "幸运儿",
-    "幻灯师",
-    "弓箭手",
-    "野人"
-   ],
-   "survivor_bans": [],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "永眠镇"
-  },
-  {
-   "seq": 2,
-   "game": 1,
-   "side": "lower",
-   "tiebreak": false,
-   "survivor_team": "成都GG",
-   "hunter_team": "FPX.ZQ",
-   "survivors": [
-    "逃脱大师",
-    "飞行家",
-    "弓箭手",
-    "幻灯师"
-   ],
-   "hunter": "牙医",
-   "hunter_player": "Qx",
-   "hunter_bans": [
-    "古董商",
-    "幸运儿",
-    "祭司",
-    "野人"
-   ],
-   "survivor_bans": [],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "永眠镇"
-  },
-  {
-   "seq": 3,
-   "game": 2,
-   "side": "upper",
-   "tiebreak": false,
-   "survivor_team": "成都GG",
-   "hunter_team": "FPX.ZQ",
-   "survivors": [
-    "野人",
-    "心理学家",
-    "斗牛士",
-    "气象学家"
-   ],
-   "hunter": "女王蜂",
-   "hunter_player": "DongX",
-   "hunter_bans": [
-    "古董商",
-    "幸运儿",
-    "祭司",
-    "空军"
-   ],
-   "survivor_bans": [
-    "鹿头"
-   ],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "唐人街"
-  },
-  {
-   "seq": 4,
-   "game": 2,
-   "side": "lower",
-   "tiebreak": false,
-   "survivor_team": "FPX.ZQ",
-   "hunter_team": "成都GG",
-   "survivors": [
-    "弓箭手",
-    "幸运儿",
-    "医生",
-    "大副"
-   ],
-   "hunter": "歌剧演员",
-   "hunter_player": "YuM",
-   "hunter_bans": [
-    "先知",
-    "前锋",
-    "斗牛士",
-    "气象学家"
-   ],
-   "survivor_bans": [
-    "女王蜂"
-   ],
-   "score": "1:3",
-   "escape": 1,
-   "kill": 3,
-   "map": "唐人街"
-  },
-  {
-   "seq": 5,
-   "game": 3,
-   "side": "upper",
-   "tiebreak": false,
-   "survivor_team": "FPX.ZQ",
-   "hunter_team": "成都GG",
-   "survivors": [
-    "咒术师",
-    "木偶师",
-    "教授",
-    "佣兵"
-   ],
-   "hunter": "杂货商",
-   "hunter_player": "YuM",
-   "hunter_bans": [
-    "先知",
-    "幻灯师",
-    "气象学家",
-    "逃脱大师"
-   ],
-   "survivor_bans": [
-    "台球手",
-    "女王蜂"
-   ],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "湖景村"
-  },
-  {
-   "seq": 6,
-   "game": 3,
-   "side": "lower",
-   "tiebreak": false,
-   "survivor_team": "成都GG",
-   "hunter_team": "FPX.ZQ",
-   "survivors": [
-    "守墓人",
-    "拉拉队员",
-    "勘探员",
-    "调酒师"
-   ],
-   "hunter": "时空之影",
-   "hunter_player": "DongX",
-   "hunter_bans": [
-    "作曲家",
-    "佣兵",
-    "古董商",
-    "幸运儿"
-   ],
-   "survivor_bans": [
-    "跛脚羊",
-    "鹿头"
-   ],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "湖景村"
-  },
-  {
-   "seq": 1,
-   "game": 1,
-   "side": "upper",
-   "tiebreak": false,
    "survivor_team": "成都Wolves",
    "hunter_team": "MRC",
    "survivors": [
     "守墓人",
-    "作曲家",
+    "飞行家",
     "古董商",
-    "飞行家"
+    "作曲家"
    ],
    "hunter": "牙医",
    "hunter_player": "Mort1s",
    "hunter_bans": [
+    "逃脱大师",
     "幻灯师",
     "弓箭手",
-    "气象学家",
-    "逃脱大师"
+    "气象学家"
    ],
    "survivor_bans": [],
    "score": "2:2",
@@ -3158,18 +3366,18 @@
    "survivor_team": "MRC",
    "hunter_team": "成都Wolves",
    "survivors": [
-    "默剧艺人",
-    "调香师",
+    "逃脱大师",
     "弓箭手",
-    "逃脱大师"
+    "默剧艺人",
+    "调香师"
    ],
    "hunter": "牙医",
    "hunter_player": "CyanX",
    "hunter_bans": [
-    "作曲家",
     "幻灯师",
     "野人",
-    "飞行家"
+    "飞行家",
+    "作曲家"
    ],
    "survivor_bans": [],
    "score": "0:5",
@@ -3185,18 +3393,18 @@
    "survivor_team": "成都Wolves",
    "hunter_team": "MRC",
    "survivors": [
+    "咒术师",
     "大副",
     "气象学家",
-    "咒术师",
     "木偶师"
    ],
    "hunter": "喧嚣",
    "hunter_player": "Mort1s",
    "hunter_bans": [
+    "逃脱大师",
     "弓箭手",
     "心理学家",
-    "空军",
-    "逃脱大师"
+    "空军"
    ],
    "survivor_bans": [
     "歌剧演员"
@@ -3214,17 +3422,17 @@
    "survivor_team": "MRC",
    "hunter_team": "成都Wolves",
    "survivors": [
-    "病患",
-    "园丁",
+    "佣兵",
     "幻灯师",
-    "佣兵"
+    "病患",
+    "园丁"
    ],
    "hunter": "歌剧演员",
    "hunter_player": "ChoAi",
    "hunter_bans": [
     "古董商",
-    "斗牛士",
     "气象学家",
+    "斗牛士",
     "空军"
    ],
    "survivor_bans": [
@@ -3243,22 +3451,22 @@
    "survivor_team": "MRC",
    "hunter_team": "成都Wolves",
    "survivors": [
-    "心理学家",
     "机械师",
     "咒术师",
-    "前锋"
+    "前锋",
+    "心理学家"
    ],
    "hunter": "跛脚羊",
    "hunter_player": "ChoAi",
    "hunter_bans": [
     "古董商",
-    "守墓人",
     "幸运儿",
+    "守墓人",
     "木偶师"
    ],
    "survivor_bans": [
-    "台球手",
-    "女王蜂"
+    "女王蜂",
+    "台球手"
    ],
    "score": "2:2",
    "escape": 2,
@@ -3274,17 +3482,17 @@
    "hunter_team": "MRC",
    "survivors": [
     "野人",
-    "先知",
     "弓箭手",
+    "先知",
     "园丁"
    ],
    "hunter": "杂货商",
    "hunter_player": "Mort1s",
    "hunter_bans": [
+    "逃脱大师",
     "幸运儿",
     "幻灯师",
-    "机械师",
-    "逃脱大师"
+    "机械师"
    ],
    "survivor_bans": [
     "女王蜂",
@@ -3300,21 +3508,425 @@
    "game": 1,
    "side": "upper",
    "tiebreak": false,
-   "survivor_team": "TE",
+   "survivor_team": "FPX.ZQ",
    "hunter_team": "成都GG",
    "survivors": [
-    "默剧艺人",
-    "飞行家",
     "守墓人",
-    "古董商"
+    "飞行家",
+    "古董商",
+    "祭司"
    ],
    "hunter": "牙医",
    "hunter_player": "YuM",
    "hunter_bans": [
-    "幸运儿",
     "幻灯师",
+    "野人",
     "弓箭手",
-    "野人"
+    "幸运儿"
+   ],
+   "survivor_bans": [],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "永眠镇"
+  },
+  {
+   "seq": 2,
+   "game": 1,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "成都GG",
+   "hunter_team": "FPX.ZQ",
+   "survivors": [
+    "逃脱大师",
+    "幻灯师",
+    "飞行家",
+    "弓箭手"
+   ],
+   "hunter": "牙医",
+   "hunter_player": "Qx",
+   "hunter_bans": [
+    "野人",
+    "祭司",
+    "幸运儿",
+    "古董商"
+   ],
+   "survivor_bans": [],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "永眠镇"
+  },
+  {
+   "seq": 3,
+   "game": 2,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "成都GG",
+   "hunter_team": "FPX.ZQ",
+   "survivors": [
+    "野人",
+    "斗牛士",
+    "气象学家",
+    "心理学家"
+   ],
+   "hunter": "女王蜂",
+   "hunter_player": "DongX",
+   "hunter_bans": [
+    "祭司",
+    "古董商",
+    "幸运儿",
+    "空军"
+   ],
+   "survivor_bans": [
+    "鹿头"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "唐人街"
+  },
+  {
+   "seq": 4,
+   "game": 2,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "FPX.ZQ",
+   "hunter_team": "成都GG",
+   "survivors": [
+    "医生",
+    "弓箭手",
+    "大副",
+    "幸运儿"
+   ],
+   "hunter": "歌剧演员",
+   "hunter_player": "YuM",
+   "hunter_bans": [
+    "先知",
+    "前锋",
+    "斗牛士",
+    "气象学家"
+   ],
+   "survivor_bans": [
+    "女王蜂"
+   ],
+   "score": "1:3",
+   "escape": 1,
+   "kill": 3,
+   "map": "唐人街"
+  },
+  {
+   "seq": 5,
+   "game": 3,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "FPX.ZQ",
+   "hunter_team": "成都GG",
+   "survivors": [
+    "木偶师",
+    "咒术师",
+    "佣兵",
+    "教授"
+   ],
+   "hunter": "杂货商",
+   "hunter_player": "YuM",
+   "hunter_bans": [
+    "先知",
+    "幻灯师",
+    "逃脱大师",
+    "气象学家"
+   ],
+   "survivor_bans": [
+    "女王蜂",
+    "台球手"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "湖景村"
+  },
+  {
+   "seq": 6,
+   "game": 3,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "成都GG",
+   "hunter_team": "FPX.ZQ",
+   "survivors": [
+    "守墓人",
+    "拉拉队员",
+    "勘探员",
+    "调酒师"
+   ],
+   "hunter": "时空之影",
+   "hunter_player": "DongX",
+   "hunter_bans": [
+    "佣兵",
+    "古董商",
+    "幸运儿",
+    "作曲家"
+   ],
+   "survivor_bans": [
+    "鹿头",
+    "跛脚羊"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "湖景村"
+  },
+  {
+   "seq": 1,
+   "game": 1,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "GR",
+   "hunter_team": "DOU5",
+   "survivors": [
+    "大副",
+    "幻灯师",
+    "气象学家",
+    "弓箭手"
+   ],
+   "hunter": "蜡像师",
+   "hunter_player": "Qiu",
+   "hunter_bans": [
+    "逃脱大师",
+    "守墓人",
+    "飞行家",
+    "古董商"
+   ],
+   "survivor_bans": [],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "永眠镇"
+  },
+  {
+   "seq": 2,
+   "game": 1,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "DOU5",
+   "hunter_team": "GR",
+   "survivors": [
+    "大副",
+    "飞行家",
+    "幸运儿",
+    "弓箭手"
+   ],
+   "hunter": "跛脚羊",
+   "hunter_player": "Jin",
+   "hunter_bans": [
+    "守墓人",
+    "逃脱大师",
+    "古董商",
+    "咒术师"
+   ],
+   "survivor_bans": [],
+   "score": "1:3",
+   "escape": 1,
+   "kill": 3,
+   "map": "永眠镇"
+  },
+  {
+   "seq": 3,
+   "game": 2,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "DOU5",
+   "hunter_team": "GR",
+   "survivors": [
+    "斗牛士",
+    "心理学家",
+    "野人",
+    "气象学家"
+   ],
+   "hunter": "鹿头",
+   "hunter_player": "Jin",
+   "hunter_bans": [
+    "佣兵",
+    "逃脱大师",
+    "守墓人",
+    "幻灯师"
+   ],
+   "survivor_bans": [
+    "喧嚣"
+   ],
+   "score": "3:1",
+   "escape": 3,
+   "kill": 1,
+   "map": "月亮河公园"
+  },
+  {
+   "seq": 4,
+   "game": 2,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "GR",
+   "hunter_team": "DOU5",
+   "survivors": [
+    "飞行家",
+    "默剧艺人",
+    "咒术师",
+    "佣兵"
+   ],
+   "hunter": "歌剧演员",
+   "hunter_player": "Qiu",
+   "hunter_bans": [
+    "逃脱大师",
+    "古董商",
+    "斗牛士",
+    "前锋"
+   ],
+   "survivor_bans": [
+    "跛脚羊"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "月亮河公园"
+  },
+  {
+   "seq": 5,
+   "game": 3,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "GR",
+   "hunter_team": "DOU5",
+   "survivors": [
+    "逃脱大师",
+    "斗牛士",
+    "心理学家",
+    "法罗女士"
+   ],
+   "hunter": "女王蜂",
+   "hunter_player": "Qiu",
+   "hunter_bans": [
+    "先知",
+    "古董商",
+    "幸运儿",
+    "作曲家"
+   ],
+   "survivor_bans": [
+    "跛脚羊",
+    "牙医"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "唐人街"
+  },
+  {
+   "seq": 6,
+   "game": 3,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "DOU5",
+   "hunter_team": "GR",
+   "survivors": [
+    "逃脱大师",
+    "古董商",
+    "病患",
+    "法罗女士"
+   ],
+   "hunter": "破轮",
+   "hunter_player": "Jin",
+   "hunter_bans": [
+    "幻灯师",
+    "守墓人",
+    "默剧艺人",
+    "作曲家"
+   ],
+   "survivor_bans": [
+    "女王蜂",
+    "歌剧演员"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "唐人街"
+  },
+  {
+   "seq": 7,
+   "game": 4,
+   "side": "upper",
+   "tiebreak": true,
+   "survivor_team": "DOU5",
+   "hunter_team": "GR",
+   "survivors": [
+    "囚徒",
+    "木偶师",
+    "勘探员",
+    "守墓人"
+   ],
+   "hunter": "台球手",
+   "hunter_player": "Jin",
+   "hunter_bans": [
+    "机械师",
+    "作曲家",
+    "幻灯师",
+    "火灾调查员"
+   ],
+   "survivor_bans": [
+    "时空之影",
+    "26号守卫"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "红教堂"
+  },
+  {
+   "seq": 8,
+   "game": 4,
+   "side": "lower",
+   "tiebreak": true,
+   "survivor_team": "GR",
+   "hunter_team": "DOU5",
+   "survivors": [
+    "囚徒",
+    "入殓师",
+    "幸运儿",
+    "守墓人"
+   ],
+   "hunter": "牙医",
+   "hunter_player": "Qiu",
+   "hunter_bans": [
+    "机械师",
+    "作曲家",
+    "古董商",
+    "拉拉队员"
+   ],
+   "survivor_bans": [
+    "跛脚羊",
+    "台球手"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "红教堂"
+  },
+  {
+   "seq": 1,
+   "game": 1,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "TE",
+   "hunter_team": "成都GG",
+   "survivors": [
+    "飞行家",
+    "守墓人",
+    "古董商",
+    "默剧艺人"
+   ],
+   "hunter": "牙医",
+   "hunter_player": "YuM",
+   "hunter_bans": [
+    "幻灯师",
+    "野人",
+    "弓箭手",
+    "幸运儿"
    ],
    "survivor_bans": [],
    "score": "1:3",
@@ -3338,10 +3950,10 @@
    "hunter": "牙医",
    "hunter_player": "ppei",
    "hunter_bans": [
-    "古董商",
-    "幸运儿",
+    "野人",
     "幻灯师",
-    "野人"
+    "古董商",
+    "幸运儿"
    ],
    "survivor_bans": [],
    "score": "1:3",
@@ -3357,18 +3969,18 @@
    "survivor_team": "TE",
    "hunter_team": "成都GG",
    "survivors": [
-    "调香师",
-    "病患",
     "佣兵",
-    "弓箭手"
+    "弓箭手",
+    "病患",
+    "调香师"
    ],
    "hunter": "歌剧演员",
    "hunter_player": "YuM",
    "hunter_bans": [
-    "园丁",
     "心理学家",
     "斗牛士",
-    "气象学家"
+    "气象学家",
+    "园丁"
    ],
    "survivor_bans": [
     "跛脚羊"
@@ -3415,18 +4027,18 @@
    "survivor_team": "TE",
    "hunter_team": "成都GG",
    "survivors": [
-    "幸运儿",
     "幻灯师",
+    "咒术师",
     "逃脱大师",
-    "咒术师"
+    "幸运儿"
    ],
    "hunter": "台球手",
    "hunter_player": "YuM",
    "hunter_bans": [
-    "大副",
     "斗牛士",
-    "气象学家",
-    "法罗女士"
+    "法罗女士",
+    "大副",
+    "气象学家"
    ],
    "survivor_bans": [
     "女王蜂",
@@ -3445,22 +4057,22 @@
    "survivor_team": "成都GG",
    "hunter_team": "TE",
    "survivors": [
-    "守墓人",
-    "斗牛士",
     "先知",
-    "古董商"
+    "古董商",
+    "斗牛士",
+    "守墓人"
    ],
    "hunter": "女王蜂",
    "hunter_player": "ppei",
    "hunter_bans": [
-    "佣兵",
     "前锋",
     "勘探员",
-    "幸运儿"
+    "幸运儿",
+    "佣兵"
    ],
    "survivor_bans": [
-    "台球手",
-    "喧嚣"
+    "喧嚣",
+    "杂货商"
    ],
    "score": "3:1",
    "escape": 3,
@@ -3475,18 +4087,18 @@
    "survivor_team": "ACT",
    "hunter_team": "MRC",
    "survivors": [
-    "守墓人",
     "古董商",
     "飞行家",
+    "守墓人",
     "园丁"
    ],
    "hunter": "牙医",
    "hunter_player": "Mort1s",
    "hunter_bans": [
-    "作曲家",
+    "野人",
     "幻灯师",
     "逃脱大师",
-    "野人"
+    "作曲家"
    ],
    "survivor_bans": [],
    "score": "2:2",
@@ -3502,18 +4114,18 @@
    "survivor_team": "MRC",
    "hunter_team": "ACT",
    "survivors": [
+    "气象学家",
     "作曲家",
     "咒术师",
-    "大副",
-    "气象学家"
+    "大副"
    ],
    "hunter": "跛脚羊",
    "hunter_player": "zz9",
    "hunter_bans": [
-    "古董商",
+    "飞行家",
     "幻灯师",
-    "逃脱大师",
-    "飞行家"
+    "古董商",
+    "逃脱大师"
    ],
    "survivor_bans": [],
    "score": "1:3",
@@ -3529,18 +4141,18 @@
    "survivor_team": "ACT",
    "hunter_team": "MRC",
    "survivors": [
-    "调酒师",
     "前锋",
-    "病患",
-    "斗牛士"
+    "调酒师",
+    "斗牛士",
+    "病患"
    ],
    "hunter": "喧嚣",
    "hunter_player": "Mort1s",
    "hunter_bans": [
+    "逃脱大师",
     "弓箭手",
     "木偶师",
-    "气象学家",
-    "逃脱大师"
+    "气象学家"
    ],
    "survivor_bans": [
     "跛脚羊"
@@ -3559,16 +4171,16 @@
    "hunter_team": "ACT",
    "survivors": [
     "园丁",
-    "弓箭手",
     "逃脱大师",
+    "弓箭手",
     "默剧艺人"
    ],
    "hunter": "鹿头",
    "hunter_player": "zz9",
    "hunter_bans": [
-    "古董商",
-    "幸运儿",
     "幻灯师",
+    "幸运儿",
+    "古董商",
     "病患"
    ],
    "survivor_bans": [
@@ -3585,81 +4197,81 @@
    "side": "upper",
    "tiebreak": false,
    "survivor_team": "GR",
-   "hunter_team": "DOU5",
+   "hunter_team": "FPX.ZQ",
    "survivors": [
+    "守墓人",
     "弓箭手",
     "气象学家",
-    "幻灯师",
-    "大副"
+    "入殓师"
    ],
-   "hunter": "蜡像师",
-   "hunter_player": "Qiu",
+   "hunter": "牙医",
+   "hunter_player": "Qx",
    "hunter_bans": [
-    "古董商",
-    "守墓人",
-    "逃脱大师",
-    "飞行家"
+    "幻灯师",
+    "野人",
+    "飞行家",
+    "幸运儿"
    ],
    "survivor_bans": [],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "永眠镇"
+   "score": "1:3",
+   "escape": 1,
+   "kill": 3,
+   "map": "湖景村"
   },
   {
    "seq": 2,
    "game": 1,
    "side": "lower",
    "tiebreak": false,
-   "survivor_team": "DOU5",
+   "survivor_team": "FPX.ZQ",
    "hunter_team": "GR",
    "survivors": [
-    "弓箭手",
+    "飞行家",
+    "木偶师",
     "大副",
-    "幸运儿",
-    "飞行家"
+    "古董商"
    ],
-   "hunter": "跛脚羊",
+   "hunter": "牙医",
    "hunter_player": "Jin",
    "hunter_bans": [
-    "古董商",
-    "咒术师",
+    "逃脱大师",
+    "幻灯师",
     "守墓人",
-    "逃脱大师"
+    "弓箭手"
    ],
    "survivor_bans": [],
-   "score": "1:3",
-   "escape": 1,
-   "kill": 3,
-   "map": "永眠镇"
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "湖景村"
   },
   {
    "seq": 3,
    "game": 2,
    "side": "upper",
    "tiebreak": false,
-   "survivor_team": "DOU5",
+   "survivor_team": "FPX.ZQ",
    "hunter_team": "GR",
    "survivors": [
-    "斗牛士",
-    "野人",
-    "气象学家",
-    "心理学家"
+    "逃脱大师",
+    "病患",
+    "弓箭手",
+    "调酒师"
    ],
-   "hunter": "鹿头",
+   "hunter": "歌剧演员",
    "hunter_player": "Jin",
    "hunter_bans": [
-    "佣兵",
-    "守墓人",
-    "幻灯师",
-    "逃脱大师"
+    "医生",
+    "气象学家",
+    "斗牛士",
+    "心理学家"
    ],
    "survivor_bans": [
-    "喧嚣"
+    "跛脚羊"
    ],
-   "score": "3:1",
-   "escape": 3,
-   "kill": 1,
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
    "map": "月亮河公园"
   },
   {
@@ -3668,20 +4280,20 @@
    "side": "lower",
    "tiebreak": false,
    "survivor_team": "GR",
-   "hunter_team": "DOU5",
+   "hunter_team": "FPX.ZQ",
    "survivors": [
-    "咒术师",
-    "默剧艺人",
-    "飞行家",
-    "佣兵"
+    "逃脱大师",
+    "幻灯师",
+    "空军",
+    "默剧艺人"
    ],
    "hunter": "歌剧演员",
-   "hunter_player": "Qiu",
+   "hunter_player": "Qx",
    "hunter_bans": [
-    "前锋",
+    "医生",
     "古董商",
-    "斗牛士",
-    "逃脱大师"
+    "心理学家",
+    "飞行家"
    ],
    "survivor_bans": [
     "跛脚羊"
@@ -3697,291 +4309,59 @@
    "side": "upper",
    "tiebreak": false,
    "survivor_team": "GR",
-   "hunter_team": "DOU5",
+   "hunter_team": "FPX.ZQ",
    "survivors": [
-    "斗牛士",
-    "法罗女士",
-    "心理学家",
-    "逃脱大师"
-   ],
-   "hunter": "女王蜂",
-   "hunter_player": "Qiu",
-   "hunter_bans": [
+    "佣兵",
     "作曲家",
-    "先知",
-    "古董商",
-    "幸运儿"
+    "幸运儿",
+    "木偶师"
+   ],
+   "hunter": "台球手",
+   "hunter_player": "Qx",
+   "hunter_bans": [
+    "医生",
+    "祭司",
+    "斗牛士",
+    "飞行家"
    ],
    "survivor_bans": [
-    "牙医",
+    "女王蜂",
     "跛脚羊"
    ],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "唐人街"
+   "score": "5:0",
+   "escape": 4,
+   "kill": 0,
+   "map": "永眠镇"
   },
   {
    "seq": 6,
    "game": 3,
    "side": "lower",
    "tiebreak": false,
-   "survivor_team": "DOU5",
+   "survivor_team": "FPX.ZQ",
    "hunter_team": "GR",
    "survivors": [
-    "古董商",
-    "逃脱大师",
-    "法罗女士",
-    "病患"
+    "机械师",
+    "幸运儿",
+    "佣兵",
+    "作曲家"
    ],
    "hunter": "破轮",
    "hunter_player": "Jin",
    "hunter_bans": [
-    "作曲家",
-    "守墓人",
-    "幻灯师",
-    "默剧艺人"
-   ],
-   "survivor_bans": [
-    "女王蜂",
-    "歌剧演员"
-   ],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "唐人街"
-  },
-  {
-   "seq": 7,
-   "game": 4,
-   "side": "upper",
-   "tiebreak": true,
-   "survivor_team": "DOU5",
-   "hunter_team": "GR",
-   "survivors": [
+    "祭司",
     "勘探员",
-    "守墓人",
     "囚徒",
-    "木偶师"
-   ],
-   "hunter": "台球手",
-   "hunter_player": "Jin",
-   "hunter_bans": [
-    "作曲家",
-    "幻灯师",
-    "机械师",
-    "火灾调查员"
-   ],
-   "survivor_bans": [
-    "26号守卫",
-    "时空之影"
-   ],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "红教堂"
-  },
-  {
-   "seq": 8,
-   "game": 4,
-   "side": "lower",
-   "tiebreak": true,
-   "survivor_team": "GR",
-   "hunter_team": "DOU5",
-   "survivors": [
-    "幸运儿",
-    "囚徒",
-    "入殓师",
-    "守墓人"
-   ],
-   "hunter": "牙医",
-   "hunter_player": "Qiu",
-   "hunter_bans": [
-    "作曲家",
-    "古董商",
-    "拉拉队员",
-    "机械师"
-   ],
-   "survivor_bans": [
-    "台球手",
-    "跛脚羊"
-   ],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "红教堂"
-  },
-  {
-   "seq": 1,
-   "game": 1,
-   "side": "upper",
-   "tiebreak": false,
-   "survivor_team": "ACT",
-   "hunter_team": "DOU5",
-   "survivors": [
-    "野人",
-    "弓箭手",
-    "气象学家",
-    "幻灯师"
-   ],
-   "hunter": "跛脚羊",
-   "hunter_player": "Qiu",
-   "hunter_bans": [
-    "古董商",
-    "守墓人",
-    "逃脱大师",
-    "飞行家"
-   ],
-   "survivor_bans": [],
-   "score": "1:3",
-   "escape": 1,
-   "kill": 3,
-   "map": "永眠镇"
-  },
-  {
-   "seq": 2,
-   "game": 1,
-   "side": "lower",
-   "tiebreak": false,
-   "survivor_team": "DOU5",
-   "hunter_team": "ACT",
-   "survivors": [
-    "咒术师",
-    "逃脱大师",
-    "教授",
-    "飞行家"
-   ],
-   "hunter": "台球手",
-   "hunter_player": "zz9",
-   "hunter_bans": [
-    "幸运儿",
-    "幻灯师",
-    "斗牛士",
-    "木偶师"
-   ],
-   "survivor_bans": [],
-   "score": "1:3",
-   "escape": 1,
-   "kill": 3,
-   "map": "永眠镇"
-  },
-  {
-   "seq": 3,
-   "game": 2,
-   "side": "upper",
-   "tiebreak": false,
-   "survivor_team": "ACT",
-   "hunter_team": "DOU5",
-   "survivors": [
-    "大副",
-    "古董商",
-    "拉拉队员",
-    "作曲家"
-   ],
-   "hunter": "女王蜂",
-   "hunter_player": "Qiu",
-   "hunter_bans": [
-    "佣兵",
-    "前锋",
-    "守墓人",
-    "逃脱大师"
-   ],
-   "survivor_bans": [
-    "牙医"
-   ],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "不归林"
-  },
-  {
-   "seq": 4,
-   "game": 2,
-   "side": "lower",
-   "tiebreak": false,
-   "survivor_team": "DOU5",
-   "hunter_team": "ACT",
-   "survivors": [
-    "古董商",
-    "守墓人",
-    "气象学家",
-    "心理学家"
-   ],
-   "hunter": "时空之影",
-   "hunter_player": "zz9",
-   "hunter_bans": [
-    "作曲家",
-    "佣兵",
-    "幸运儿",
-    "幻灯师"
-   ],
-   "survivor_bans": [
-    "跛脚羊"
-   ],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "不归林"
-  },
-  {
-   "seq": 5,
-   "game": 3,
-   "side": "upper",
-   "tiebreak": false,
-   "survivor_team": "ACT",
-   "hunter_team": "DOU5",
-   "survivors": [
-    "法罗女士",
-    "前锋",
-    "调酒师",
-    "斗牛士"
-   ],
-   "hunter": "喧嚣",
-   "hunter_player": "Qiu",
-   "hunter_bans": [
-    "先知",
-    "木偶师",
-    "逃脱大师",
-    "飞行家"
-   ],
-   "survivor_bans": [
-    "歌剧演员",
-    "牙医"
-   ],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "月亮河公园"
-  },
-  {
-   "seq": 6,
-   "game": 3,
-   "side": "lower",
-   "tiebreak": false,
-   "survivor_team": "DOU5",
-   "hunter_team": "ACT",
-   "survivors": [
-    "斗牛士",
-    "大副",
-    "病患",
-    "园丁"
-   ],
-   "hunter": "歌剧演员",
-   "hunter_player": "zz9",
-   "hunter_bans": [
-    "入殓师",
-    "幻灯师",
-    "弓箭手",
-    "空军"
+    "咒术师"
    ],
    "survivor_bans": [
     "跛脚羊",
-    "鹿头"
+    "台球手"
    ],
-   "score": "0:5",
-   "escape": 0,
-   "kill": 4,
-   "map": "月亮河公园"
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "永眠镇"
   },
   {
    "seq": 1,
@@ -3992,17 +4372,17 @@
    "hunter_team": "北京WBG",
    "survivors": [
     "野人",
-    "木偶师",
+    "飞行家",
     "幻灯师",
-    "飞行家"
+    "木偶师"
    ],
    "hunter": "跛脚羊",
    "hunter_player": "NonSept",
    "hunter_bans": [
+    "弓箭手",
     "古董商",
-    "咒术师",
     "园丁",
-    "弓箭手"
+    "咒术师"
    ],
    "survivor_bans": [],
    "score": "3:1",
@@ -4018,18 +4398,18 @@
    "survivor_team": "北京WBG",
    "hunter_team": "成都Wolves",
    "survivors": [
+    "野人",
     "气象学家",
     "木偶师",
-    "法罗女士",
-    "野人"
+    "法罗女士"
    ],
    "hunter": "牙医",
    "hunter_player": "ChoAi",
    "hunter_bans": [
     "古董商",
+    "弓箭手",
     "咒术师",
-    "幻灯师",
-    "弓箭手"
+    "幻灯师"
    ],
    "survivor_bans": [],
    "score": "2:2",
@@ -4082,10 +4462,10 @@
    "hunter": "台球手",
    "hunter_player": "ChoAi",
    "hunter_bans": [
-    "守墓人",
-    "幸运儿",
     "幻灯师",
-    "弓箭手"
+    "弓箭手",
+    "幸运儿",
+    "守墓人"
    ],
    "survivor_bans": [
     "跛脚羊"
@@ -4103,22 +4483,22 @@
    "survivor_team": "北京WBG",
    "hunter_team": "成都Wolves",
    "survivors": [
-    "古董商",
     "默剧艺人",
+    "古董商",
     "作曲家",
     "佣兵"
    ],
    "hunter": "鹿头",
    "hunter_player": "ChoAi",
    "hunter_bans": [
-    "守墓人",
-    "幸运儿",
     "幻灯师",
-    "弓箭手"
+    "弓箭手",
+    "幸运儿",
+    "守墓人"
    ],
    "survivor_bans": [
-    "小丑",
-    "跛脚羊"
+    "跛脚羊",
+    "小丑"
    ],
    "score": "2:2",
    "escape": 2,
@@ -4133,18 +4513,18 @@
    "survivor_team": "成都Wolves",
    "hunter_team": "北京WBG",
    "survivors": [
-    "大副",
     "先知",
+    "病患",
     "调酒师",
-    "病患"
+    "大副"
    ],
    "hunter": "鹿头",
    "hunter_player": "NonSept",
    "hunter_bans": [
-    "作曲家",
+    "弓箭手",
     "古董商",
-    "守墓人",
-    "弓箭手"
+    "作曲家",
+    "守墓人"
    ],
    "survivor_bans": [
     "女王蜂",
@@ -4160,107 +4540,137 @@
    "game": 1,
    "side": "upper",
    "tiebreak": false,
-   "survivor_team": "GR",
-   "hunter_team": "FPX.ZQ",
+   "survivor_team": "ACT",
+   "hunter_team": "DOU5",
    "survivors": [
-    "弓箭手",
-    "气象学家",
-    "入殓师",
-    "守墓人"
-   ],
-   "hunter": "牙医",
-   "hunter_player": "Qx",
-   "hunter_bans": [
-    "幸运儿",
     "幻灯师",
     "野人",
-    "飞行家"
+    "气象学家",
+    "弓箭手"
+   ],
+   "hunter": "跛脚羊",
+   "hunter_player": "Qiu",
+   "hunter_bans": [
+    "守墓人",
+    "逃脱大师",
+    "飞行家",
+    "古董商"
    ],
    "survivor_bans": [],
    "score": "1:3",
    "escape": 1,
    "kill": 3,
-   "map": "湖景村"
+   "map": "永眠镇"
   },
   {
    "seq": 2,
    "game": 1,
    "side": "lower",
    "tiebreak": false,
-   "survivor_team": "FPX.ZQ",
-   "hunter_team": "GR",
+   "survivor_team": "DOU5",
+   "hunter_team": "ACT",
    "survivors": [
     "飞行家",
-    "古董商",
-    "木偶师",
-    "大副"
+    "逃脱大师",
+    "咒术师",
+    "教授"
    ],
-   "hunter": "牙医",
-   "hunter_player": "Jin",
+   "hunter": "台球手",
+   "hunter_player": "zz9",
    "hunter_bans": [
-    "守墓人",
     "幻灯师",
-    "弓箭手",
-    "逃脱大师"
+    "幸运儿",
+    "斗牛士",
+    "木偶师"
    ],
    "survivor_bans": [],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "湖景村"
+   "score": "1:3",
+   "escape": 1,
+   "kill": 3,
+   "map": "永眠镇"
   },
   {
    "seq": 3,
    "game": 2,
    "side": "upper",
    "tiebreak": false,
-   "survivor_team": "FPX.ZQ",
-   "hunter_team": "GR",
+   "survivor_team": "ACT",
+   "hunter_team": "DOU5",
    "survivors": [
-    "病患",
-    "弓箭手",
-    "调酒师",
-    "逃脱大师"
+    "拉拉队员",
+    "作曲家",
+    "古董商",
+    "大副"
    ],
-   "hunter": "歌剧演员",
-   "hunter_player": "Jin",
+   "hunter": "女王蜂",
+   "hunter_player": "Qiu",
    "hunter_bans": [
-    "医生",
-    "心理学家",
-    "斗牛士",
-    "气象学家"
+    "逃脱大师",
+    "守墓人",
+    "前锋",
+    "佣兵"
    ],
    "survivor_bans": [
-    "跛脚羊"
+    "牙医"
    ],
    "score": "2:2",
    "escape": 2,
    "kill": 2,
-   "map": "月亮河公园"
+   "map": "不归林"
   },
   {
    "seq": 4,
    "game": 2,
    "side": "lower",
    "tiebreak": false,
-   "survivor_team": "GR",
-   "hunter_team": "FPX.ZQ",
+   "survivor_team": "DOU5",
+   "hunter_team": "ACT",
    "survivors": [
-    "幻灯师",
-    "默剧艺人",
-    "空军",
-    "逃脱大师"
-   ],
-   "hunter": "歌剧演员",
-   "hunter_player": "Qx",
-   "hunter_bans": [
-    "医生",
+    "气象学家",
     "古董商",
-    "心理学家",
-    "飞行家"
+    "守墓人",
+    "心理学家"
+   ],
+   "hunter": "时空之影",
+   "hunter_player": "zz9",
+   "hunter_bans": [
+    "幻灯师",
+    "幸运儿",
+    "佣兵",
+    "作曲家"
    ],
    "survivor_bans": [
     "跛脚羊"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "不归林"
+  },
+  {
+   "seq": 5,
+   "game": 3,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "ACT",
+   "hunter_team": "DOU5",
+   "survivors": [
+    "前锋",
+    "调酒师",
+    "斗牛士",
+    "法罗女士"
+   ],
+   "hunter": "喧嚣",
+   "hunter_player": "Qiu",
+   "hunter_bans": [
+    "逃脱大师",
+    "先知",
+    "木偶师",
+    "飞行家"
+   ],
+   "survivor_bans": [
+    "牙医",
+    "歌剧演员"
    ],
    "score": "2:2",
    "escape": 2,
@@ -4268,64 +4678,34 @@
    "map": "月亮河公园"
   },
   {
-   "seq": 5,
-   "game": 3,
-   "side": "upper",
-   "tiebreak": false,
-   "survivor_team": "GR",
-   "hunter_team": "FPX.ZQ",
-   "survivors": [
-    "幸运儿",
-    "作曲家",
-    "木偶师",
-    "佣兵"
-   ],
-   "hunter": "台球手",
-   "hunter_player": "Qx",
-   "hunter_bans": [
-    "医生",
-    "斗牛士",
-    "祭司",
-    "飞行家"
-   ],
-   "survivor_bans": [
-    "女王蜂",
-    "跛脚羊"
-   ],
-   "score": "5:0",
-   "escape": 4,
-   "kill": 0,
-   "map": "永眠镇"
-  },
-  {
    "seq": 6,
    "game": 3,
    "side": "lower",
    "tiebreak": false,
-   "survivor_team": "FPX.ZQ",
-   "hunter_team": "GR",
+   "survivor_team": "DOU5",
+   "hunter_team": "ACT",
    "survivors": [
-    "幸运儿",
-    "作曲家",
-    "机械师",
-    "佣兵"
+    "病患",
+    "斗牛士",
+    "大副",
+    "园丁"
    ],
-   "hunter": "破轮",
-   "hunter_player": "Jin",
+   "hunter": "歌剧演员",
+   "hunter_player": "zz9",
    "hunter_bans": [
-    "勘探员",
-    "咒术师",
-    "囚徒",
-    "祭司"
+    "弓箭手",
+    "幻灯师",
+    "空军",
+    "入殓师"
    ],
    "survivor_bans": [
-    "台球手",
-    "跛脚羊"
+    "跛脚羊",
+    "鹿头"
    ],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "永眠镇"
+   "score": "0:5",
+   "escape": 0,
+   "kill": 4,
+   "map": "月亮河公园"
   },
   {
    "seq": 1,
@@ -4335,18 +4715,18 @@
    "survivor_team": "成都GG",
    "hunter_team": "北京WBG",
    "survivors": [
-    "逃脱大师",
-    "飞行家",
     "古董商",
+    "飞行家",
+    "逃脱大师",
     "园丁"
    ],
    "hunter": "牙医",
    "hunter_player": "NonSept",
    "hunter_bans": [
-    "作曲家",
     "幻灯师",
+    "野人",
     "气象学家",
-    "野人"
+    "作曲家"
    ],
    "survivor_bans": [],
    "score": "0:5",
@@ -4362,18 +4742,18 @@
    "survivor_team": "北京WBG",
    "hunter_team": "成都GG",
    "survivors": [
-    "古董商",
+    "野人",
     "飞行家",
-    "作曲家",
-    "野人"
+    "古董商",
+    "作曲家"
    ],
    "hunter": "台球手",
    "hunter_player": "YuM",
    "hunter_bans": [
-    "幸运儿",
     "幻灯师",
+    "祭司",
     "弓箭手",
-    "祭司"
+    "幸运儿"
    ],
    "survivor_bans": [],
    "score": "2:2",
@@ -4397,10 +4777,10 @@
    "hunter": "鹿头",
    "hunter_player": "YuM",
    "hunter_bans": [
+    "幻灯师",
     "咒术师",
-    "大副",
     "守墓人",
-    "幻灯师"
+    "大副"
    ],
    "survivor_bans": [
     "牙医"
@@ -4418,18 +4798,18 @@
    "survivor_team": "成都GG",
    "hunter_team": "北京WBG",
    "survivors": [
-    "佣兵",
-    "木偶师",
     "勘探员",
-    "气象学家"
+    "气象学家",
+    "木偶师",
+    "佣兵"
    ],
    "hunter": "鹿头",
    "hunter_player": "NonSept",
    "hunter_bans": [
-    "守墓人",
-    "幸运儿",
+    "弓箭手",
     "幻灯师",
-    "弓箭手"
+    "幸运儿",
+    "守墓人"
    ],
    "survivor_bans": [
     "跛脚羊"
@@ -4477,199 +4857,27 @@
    "survivor_team": "成都GG",
    "hunter_team": "北京WBG",
    "survivors": [
+    "幻灯师",
     "野人",
     "默剧艺人",
-    "咒术师",
-    "幻灯师"
+    "咒术师"
    ],
    "hunter": "歌剧演员",
    "hunter_player": "NonSept",
    "hunter_bans": [
     "先知",
-    "幸运儿",
     "弓箭手",
+    "幸运儿",
     "斗牛士"
    ],
    "survivor_bans": [
-    "使徒",
-    "跛脚羊"
+    "跛脚羊",
+    "使徒"
    ],
    "score": "3:1",
    "escape": 3,
    "kill": 1,
    "map": "湖景村"
-  },
-  {
-   "seq": 1,
-   "game": 1,
-   "side": "upper",
-   "tiebreak": false,
-   "survivor_team": "成都Wolves",
-   "hunter_team": "FPX.ZQ",
-   "survivors": [
-    "守墓人",
-    "默剧艺人",
-    "古董商",
-    "幸运儿"
-   ],
-   "hunter": "牙医",
-   "hunter_player": "Qx",
-   "hunter_bans": [
-    "幻灯师",
-    "气象学家",
-    "野人",
-    "飞行家"
-   ],
-   "survivor_bans": [],
-   "score": "1:3",
-   "escape": 1,
-   "kill": 3,
-   "map": "湖景村"
-  },
-  {
-   "seq": 2,
-   "game": 1,
-   "side": "lower",
-   "tiebreak": false,
-   "survivor_team": "FPX.ZQ",
-   "hunter_team": "成都Wolves",
-   "survivors": [
-    "飞行家",
-    "古董商",
-    "机械师",
-    "逃脱大师"
-   ],
-   "hunter": "女王蜂",
-   "hunter_player": "CyanX",
-   "hunter_bans": [
-    "守墓人",
-    "幸运儿",
-    "幻灯师",
-    "弓箭手"
-   ],
-   "survivor_bans": [],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "湖景村"
-  },
-  {
-   "seq": 3,
-   "game": 2,
-   "side": "upper",
-   "tiebreak": false,
-   "survivor_team": "成都Wolves",
-   "hunter_team": "FPX.ZQ",
-   "survivors": [
-    "野人",
-    "气象学家",
-    "弓箭手",
-    "园丁"
-   ],
-   "hunter": "歌剧演员",
-   "hunter_player": "Qx",
-   "hunter_bans": [
-    "医生",
-    "心理学家",
-    "逃脱大师",
-    "飞行家"
-   ],
-   "survivor_bans": [
-    "喧嚣"
-   ],
-   "score": "3:1",
-   "escape": 3,
-   "kill": 1,
-   "map": "月亮河公园"
-  },
-  {
-   "seq": 4,
-   "game": 2,
-   "side": "lower",
-   "tiebreak": false,
-   "survivor_team": "FPX.ZQ",
-   "hunter_team": "成都Wolves",
-   "survivors": [
-    "木偶师",
-    "医生",
-    "咒术师",
-    "野人"
-   ],
-   "hunter": "鹿头",
-   "hunter_player": "CyanX",
-   "hunter_bans": [
-    "幻灯师",
-    "弓箭手",
-    "斗牛士",
-    "气象学家"
-   ],
-   "survivor_bans": [
-    "牙医"
-   ],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "月亮河公园"
-  },
-  {
-   "seq": 5,
-   "game": 3,
-   "side": "upper",
-   "tiebreak": false,
-   "survivor_team": "FPX.ZQ",
-   "hunter_team": "成都Wolves",
-   "survivors": [
-    "幸运儿",
-    "幻灯师",
-    "心理学家",
-    "佣兵"
-   ],
-   "hunter": "台球手",
-   "hunter_player": "CyanX",
-   "hunter_bans": [
-    "先知",
-    "守墓人",
-    "弓箭手",
-    "气象学家"
-   ],
-   "survivor_bans": [
-    "牙医",
-    "跛脚羊"
-   ],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "不归林"
-  },
-  {
-   "seq": 6,
-   "game": 3,
-   "side": "lower",
-   "tiebreak": false,
-   "survivor_team": "成都Wolves",
-   "hunter_team": "FPX.ZQ",
-   "survivors": [
-    "大副",
-    "法罗女士",
-    "飞行家",
-    "木偶师"
-   ],
-   "hunter": "喧嚣",
-   "hunter_player": "DongX",
-   "hunter_bans": [
-    "作曲家",
-    "医生",
-    "咒术师",
-    "逃脱大师"
-   ],
-   "survivor_bans": [
-    "女王蜂",
-    "跛脚羊"
-   ],
-   "score": "3:1",
-   "escape": 3,
-   "kill": 1,
-   "map": "不归林"
   },
   {
    "seq": 1,
@@ -4706,18 +4914,18 @@
    "survivor_team": "MRC",
    "hunter_team": "ASC",
    "survivors": [
+    "逃脱大师",
     "气象学家",
     "作曲家",
-    "咒术师",
-    "逃脱大师"
+    "咒术师"
    ],
    "hunter": "牙医",
    "hunter_player": "Tear",
    "hunter_bans": [
     "幻灯师",
+    "默剧艺人",
     "弓箭手",
-    "飞行家",
-    "默剧艺人"
+    "飞行家"
    ],
    "survivor_bans": [],
    "score": "1:3",
@@ -4733,18 +4941,18 @@
    "survivor_team": "MRC",
    "hunter_team": "ASC",
    "survivors": [
+    "古董商",
     "默剧艺人",
-    "幸运儿",
     "大副",
-    "古董商"
+    "幸运儿"
    ],
    "hunter": "台球手",
    "hunter_player": "Tear",
    "hunter_bans": [
-    "佣兵",
+    "飞行家",
     "弓箭手",
-    "拉拉队员",
-    "飞行家"
+    "佣兵",
+    "拉拉队员"
    ],
    "survivor_bans": [
     "女王蜂"
@@ -4762,17 +4970,17 @@
    "survivor_team": "ASC",
    "hunter_team": "MRC",
    "survivors": [
-    "气象学家",
     "守墓人",
+    "古董商",
     "幻灯师",
-    "古董商"
+    "气象学家"
    ],
    "hunter": "喧嚣",
    "hunter_player": "BaiLu",
    "hunter_bans": [
-    "作曲家",
     "佣兵",
     "逃脱大师",
+    "作曲家",
     "默剧艺人"
    ],
    "survivor_bans": [
@@ -4788,21 +4996,193 @@
    "game": 1,
    "side": "upper",
    "tiebreak": false,
+   "survivor_team": "成都Wolves",
+   "hunter_team": "FPX.ZQ",
+   "survivors": [
+    "守墓人",
+    "古董商",
+    "幸运儿",
+    "默剧艺人"
+   ],
+   "hunter": "牙医",
+   "hunter_player": "Qx",
+   "hunter_bans": [
+    "野人",
+    "幻灯师",
+    "飞行家",
+    "气象学家"
+   ],
+   "survivor_bans": [],
+   "score": "1:3",
+   "escape": 1,
+   "kill": 3,
+   "map": "湖景村"
+  },
+  {
+   "seq": 2,
+   "game": 1,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "FPX.ZQ",
+   "hunter_team": "成都Wolves",
+   "survivors": [
+    "飞行家",
+    "逃脱大师",
+    "古董商",
+    "机械师"
+   ],
+   "hunter": "女王蜂",
+   "hunter_player": "CyanX",
+   "hunter_bans": [
+    "幻灯师",
+    "守墓人",
+    "弓箭手",
+    "幸运儿"
+   ],
+   "survivor_bans": [],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "湖景村"
+  },
+  {
+   "seq": 3,
+   "game": 2,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "成都Wolves",
+   "hunter_team": "FPX.ZQ",
+   "survivors": [
+    "弓箭手",
+    "野人",
+    "园丁",
+    "气象学家"
+   ],
+   "hunter": "歌剧演员",
+   "hunter_player": "Qx",
+   "hunter_bans": [
+    "医生",
+    "逃脱大师",
+    "心理学家",
+    "飞行家"
+   ],
+   "survivor_bans": [
+    "喧嚣"
+   ],
+   "score": "3:1",
+   "escape": 3,
+   "kill": 1,
+   "map": "月亮河公园"
+  },
+  {
+   "seq": 4,
+   "game": 2,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "FPX.ZQ",
+   "hunter_team": "成都Wolves",
+   "survivors": [
+    "咒术师",
+    "医生",
+    "野人",
+    "木偶师"
+   ],
+   "hunter": "鹿头",
+   "hunter_player": "CyanX",
+   "hunter_bans": [
+    "幻灯师",
+    "弓箭手",
+    "斗牛士",
+    "气象学家"
+   ],
+   "survivor_bans": [
+    "牙医"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "月亮河公园"
+  },
+  {
+   "seq": 5,
+   "game": 3,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "FPX.ZQ",
+   "hunter_team": "成都Wolves",
+   "survivors": [
+    "幻灯师",
+    "幸运儿",
+    "心理学家",
+    "佣兵"
+   ],
+   "hunter": "台球手",
+   "hunter_player": "CyanX",
+   "hunter_bans": [
+    "弓箭手",
+    "先知",
+    "气象学家",
+    "守墓人"
+   ],
+   "survivor_bans": [
+    "跛脚羊",
+    "牙医"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "不归林"
+  },
+  {
+   "seq": 6,
+   "game": 3,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "成都Wolves",
+   "hunter_team": "FPX.ZQ",
+   "survivors": [
+    "木偶师",
+    "飞行家",
+    "大副",
+    "法罗女士"
+   ],
+   "hunter": "喧嚣",
+   "hunter_player": "Qx",
+   "hunter_bans": [
+    "医生",
+    "咒术师",
+    "逃脱大师",
+    "作曲家"
+   ],
+   "survivor_bans": [
+    "女王蜂",
+    "跛脚羊"
+   ],
+   "score": "3:1",
+   "escape": 3,
+   "kill": 1,
+   "map": "不归林"
+  },
+  {
+   "seq": 1,
+   "game": 1,
+   "side": "upper",
+   "tiebreak": false,
    "survivor_team": "TE",
    "hunter_team": "DOU5",
    "survivors": [
-    "幸运儿",
     "飞行家",
-    "大副",
-    "古董商"
+    "古董商",
+    "幸运儿",
+    "大副"
    ],
    "hunter": "牙医",
    "hunter_player": "Qiu",
    "hunter_bans": [
-    "守墓人",
+    "野人",
     "幻灯师",
     "逃脱大师",
-    "野人"
+    "守墓人"
    ],
    "survivor_bans": [],
    "score": "1:3",
@@ -4818,18 +5198,18 @@
    "survivor_team": "DOU5",
    "hunter_team": "TE",
    "survivors": [
-    "弓箭手",
     "野人",
-    "幸运儿",
-    "飞行家"
+    "飞行家",
+    "弓箭手",
+    "幸运儿"
    ],
    "hunter": "牙医",
    "hunter_player": "ppei",
    "hunter_bans": [
-    "作曲家",
-    "古董商",
+    "逃脱大师",
     "幻灯师",
-    "逃脱大师"
+    "古董商",
+    "作曲家"
    ],
    "survivor_bans": [],
    "score": "2:2",
@@ -4845,18 +5225,18 @@
    "survivor_team": "DOU5",
    "hunter_team": "TE",
    "survivors": [
-    "斗牛士",
     "大副",
-    "病患",
-    "园丁"
+    "斗牛士",
+    "园丁",
+    "病患"
    ],
    "hunter": "喧嚣",
    "hunter_player": "ppei",
    "hunter_bans": [
+    "逃脱大师",
     "佣兵",
     "心理学家",
-    "气象学家",
-    "逃脱大师"
+    "气象学家"
    ],
    "survivor_bans": [
     "跛脚羊"
@@ -4874,17 +5254,17 @@
    "survivor_team": "TE",
    "hunter_team": "DOU5",
    "survivors": [
-    "祭司",
-    "气象学家",
+    "咒术师",
     "守墓人",
-    "咒术师"
+    "气象学家",
+    "祭司"
    ],
    "hunter": "跛脚羊",
    "hunter_player": "Qiu",
    "hunter_bans": [
     "先知",
-    "医生",
     "弓箭手",
+    "医生",
     "木偶师"
    ],
    "survivor_bans": [
@@ -4903,18 +5283,18 @@
    "survivor_team": "FPX.ZQ",
    "hunter_team": "北京WBG",
    "survivors": [
-    "古董商",
+    "守墓人",
     "飞行家",
     "幸运儿",
-    "守墓人"
+    "古董商"
    ],
    "hunter": "牙医",
    "hunter_player": "NonSept",
    "hunter_bans": [
     "幻灯师",
-    "弓箭手",
+    "野人",
     "祭司",
-    "野人"
+    "弓箭手"
    ],
    "survivor_bans": [],
    "score": "2:2",
@@ -4930,18 +5310,18 @@
    "survivor_team": "北京WBG",
    "hunter_team": "FPX.ZQ",
    "survivors": [
-    "古董商",
-    "幸运儿",
+    "守墓人",
     "飞行家",
-    "守墓人"
+    "古董商",
+    "幸运儿"
    ],
    "hunter": "牙医",
    "hunter_player": "Qx",
    "hunter_bans": [
-    "作曲家",
+    "野人",
     "幻灯师",
     "祭司",
-    "野人"
+    "作曲家"
    ],
    "survivor_bans": [],
    "score": "1:3",
@@ -4957,18 +5337,18 @@
    "survivor_team": "北京WBG",
    "hunter_team": "FPX.ZQ",
    "survivors": [
-    "斗牛士",
-    "木偶师",
+    "气象学家",
     "野人",
-    "气象学家"
+    "斗牛士",
+    "木偶师"
    ],
    "hunter": "台球手",
    "hunter_player": "DongX",
    "hunter_bans": [
-    "作曲家",
+    "祭司",
     "幻灯师",
     "弓箭手",
-    "祭司"
+    "作曲家"
    ],
    "survivor_bans": [
     "鹿头"
@@ -4986,9 +5366,9 @@
    "survivor_team": "FPX.ZQ",
    "hunter_team": "北京WBG",
    "survivors": [
-    "木偶师",
-    "空军",
     "祭司",
+    "空军",
+    "木偶师",
     "佣兵"
    ],
    "hunter": "歌剧演员",
@@ -5015,18 +5395,18 @@
    "survivor_team": "ACT",
    "hunter_team": "GR",
    "survivors": [
-    "守墓人",
     "古董商",
     "气象学家",
-    "幸运儿"
+    "幸运儿",
+    "守墓人"
    ],
    "hunter": "牙医",
    "hunter_player": "Jin",
    "hunter_bans": [
     "幻灯师",
+    "飞行家",
     "逃脱大师",
-    "野人",
-    "飞行家"
+    "野人"
    ],
    "survivor_bans": [],
    "score": "2:2",
@@ -5044,16 +5424,16 @@
    "survivors": [
     "弓箭手",
     "飞行家",
-    "入殓师",
-    "大副"
+    "大副",
+    "入殓师"
    ],
    "hunter": "跛脚羊",
    "hunter_player": "zz9",
    "hunter_bans": [
     "古董商",
     "咒术师",
-    "木偶师",
-    "逃脱大师"
+    "逃脱大师",
+    "木偶师"
    ],
    "survivor_bans": [],
    "score": "1:3",
@@ -5069,17 +5449,17 @@
    "survivor_team": "ACT",
    "hunter_team": "GR",
    "survivors": [
-    "调酒师",
     "前锋",
-    "木偶师",
-    "幻灯师"
+    "调酒师",
+    "幻灯师",
+    "木偶师"
    ],
    "hunter": "喧嚣",
    "hunter_player": "Jin",
    "hunter_bans": [
+    "逃脱大师",
     "弓箭手",
     "斗牛士",
-    "逃脱大师",
     "飞行家"
    ],
    "survivor_bans": [
@@ -5098,18 +5478,18 @@
    "survivor_team": "GR",
    "hunter_team": "ACT",
    "survivors": [
-    "斗牛士",
-    "默剧艺人",
     "空军",
-    "佣兵"
+    "斗牛士",
+    "佣兵",
+    "默剧艺人"
    ],
    "hunter": "牙医",
    "hunter_player": "zz9",
    "hunter_bans": [
     "古董商",
     "幻灯师",
-    "气象学家",
-    "逃脱大师"
+    "逃脱大师",
+    "气象学家"
    ],
    "survivor_bans": [
     "时空之影"
@@ -5127,22 +5507,22 @@
    "survivor_team": "ACT",
    "hunter_team": "GR",
    "survivors": [
-    "记者",
     "弓箭手",
     "作曲家",
-    "斗牛士"
+    "斗牛士",
+    "记者"
    ],
    "hunter": "破轮",
    "hunter_player": "Jin",
    "hunter_bans": [
     "佣兵",
-    "哭泣小丑",
     "逃脱大师",
-    "飞行家"
+    "飞行家",
+    "哭泣小丑"
    ],
    "survivor_bans": [
-    "歌剧演员",
-    "跛脚羊"
+    "跛脚羊",
+    "歌剧演员"
    ],
    "score": "0:5",
    "escape": 0,
@@ -5157,22 +5537,22 @@
    "survivor_team": "GR",
    "hunter_team": "ACT",
    "survivors": [
-    "火灾调查员",
-    "心理学家",
     "气象学家",
-    "守墓人"
+    "心理学家",
+    "守墓人",
+    "火灾调查员"
    ],
    "hunter": "台球手",
    "hunter_player": "zz9",
    "hunter_bans": [
-    "先知",
+    "幻灯师",
     "古董商",
     "幸运儿",
-    "幻灯师"
+    "先知"
    ],
    "survivor_bans": [
-    "时空之影",
-    "歌剧演员"
+    "歌剧演员",
+    "时空之影"
    ],
    "score": "2:2",
    "escape": 2,
@@ -5188,17 +5568,17 @@
    "hunter_team": "TE",
    "survivors": [
     "守墓人",
-    "默剧艺人",
     "古董商",
+    "默剧艺人",
     "教授"
    ],
    "hunter": "牙医",
    "hunter_player": "ppei",
    "hunter_bans": [
-    "幸运儿",
-    "幻灯师",
     "野人",
-    "飞行家"
+    "幻灯师",
+    "飞行家",
+    "幸运儿"
    ],
    "survivor_bans": [],
    "score": "2:2",
@@ -5214,18 +5594,18 @@
    "survivor_team": "TE",
    "hunter_team": "成都Wolves",
    "survivors": [
-    "默剧艺人",
+    "古董商",
     "飞行家",
-    "守墓人",
-    "古董商"
+    "默剧艺人",
+    "守墓人"
    ],
    "hunter": "牙医",
    "hunter_player": "CyanX",
    "hunter_bans": [
-    "幸运儿",
     "幻灯师",
-    "逃脱大师",
-    "野人"
+    "野人",
+    "幸运儿",
+    "逃脱大师"
    ],
    "survivor_bans": [],
    "score": "0:5",
@@ -5241,18 +5621,18 @@
    "survivor_team": "TE",
    "hunter_team": "成都Wolves",
    "survivors": [
-    "调香师",
-    "病患",
     "佣兵",
-    "咒术师"
+    "咒术师",
+    "病患",
+    "调香师"
    ],
    "hunter": "歌剧演员",
    "hunter_player": "ChoAi",
    "hunter_bans": [
-    "园丁",
     "弓箭手",
     "斗牛士",
-    "气象学家"
+    "气象学家",
+    "园丁"
    ],
    "survivor_bans": [
     "跛脚羊"
@@ -5278,10 +5658,10 @@
    "hunter": "鹿头",
    "hunter_player": "ppei",
    "hunter_bans": [
-    "园丁",
     "弓箭手",
+    "逃脱大师",
     "斗牛士",
-    "逃脱大师"
+    "园丁"
    ],
    "survivor_bans": [
     "跛脚羊"
@@ -5296,183 +5676,11 @@
    "game": 1,
    "side": "upper",
    "tiebreak": false,
-   "survivor_team": "成都GG",
-   "hunter_team": "GR",
-   "survivors": [
-    "默剧艺人",
-    "气象学家",
-    "弓箭手",
-    "大副"
-   ],
-   "hunter": "跛脚羊",
-   "hunter_player": "Jin",
-   "hunter_bans": [
-    "守墓人",
-    "幸运儿",
-    "幻灯师",
-    "飞行家"
-   ],
-   "survivor_bans": [],
-   "score": "0:5",
-   "escape": 0,
-   "kill": 4,
-   "map": "湖景村"
-  },
-  {
-   "seq": 2,
-   "game": 1,
-   "side": "lower",
-   "tiebreak": false,
-   "survivor_team": "GR",
-   "hunter_team": "成都GG",
-   "survivors": [
-    "弓箭手",
-    "气象学家",
-    "幸运儿",
-    "守墓人"
-   ],
-   "hunter": "牙医",
-   "hunter_player": "YuM",
-   "hunter_bans": [
-    "入殓师",
-    "幻灯师",
-    "野人",
-    "飞行家"
-   ],
-   "survivor_bans": [],
-   "score": "0:5",
-   "escape": 0,
-   "kill": 4,
-   "map": "湖景村"
-  },
-  {
-   "seq": 3,
-   "game": 2,
-   "side": "upper",
-   "tiebreak": false,
-   "survivor_team": "成都GG",
-   "hunter_team": "GR",
-   "survivors": [
-    "斗牛士",
-    "飞行家",
-    "前锋",
-    "入殓师"
-   ],
-   "hunter": "喧嚣",
-   "hunter_player": "Jin",
-   "hunter_bans": [
-    "佣兵",
-    "园丁",
-    "心理学家",
-    "逃脱大师"
-   ],
-   "survivor_bans": [
-    "牙医"
-   ],
-   "score": "1:3",
-   "escape": 1,
-   "kill": 3,
-   "map": "月亮河公园"
-  },
-  {
-   "seq": 4,
-   "game": 2,
-   "side": "lower",
-   "tiebreak": false,
-   "survivor_team": "GR",
-   "hunter_team": "成都GG",
-   "survivors": [
-    "心理学家",
-    "幻灯师",
-    "病患",
-    "大副"
-   ],
-   "hunter": "歌剧演员",
-   "hunter_player": "YuM",
-   "hunter_bans": [
-    "佣兵",
-    "斗牛士",
-    "空军",
-    "默剧艺人"
-   ],
-   "survivor_bans": [
-    "跛脚羊"
-   ],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "月亮河公园"
-  },
-  {
-   "seq": 5,
-   "game": 3,
-   "side": "upper",
-   "tiebreak": false,
-   "survivor_team": "GR",
-   "hunter_team": "成都GG",
-   "survivors": [
-    "斗牛士",
-    "作曲家",
-    "木偶师",
-    "佣兵"
-   ],
-   "hunter": "台球手",
-   "hunter_player": "YuM",
-   "hunter_bans": [
-    "先知",
-    "拉拉队员",
-    "法罗女士",
-    "逃脱大师"
-   ],
-   "survivor_bans": [
-    "女王蜂",
-    "跛脚羊"
-   ],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "永眠镇"
-  },
-  {
-   "seq": 6,
-   "game": 3,
-   "side": "lower",
-   "tiebreak": false,
-   "survivor_team": "成都GG",
-   "hunter_team": "GR",
-   "survivors": [
-    "病患",
-    "法罗女士",
-    "咒术师",
-    "祭司"
-   ],
-   "hunter": "破轮",
-   "hunter_player": "Jin",
-   "hunter_bans": [
-    "勘探员",
-    "守墓人",
-    "机械师",
-    "逃脱大师"
-   ],
-   "survivor_bans": [
-    "台球手",
-    "牙医"
-   ],
-   "score": "0:5",
-   "escape": 0,
-   "kill": 4,
-   "map": "永眠镇"
-  },
-  {
-   "seq": 1,
-   "game": 1,
-   "side": "upper",
-   "tiebreak": false,
    "survivor_team": "ACT",
    "hunter_team": "ASC",
    "survivors": [
-    "逃脱大师",
     "古董商",
+    "逃脱大师",
     "气象学家",
     "心理学家"
    ],
@@ -5480,9 +5688,9 @@
    "hunter_player": "Tear",
    "hunter_bans": [
     "幻灯师",
-    "斗牛士",
     "野人",
-    "飞行家"
+    "飞行家",
+    "斗牛士"
    ],
    "survivor_bans": [],
    "score": "0:5",
@@ -5498,10 +5706,10 @@
    "survivor_team": "ASC",
    "hunter_team": "ACT",
    "survivors": [
+    "咒术师",
     "飞行家",
-    "大副",
     "幸运儿",
-    "咒术师"
+    "大副"
    ],
    "hunter": "歌剧演员",
    "hunter_player": "zz9",
@@ -5525,18 +5733,18 @@
    "survivor_team": "ASC",
    "hunter_team": "ACT",
    "survivors": [
-    "气象学家",
-    "逃脱大师",
+    "弓箭手",
     "木偶师",
-    "弓箭手"
+    "气象学家",
+    "逃脱大师"
    ],
    "hunter": "台球手",
    "hunter_player": "zz9",
    "hunter_bans": [
-    "作曲家",
     "古董商",
-    "守墓人",
-    "幻灯师"
+    "幻灯师",
+    "作曲家",
+    "守墓人"
    ],
    "survivor_bans": [
     "时空之影"
@@ -5554,18 +5762,18 @@
    "survivor_team": "ACT",
    "hunter_team": "ASC",
    "survivors": [
-    "木偶师",
-    "前锋",
     "拉拉队员",
-    "作曲家"
+    "作曲家",
+    "前锋",
+    "木偶师"
    ],
    "hunter": "女王蜂",
    "hunter_player": "Tear",
    "hunter_bans": [
-    "幸运儿",
-    "幻灯师",
     "弓箭手",
-    "飞行家"
+    "幻灯师",
+    "飞行家",
+    "幸运儿"
    ],
    "survivor_bans": [
     "台球手"
@@ -5580,313 +5788,141 @@
    "game": 1,
    "side": "upper",
    "tiebreak": false,
-   "survivor_team": "ASC",
-   "hunter_team": "FPX.ZQ",
+   "survivor_team": "成都GG",
+   "hunter_team": "GR",
    "survivors": [
-    "飞行家",
+    "弓箭手",
+    "气象学家",
     "大副",
-    "调香师",
-    "弓箭手"
+    "默剧艺人"
    ],
-   "hunter": "牙医",
-   "hunter_player": "Qx",
+   "hunter": "跛脚羊",
+   "hunter_player": "Jin",
    "hunter_bans": [
-    "守墓人",
-    "幸运儿",
     "幻灯师",
-    "野人"
+    "飞行家",
+    "守墓人",
+    "幸运儿"
    ],
    "survivor_bans": [],
-   "score": "1:3",
-   "escape": 1,
-   "kill": 3,
-   "map": "不归林"
+   "score": "0:5",
+   "escape": 0,
+   "kill": 4,
+   "map": "湖景村"
   },
   {
    "seq": 2,
    "game": 1,
    "side": "lower",
    "tiebreak": false,
-   "survivor_team": "FPX.ZQ",
-   "hunter_team": "ASC",
+   "survivor_team": "GR",
+   "hunter_team": "成都GG",
    "survivors": [
-    "古董商",
     "气象学家",
-    "机械师",
-    "守墓人"
+    "弓箭手",
+    "守墓人",
+    "幸运儿"
    ],
    "hunter": "牙医",
-   "hunter_player": "Tear",
+   "hunter_player": "YuM",
    "hunter_bans": [
-    "幸运儿",
     "幻灯师",
-    "弓箭手",
-    "飞行家"
+    "飞行家",
+    "野人",
+    "入殓师"
    ],
    "survivor_bans": [],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "不归林"
+   "score": "0:5",
+   "escape": 0,
+   "kill": 4,
+   "map": "湖景村"
   },
   {
    "seq": 3,
    "game": 2,
    "side": "upper",
    "tiebreak": false,
-   "survivor_team": "FPX.ZQ",
-   "hunter_team": "ASC",
+   "survivor_team": "成都GG",
+   "hunter_team": "GR",
    "survivors": [
-    "咒术师",
-    "医生",
-    "默剧艺人",
-    "大副"
+    "前锋",
+    "飞行家",
+    "斗牛士",
+    "入殓师"
    ],
    "hunter": "喧嚣",
-   "hunter_player": "Tear",
+   "hunter_player": "Jin",
    "hunter_bans": [
+    "逃脱大师",
     "佣兵",
-    "木偶师",
-    "逃脱大师",
-    "飞行家"
-   ],
-   "survivor_bans": [
-    "女王蜂"
-   ],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "湖景村"
-  },
-  {
-   "seq": 4,
-   "game": 2,
-   "side": "lower",
-   "tiebreak": false,
-   "survivor_team": "ASC",
-   "hunter_team": "FPX.ZQ",
-   "survivors": [
-    "气象学家",
-    "守墓人",
-    "木偶师",
-    "咒术师"
-   ],
-   "hunter": "时空之影",
-   "hunter_player": "DongX",
-   "hunter_bans": [
-    "古董商",
-    "幸运儿",
-    "幻灯师",
-    "斗牛士"
-   ],
-   "survivor_bans": [
-    "女王蜂"
-   ],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "湖景村"
-  },
-  {
-   "seq": 5,
-   "game": 3,
-   "side": "upper",
-   "tiebreak": false,
-   "survivor_team": "ASC",
-   "hunter_team": "FPX.ZQ",
-   "survivors": [
     "心理学家",
-    "前锋",
-    "调酒师",
-    "斗牛士"
-   ],
-   "hunter": "鹿头",
-   "hunter_player": "DongX",
-   "hunter_bans": [
-    "先知",
-    "古董商",
-    "幸运儿",
-    "幻灯师"
+    "园丁"
    ],
    "survivor_bans": [
-    "台球手",
-    "女王蜂"
+    "牙医"
    ],
-   "score": "0:5",
-   "escape": 0,
-   "kill": 4,
-   "map": "永眠镇"
-  },
-  {
-   "seq": 6,
-   "game": 3,
-   "side": "lower",
-   "tiebreak": false,
-   "survivor_team": "FPX.ZQ",
-   "hunter_team": "ASC",
-   "survivors": [
-    "斗牛士",
-    "邮差",
-    "祭司",
-    "野人"
-   ],
-   "hunter": "雕刻家",
-   "hunter_player": "Tear",
-   "hunter_bans": [
-    "前锋",
-    "幻灯师",
-    "弓箭手",
-    "飞行家"
-   ],
-   "survivor_bans": [
-    "台球手",
-    "跛脚羊"
-   ],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "永眠镇"
-  },
-  {
-   "seq": 1,
-   "game": 1,
-   "side": "upper",
-   "tiebreak": false,
-   "survivor_team": "成都Wolves",
-   "hunter_team": "DOU5",
-   "survivors": [
-    "守墓人",
-    "默剧艺人",
-    "弓箭手",
-    "教授"
-   ],
-   "hunter": "牙医",
-   "hunter_player": "YuZ",
-   "hunter_bans": [
-    "幸运儿",
-    "幻灯师",
-    "野人",
-    "飞行家"
-   ],
-   "survivor_bans": [],
-   "score": "3:1",
-   "escape": 3,
-   "kill": 1,
-   "map": "湖景村"
-  },
-  {
-   "seq": 2,
-   "game": 1,
-   "side": "lower",
-   "tiebreak": false,
-   "survivor_team": "DOU5",
-   "hunter_team": "成都Wolves",
-   "survivors": [
-    "古董商",
-    "守墓人",
-    "默剧艺人",
-    "飞行家"
-   ],
-   "hunter": "牙医",
-   "hunter_player": "CyanX",
-   "hunter_bans": [
-    "幻灯师",
-    "弓箭手",
-    "逃脱大师",
-    "野人"
-   ],
-   "survivor_bans": [],
    "score": "1:3",
    "escape": 1,
    "kill": 3,
-   "map": "湖景村"
-  },
-  {
-   "seq": 3,
-   "game": 2,
-   "side": "upper",
-   "tiebreak": false,
-   "survivor_team": "成都Wolves",
-   "hunter_team": "DOU5",
-   "survivors": [
-    "大副",
-    "幻灯师",
-    "幸运儿",
-    "气象学家"
-   ],
-   "hunter": "蜡像师",
-   "hunter_player": "Qiu",
-   "hunter_bans": [
-    "佣兵",
-    "斗牛士",
-    "逃脱大师",
-    "飞行家"
-   ],
-   "survivor_bans": [
-    "跛脚羊"
-   ],
-   "score": "0:5",
-   "escape": 0,
-   "kill": 4,
-   "map": "不归林"
+   "map": "月亮河公园"
   },
   {
    "seq": 4,
    "game": 2,
    "side": "lower",
    "tiebreak": false,
-   "survivor_team": "DOU5",
-   "hunter_team": "成都Wolves",
+   "survivor_team": "GR",
+   "hunter_team": "成都GG",
    "survivors": [
-    "咒术师",
-    "大副",
-    "气象学家",
-    "木偶师"
-   ],
-   "hunter": "鹿头",
-   "hunter_player": "CyanX",
-   "hunter_bans": [
     "幻灯师",
-    "弓箭手",
+    "病患",
+    "大副",
+    "心理学家"
+   ],
+   "hunter": "歌剧演员",
+   "hunter_player": "YuM",
+   "hunter_bans": [
     "斗牛士",
-    "逃脱大师"
+    "默剧艺人",
+    "佣兵",
+    "空军"
    ],
    "survivor_bans": [
-    "女王蜂"
+    "跛脚羊"
    ],
    "score": "2:2",
    "escape": 2,
    "kill": 2,
-   "map": "不归林"
+   "map": "月亮河公园"
   },
   {
    "seq": 5,
    "game": 3,
    "side": "upper",
    "tiebreak": false,
-   "survivor_team": "成都Wolves",
-   "hunter_team": "DOU5",
+   "survivor_team": "GR",
+   "hunter_team": "成都GG",
    "survivors": [
-    "逃脱大师",
-    "作曲家",
-    "古董商",
-    "飞行家"
+    "佣兵",
+    "斗牛士",
+    "木偶师",
+    "作曲家"
    ],
-   "hunter": "女王蜂",
-   "hunter_player": "Qiu",
+   "hunter": "台球手",
+   "hunter_player": "YuM",
    "hunter_bans": [
     "先知",
-    "咒术师",
-    "拉拉队员",
-    "斗牛士"
+    "逃脱大师",
+    "法罗女士",
+    "拉拉队员"
    ],
    "survivor_bans": [
-    "台球手",
-    "跛脚羊"
+    "跛脚羊",
+    "女王蜂"
    ],
-   "score": "3:1",
-   "escape": 3,
-   "kill": 1,
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
    "map": "永眠镇"
   },
   {
@@ -5894,29 +5930,29 @@
    "game": 3,
    "side": "lower",
    "tiebreak": false,
-   "survivor_team": "DOU5",
-   "hunter_team": "成都Wolves",
+   "survivor_team": "成都GG",
+   "hunter_team": "GR",
    "survivors": [
-    "勘探员",
-    "逃脱大师",
     "祭司",
-    "病患"
+    "咒术师",
+    "病患",
+    "法罗女士"
    ],
-   "hunter": "女王蜂",
-   "hunter_player": "CyanX",
+   "hunter": "破轮",
+   "hunter_player": "Jin",
    "hunter_bans": [
-    "囚徒",
-    "幸运儿",
-    "幻灯师",
-    "弓箭手"
+    "逃脱大师",
+    "勘探员",
+    "守墓人",
+    "机械师"
    ],
    "survivor_bans": [
-    "台球手",
-    "跛脚羊"
+    "牙医",
+    "台球手"
    ],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
+   "score": "0:5",
+   "escape": 0,
+   "kill": 4,
    "map": "永眠镇"
   },
   {
@@ -5927,18 +5963,18 @@
    "survivor_team": "北京WBG",
    "hunter_team": "MRC",
    "survivors": [
-    "古董商",
-    "飞行家",
     "守墓人",
-    "幸运儿"
+    "飞行家",
+    "幸运儿",
+    "古董商"
    ],
    "hunter": "牙医",
    "hunter_player": "BaiLu",
    "hunter_bans": [
-    "作曲家",
-    "咒术师",
+    "祭司",
     "幻灯师",
-    "祭司"
+    "作曲家",
+    "咒术师"
    ],
    "survivor_bans": [],
    "score": "2:2",
@@ -5954,18 +5990,18 @@
    "survivor_team": "MRC",
    "hunter_team": "北京WBG",
    "survivors": [
-    "气象学家",
     "祭司",
     "守墓人",
+    "气象学家",
     "法罗女士"
    ],
    "hunter": "牙医",
    "hunter_player": "NonSept",
    "hunter_bans": [
-    "幻灯师",
-    "弓箭手",
     "野人",
-    "飞行家"
+    "幻灯师",
+    "飞行家",
+    "弓箭手"
    ],
    "survivor_bans": [],
    "score": "2:2",
@@ -5981,18 +6017,18 @@
    "survivor_team": "MRC",
    "hunter_team": "北京WBG",
    "survivors": [
-    "飞行家",
+    "幻灯师",
     "园丁",
-    "大副",
-    "幻灯师"
+    "飞行家",
+    "大副"
    ],
    "hunter": "歌剧演员",
    "hunter_player": "N1e",
    "hunter_bans": [
-    "佣兵",
-    "古董商",
     "弓箭手",
-    "病患"
+    "古董商",
+    "病患",
+    "佣兵"
    ],
    "survivor_bans": [
     "跛脚羊"
@@ -6011,16 +6047,16 @@
    "hunter_team": "MRC",
    "survivors": [
     "斗牛士",
-    "入殓师",
+    "默剧艺人",
     "佣兵",
-    "默剧艺人"
+    "入殓师"
    ],
    "hunter": "歌剧演员",
    "hunter_player": "BaiLu",
    "hunter_bans": [
-    "园丁",
     "弓箭手",
     "气象学家",
+    "园丁",
     "空军"
    ],
    "survivor_bans": [
@@ -6039,22 +6075,22 @@
    "survivor_team": "北京WBG",
    "hunter_team": "MRC",
    "survivors": [
-    "咒术师",
-    "木偶师",
     "大副",
-    "心理学家"
+    "心理学家",
+    "木偶师",
+    "咒术师"
    ],
    "hunter": "女王蜂",
    "hunter_player": "BaiLu",
    "hunter_bans": [
     "幻灯师",
-    "弓箭手",
+    "逃脱大师",
     "机械师",
-    "逃脱大师"
+    "弓箭手"
    ],
    "survivor_bans": [
-    "台球手",
-    "跛脚羊"
+    "跛脚羊",
+    "台球手"
    ],
    "score": "2:2",
    "escape": 2,
@@ -6071,16 +6107,16 @@
    "survivors": [
     "先知",
     "幸运儿",
-    "哭泣小丑",
-    "调酒师"
+    "调酒师",
+    "哭泣小丑"
    ],
    "hunter": "杂货商",
    "hunter_player": "N1e",
    "hunter_bans": [
-    "前锋",
     "咒术师",
+    "逃脱大师",
     "弓箭手",
-    "逃脱大师"
+    "前锋"
    ],
    "survivor_bans": [
     "女王蜂",
@@ -6099,18 +6135,18 @@
    "survivor_team": "MRC",
    "hunter_team": "北京WBG",
    "survivors": [
-    "心理学家",
     "囚徒",
     "逃脱大师",
-    "咒术师"
+    "咒术师",
+    "心理学家"
    ],
    "hunter": "台球手",
    "hunter_player": "N1e",
    "hunter_bans": [
+    "空军",
     "作曲家",
-    "木偶师",
     "机械师",
-    "空军"
+    "木偶师"
    ],
    "survivor_bans": [
     "女王蜂",
@@ -6129,22 +6165,22 @@
    "survivor_team": "北京WBG",
    "hunter_team": "MRC",
    "survivors": [
-    "幻灯师",
-    "邮差",
     "逃脱大师",
-    "法罗女士"
+    "法罗女士",
+    "幻灯师",
+    "邮差"
    ],
    "hunter": "记录员",
    "hunter_player": "BaiLu",
    "hunter_bans": [
     "作曲家",
     "囚徒",
-    "弓箭手",
-    "机械师"
+    "机械师",
+    "弓箭手"
    ],
    "survivor_bans": [
-    "台球手",
-    "跛脚羊"
+    "跛脚羊",
+    "台球手"
    ],
    "score": "2:2",
    "escape": 2,
@@ -6156,21 +6192,365 @@
    "game": 1,
    "side": "upper",
    "tiebreak": false,
+   "survivor_team": "ASC",
+   "hunter_team": "FPX.ZQ",
+   "survivors": [
+    "弓箭手",
+    "调香师",
+    "大副",
+    "飞行家"
+   ],
+   "hunter": "牙医",
+   "hunter_player": "Qx",
+   "hunter_bans": [
+    "野人",
+    "幻灯师",
+    "守墓人",
+    "幸运儿"
+   ],
+   "survivor_bans": [],
+   "score": "1:3",
+   "escape": 1,
+   "kill": 3,
+   "map": "不归林"
+  },
+  {
+   "seq": 2,
+   "game": 1,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "FPX.ZQ",
+   "hunter_team": "ASC",
+   "survivors": [
+    "守墓人",
+    "气象学家",
+    "机械师",
+    "古董商"
+   ],
+   "hunter": "牙医",
+   "hunter_player": "Tear",
+   "hunter_bans": [
+    "幻灯师",
+    "飞行家",
+    "幸运儿",
+    "弓箭手"
+   ],
+   "survivor_bans": [],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "不归林"
+  },
+  {
+   "seq": 3,
+   "game": 2,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "FPX.ZQ",
+   "hunter_team": "ASC",
+   "survivors": [
+    "医生",
+    "咒术师",
+    "默剧艺人",
+    "大副"
+   ],
+   "hunter": "喧嚣",
+   "hunter_player": "Tear",
+   "hunter_bans": [
+    "飞行家",
+    "逃脱大师",
+    "木偶师",
+    "佣兵"
+   ],
+   "survivor_bans": [
+    "女王蜂"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "湖景村"
+  },
+  {
+   "seq": 4,
+   "game": 2,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "ASC",
+   "hunter_team": "FPX.ZQ",
+   "survivors": [
+    "守墓人",
+    "气象学家",
+    "咒术师",
+    "木偶师"
+   ],
+   "hunter": "时空之影",
+   "hunter_player": "DongX",
+   "hunter_bans": [
+    "幻灯师",
+    "古董商",
+    "斗牛士",
+    "幸运儿"
+   ],
+   "survivor_bans": [
+    "女王蜂"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "湖景村"
+  },
+  {
+   "seq": 5,
+   "game": 3,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "ASC",
+   "hunter_team": "FPX.ZQ",
+   "survivors": [
+    "前锋",
+    "斗牛士",
+    "调酒师",
+    "心理学家"
+   ],
+   "hunter": "鹿头",
+   "hunter_player": "DongX",
+   "hunter_bans": [
+    "幻灯师",
+    "古董商",
+    "幸运儿",
+    "先知"
+   ],
+   "survivor_bans": [
+    "女王蜂",
+    "台球手"
+   ],
+   "score": "0:5",
+   "escape": 0,
+   "kill": 4,
+   "map": "永眠镇"
+  },
+  {
+   "seq": 6,
+   "game": 3,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "FPX.ZQ",
+   "hunter_team": "ASC",
+   "survivors": [
+    "祭司",
+    "斗牛士",
+    "邮差",
+    "野人"
+   ],
+   "hunter": "雕刻家",
+   "hunter_player": "Tear",
+   "hunter_bans": [
+    "弓箭手",
+    "幻灯师",
+    "飞行家",
+    "前锋"
+   ],
+   "survivor_bans": [
+    "跛脚羊",
+    "台球手"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "永眠镇"
+  },
+  {
+   "seq": 1,
+   "game": 1,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "成都Wolves",
+   "hunter_team": "DOU5",
+   "survivors": [
+    "守墓人",
+    "弓箭手",
+    "默剧艺人",
+    "教授"
+   ],
+   "hunter": "牙医",
+   "hunter_player": "YuZ",
+   "hunter_bans": [
+    "幻灯师",
+    "野人",
+    "飞行家",
+    "幸运儿"
+   ],
+   "survivor_bans": [],
+   "score": "3:1",
+   "escape": 3,
+   "kill": 1,
+   "map": "湖景村"
+  },
+  {
+   "seq": 2,
+   "game": 1,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "DOU5",
+   "hunter_team": "成都Wolves",
+   "survivors": [
+    "飞行家",
+    "默剧艺人",
+    "古董商",
+    "守墓人"
+   ],
+   "hunter": "牙医",
+   "hunter_player": "CyanX",
+   "hunter_bans": [
+    "幻灯师",
+    "野人",
+    "弓箭手",
+    "逃脱大师"
+   ],
+   "survivor_bans": [],
+   "score": "1:3",
+   "escape": 1,
+   "kill": 3,
+   "map": "湖景村"
+  },
+  {
+   "seq": 3,
+   "game": 2,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "成都Wolves",
+   "hunter_team": "DOU5",
+   "survivors": [
+    "大副",
+    "幻灯师",
+    "气象学家",
+    "幸运儿"
+   ],
+   "hunter": "蜡像师",
+   "hunter_player": "Qiu",
+   "hunter_bans": [
+    "逃脱大师",
+    "佣兵",
+    "飞行家",
+    "斗牛士"
+   ],
+   "survivor_bans": [
+    "跛脚羊"
+   ],
+   "score": "0:5",
+   "escape": 0,
+   "kill": 4,
+   "map": "不归林"
+  },
+  {
+   "seq": 4,
+   "game": 2,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "DOU5",
+   "hunter_team": "成都Wolves",
+   "survivors": [
+    "咒术师",
+    "木偶师",
+    "气象学家",
+    "大副"
+   ],
+   "hunter": "鹿头",
+   "hunter_player": "CyanX",
+   "hunter_bans": [
+    "幻灯师",
+    "弓箭手",
+    "斗牛士",
+    "逃脱大师"
+   ],
+   "survivor_bans": [
+    "女王蜂"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "不归林"
+  },
+  {
+   "seq": 5,
+   "game": 3,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "成都Wolves",
+   "hunter_team": "DOU5",
+   "survivors": [
+    "逃脱大师",
+    "飞行家",
+    "古董商",
+    "作曲家"
+   ],
+   "hunter": "女王蜂",
+   "hunter_player": "Qiu",
+   "hunter_bans": [
+    "先知",
+    "斗牛士",
+    "咒术师",
+    "拉拉队员"
+   ],
+   "survivor_bans": [
+    "跛脚羊",
+    "台球手"
+   ],
+   "score": "3:1",
+   "escape": 3,
+   "kill": 1,
+   "map": "永眠镇"
+  },
+  {
+   "seq": 6,
+   "game": 3,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "DOU5",
+   "hunter_team": "成都Wolves",
+   "survivors": [
+    "病患",
+    "逃脱大师",
+    "祭司",
+    "勘探员"
+   ],
+   "hunter": "女王蜂",
+   "hunter_player": "CyanX",
+   "hunter_bans": [
+    "幻灯师",
+    "弓箭手",
+    "幸运儿",
+    "囚徒"
+   ],
+   "survivor_bans": [
+    "跛脚羊",
+    "台球手"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "永眠镇"
+  },
+  {
+   "seq": 1,
+   "game": 1,
+   "side": "upper",
+   "tiebreak": false,
    "survivor_team": "DOU5",
    "hunter_team": "ASC",
    "survivors": [
-    "弓箭手",
-    "逃脱大师",
     "幻灯师",
+    "逃脱大师",
+    "弓箭手",
     "小说家"
    ],
    "hunter": "女王蜂",
    "hunter_player": "Tear",
    "hunter_bans": [
-    "木偶师",
-    "气象学家",
     "飞行家",
-    "默剧艺人"
+    "默剧艺人",
+    "气象学家",
+    "木偶师"
    ],
    "survivor_bans": [],
    "score": "2:2",
@@ -6186,18 +6566,18 @@
    "survivor_team": "ASC",
    "hunter_team": "DOU5",
    "survivors": [
-    "飞行家",
     "守墓人",
+    "木偶师",
     "弓箭手",
-    "木偶师"
+    "飞行家"
    ],
    "hunter": "跛脚羊",
    "hunter_player": "Qiu",
    "hunter_bans": [
-    "古董商",
-    "幸运儿",
+    "野人",
     "幻灯师",
-    "野人"
+    "古董商",
+    "幸运儿"
    ],
    "survivor_bans": [],
    "score": "1:3",
@@ -6213,18 +6593,18 @@
    "survivor_team": "ASC",
    "hunter_team": "DOU5",
    "survivors": [
-    "火灾调查员",
+    "病患",
     "佣兵",
     "心理学家",
-    "病患"
+    "火灾调查员"
    ],
    "hunter": "歌剧演员",
    "hunter_player": "Qiu",
    "hunter_bans": [
-    "作曲家",
     "古董商",
+    "逃脱大师",
     "气象学家",
-    "逃脱大师"
+    "作曲家"
    ],
    "survivor_bans": [
     "牙医"
@@ -6243,17 +6623,17 @@
    "hunter_team": "ASC",
    "survivors": [
     "咒术师",
-    "大副",
     "气象学家",
+    "大副",
     "心理学家"
    ],
    "hunter": "台球手",
    "hunter_player": "Tear",
    "hunter_bans": [
     "古董商",
+    "斗牛士",
     "守墓人",
-    "幸运儿",
-    "斗牛士"
+    "幸运儿"
    ],
    "survivor_bans": [
     "牙医"
@@ -6271,22 +6651,22 @@
    "survivor_team": "ASC",
    "hunter_team": "DOU5",
    "survivors": [
-    "幻灯师",
     "大副",
     "古董商",
-    "幸运儿"
+    "幸运儿",
+    "幻灯师"
    ],
    "hunter": "26号守卫",
    "hunter_player": "Qiu",
    "hunter_bans": [
+    "逃脱大师",
     "前锋",
     "斗牛士",
-    "气象学家",
-    "逃脱大师"
+    "气象学家"
    ],
    "survivor_bans": [
-    "女王蜂",
-    "牙医"
+    "牙医",
+    "女王蜂"
    ],
    "score": "2:2",
    "escape": 2,
@@ -6301,10 +6681,10 @@
    "survivor_team": "DOU5",
    "hunter_team": "ASC",
    "survivors": [
-    "作曲家",
-    "守墓人",
     "飞行家",
-    "木偶师"
+    "守墓人",
+    "木偶师",
+    "作曲家"
    ],
    "hunter": "跛脚羊",
    "hunter_player": "Tear",
@@ -6328,21 +6708,133 @@
    "game": 1,
    "side": "upper",
    "tiebreak": false,
+   "survivor_team": "GR",
+   "hunter_team": "成都Wolves",
+   "survivors": [
+    "弓箭手",
+    "守墓人",
+    "气象学家",
+    "木偶师"
+   ],
+   "hunter": "牙医",
+   "hunter_player": "ChoAi",
+   "hunter_bans": [
+    "幻灯师",
+    "野人",
+    "飞行家",
+    "祭司"
+   ],
+   "survivor_bans": [],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "永眠镇"
+  },
+  {
+   "seq": 2,
+   "game": 1,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "成都Wolves",
+   "hunter_team": "GR",
+   "survivors": [
+    "野人",
+    "飞行家",
+    "古董商",
+    "幸运儿"
+   ],
+   "hunter": "破轮",
+   "hunter_player": "Jin",
+   "hunter_bans": [
+    "守墓人",
+    "逃脱大师",
+    "弓箭手",
+    "幻灯师"
+   ],
+   "survivor_bans": [],
+   "score": "0:5",
+   "escape": 0,
+   "kill": 4,
+   "map": "永眠镇"
+  },
+  {
+   "seq": 3,
+   "game": 2,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "成都Wolves",
+   "hunter_team": "GR",
+   "survivors": [
+    "气象学家",
+    "斗牛士",
+    "园丁",
+    "大副"
+   ],
+   "hunter": "牙医",
+   "hunter_player": "Jin",
+   "hunter_bans": [
+    "弓箭手",
+    "咒术师",
+    "幻灯师",
+    "佣兵"
+   ],
+   "survivor_bans": [
+    "跛脚羊"
+   ],
+   "score": "0:5",
+   "escape": 0,
+   "kill": 4,
+   "map": "月亮河公园"
+  },
+  {
+   "seq": 4,
+   "game": 2,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "GR",
+   "hunter_team": "成都Wolves",
+   "survivors": [
+    "默剧艺人",
+    "空军",
+    "佣兵",
+    "先知"
+   ],
+   "hunter": "女王蜂",
+   "hunter_player": "ChoAi",
+   "hunter_bans": [
+    "古董商",
+    "幻灯师",
+    "斗牛士",
+    "飞行家"
+   ],
+   "survivor_bans": [
+    "跛脚羊"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "月亮河公园"
+  },
+  {
+   "seq": 1,
+   "game": 1,
+   "side": "upper",
+   "tiebreak": false,
    "survivor_team": "TE",
    "hunter_team": "北京WBG",
    "survivors": [
+    "逃脱大师",
     "法罗女士",
     "飞行家",
-    "逃脱大师",
     "弓箭手"
    ],
    "hunter": "时空之影",
    "hunter_player": "N1e",
    "hunter_bans": [
-    "古董商",
-    "咒术师",
     "幻灯师",
-    "祭司"
+    "祭司",
+    "咒术师",
+    "古董商"
    ],
    "survivor_bans": [],
    "score": "2:2",
@@ -6358,18 +6850,18 @@
    "survivor_team": "北京WBG",
    "hunter_team": "TE",
    "survivors": [
-    "弓箭手",
     "飞行家",
     "逃脱大师",
+    "弓箭手",
     "作曲家"
    ],
    "hunter": "牙医",
    "hunter_player": "Nokino",
    "hunter_bans": [
-    "古董商",
     "幻灯师",
-    "法罗女士",
-    "野人"
+    "野人",
+    "古董商",
+    "法罗女士"
    ],
    "survivor_bans": [],
    "score": "2:2",
@@ -6385,18 +6877,18 @@
    "survivor_team": "TE",
    "hunter_team": "北京WBG",
    "survivors": [
-    "调香师",
     "气象学家",
-    "大副",
-    "古董商"
+    "古董商",
+    "调香师",
+    "大副"
    ],
    "hunter": "台球手",
    "hunter_player": "N1e",
    "hunter_bans": [
+    "幻灯师",
     "咒术师",
-    "守墓人",
     "幸运儿",
-    "幻灯师"
+    "守墓人"
    ],
    "survivor_bans": [
     "牙医"
@@ -6416,16 +6908,16 @@
    "survivors": [
     "幻灯师",
     "默剧艺人",
-    "大副",
-    "咒术师"
+    "咒术师",
+    "大副"
    ],
    "hunter": "女王蜂",
    "hunter_player": "Nokino",
    "hunter_bans": [
     "佣兵",
+    "木偶师",
     "古董商",
-    "守墓人",
-    "木偶师"
+    "守墓人"
    ],
    "survivor_bans": [
     "跛脚羊"
@@ -6443,22 +6935,22 @@
    "survivor_team": "TE",
    "hunter_team": "北京WBG",
    "survivors": [
-    "默剧艺人",
     "幻灯师",
     "佣兵",
+    "默剧艺人",
     "病患"
    ],
    "hunter": "女王蜂",
    "hunter_player": "N1e",
    "hunter_bans": [
     "咒术师",
+    "祭司",
     "幸运儿",
-    "木偶师",
-    "祭司"
+    "木偶师"
    ],
    "survivor_bans": [
-    "牙医",
-    "跛脚羊"
+    "跛脚羊",
+    "牙医"
    ],
    "score": "1:3",
    "escape": 1,
@@ -6473,21 +6965,253 @@
    "survivor_team": "北京WBG",
    "hunter_team": "TE",
    "survivors": [
-    "火灾调查员",
-    "木偶师",
     "守墓人",
-    "幸运儿"
+    "幸运儿",
+    "木偶师",
+    "火灾调查员"
    ],
    "hunter": "渔女",
    "hunter_player": "Nokino",
    "hunter_bans": [
     "佣兵",
-    "古董商",
+    "祭司",
     "斗牛士",
-    "祭司"
+    "古董商"
+   ],
+   "survivor_bans": [
+    "跛脚羊",
+    "台球手"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "永眠镇"
+  },
+  {
+   "seq": 1,
+   "game": 1,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "ACT",
+   "hunter_team": "成都GG",
+   "survivors": [
+    "逃脱大师",
+    "古董商",
+    "飞行家",
+    "园丁"
+   ],
+   "hunter": "台球手",
+   "hunter_player": "YuM",
+   "hunter_bans": [
+    "野人",
+    "幻灯师",
+    "气象学家",
+    "幸运儿"
+   ],
+   "survivor_bans": [],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "湖景村"
+  },
+  {
+   "seq": 2,
+   "game": 1,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "成都GG",
+   "hunter_team": "ACT",
+   "survivors": [
+    "大副",
+    "弓箭手",
+    "默剧艺人",
+    "木偶师"
+   ],
+   "hunter": "跛脚羊",
+   "hunter_player": "zz9",
+   "hunter_bans": [
+    "飞行家",
+    "幻灯师",
+    "气象学家",
+    "幸运儿"
+   ],
+   "survivor_bans": [],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "湖景村"
+  },
+  {
+   "seq": 3,
+   "game": 2,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "ACT",
+   "hunter_team": "成都GG",
+   "survivors": [
+    "弓箭手",
+    "心理学家",
+    "野人",
+    "木偶师"
+   ],
+   "hunter": "鹿头",
+   "hunter_player": "YuM",
+   "hunter_bans": [
+    "前锋",
+    "斗牛士",
+    "守墓人",
+    "气象学家"
+   ],
+   "survivor_bans": [
+    "牙医"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "月亮河公园"
+  },
+  {
+   "seq": 4,
+   "game": 2,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "成都GG",
+   "hunter_team": "ACT",
+   "survivors": [
+    "气象学家",
+    "斗牛士",
+    "佣兵",
+    "飞行家"
+   ],
+   "hunter": "时空之影",
+   "hunter_player": "zz9",
+   "hunter_bans": [
+    "古董商",
+    "前锋",
+    "空军",
+    "心理学家"
+   ],
+   "survivor_bans": [
+    "牙医"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "月亮河公园"
+  },
+  {
+   "seq": 5,
+   "game": 3,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "ACT",
+   "hunter_team": "成都GG",
+   "survivors": [
+    "医生",
+    "咒术师",
+    "守墓人",
+    "气象学家"
+   ],
+   "hunter": "女王蜂",
+   "hunter_player": "YuM",
+   "hunter_bans": [
+    "先知",
+    "祭司",
+    "幻灯师",
+    "幸运儿"
+   ],
+   "survivor_bans": [
+    "牙医",
+    "歌剧演员"
+   ],
+   "score": "3:1",
+   "escape": 3,
+   "kill": 1,
+   "map": "唐人街"
+  },
+  {
+   "seq": 6,
+   "game": 3,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "成都GG",
+   "hunter_team": "ACT",
+   "survivors": [
+    "勘探员",
+    "幸运儿",
+    "守墓人",
+    "古董商"
+   ],
+   "hunter": "女王蜂",
+   "hunter_player": "zz9",
+   "hunter_bans": [
+    "前锋",
+    "祭司",
+    "冒险家",
+    "心理学家"
    ],
    "survivor_bans": [
     "台球手",
+    "牙医"
+   ],
+   "score": "3:1",
+   "escape": 3,
+   "kill": 1,
+   "map": "唐人街"
+  },
+  {
+   "seq": 7,
+   "game": 4,
+   "side": "upper",
+   "tiebreak": true,
+   "survivor_team": "成都GG",
+   "hunter_team": "ACT",
+   "survivors": [
+    "拉拉队员",
+    "作曲家",
+    "心理学家",
+    "邮差"
+   ],
+   "hunter": "蜡像师",
+   "hunter_player": "zz9",
+   "hunter_bans": [
+    "前锋",
+    "祭司",
+    "幻灯师",
+    "逃脱大师"
+   ],
+   "survivor_bans": [
+    "台球手",
+    "牙医"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "永眠镇"
+  },
+  {
+   "seq": 8,
+   "game": 4,
+   "side": "lower",
+   "tiebreak": true,
+   "survivor_team": "ACT",
+   "hunter_team": "成都GG",
+   "survivors": [
+    "作曲家",
+    "幻灯师",
+    "拉拉队员",
+    "法罗女士"
+   ],
+   "hunter": "歌剧演员",
+   "hunter_player": "YuM",
+   "hunter_bans": [
+    "斗牛士",
+    "幸运儿",
+    "空军",
+    "佣兵"
+   ],
+   "survivor_bans": [
+    "牙医",
     "跛脚羊"
    ],
    "score": "2:2",
@@ -6500,21 +7224,21 @@
    "game": 1,
    "side": "upper",
    "tiebreak": false,
-   "survivor_team": "GR",
-   "hunter_team": "成都Wolves",
+   "survivor_team": "DOU5",
+   "hunter_team": "FPX.ZQ",
    "survivors": [
+    "逃脱大师",
+    "飞行家",
     "弓箭手",
-    "气象学家",
-    "木偶师",
-    "守墓人"
+    "作曲家"
    ],
    "hunter": "牙医",
-   "hunter_player": "ChoAi",
+   "hunter_player": "Qx",
    "hunter_bans": [
-    "咒术师",
+    "野人",
     "幻灯师",
-    "祭司",
-    "飞行家"
+    "古董商",
+    "祭司"
    ],
    "survivor_bans": [],
    "score": "2:2",
@@ -6527,26 +7251,26 @@
    "game": 1,
    "side": "lower",
    "tiebreak": false,
-   "survivor_team": "成都Wolves",
-   "hunter_team": "GR",
+   "survivor_team": "FPX.ZQ",
+   "hunter_team": "DOU5",
    "survivors": [
-    "野人",
-    "幸运儿",
-    "古董商",
-    "飞行家"
-   ],
-   "hunter": "破轮",
-   "hunter_player": "Jin",
-   "hunter_bans": [
     "守墓人",
-    "幻灯师",
+    "飞行家",
     "弓箭手",
-    "逃脱大师"
+    "木偶师"
+   ],
+   "hunter": "牙医",
+   "hunter_player": "Qiu",
+   "hunter_bans": [
+    "逃脱大师",
+    "幻灯师",
+    "古董商",
+    "作曲家"
    ],
    "survivor_bans": [],
-   "score": "0:5",
-   "escape": 0,
-   "kill": 4,
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
    "map": "永眠镇"
   },
   {
@@ -6554,24 +7278,83 @@
    "game": 2,
    "side": "upper",
    "tiebreak": false,
-   "survivor_team": "成都Wolves",
-   "hunter_team": "GR",
+   "survivor_team": "FPX.ZQ",
+   "hunter_team": "DOU5",
    "survivors": [
-    "大副",
     "气象学家",
-    "斗牛士",
-    "园丁"
-   ],
-   "hunter": "牙医",
-   "hunter_player": "Jin",
-   "hunter_bans": [
-    "佣兵",
-    "咒术师",
     "幻灯师",
-    "弓箭手"
+    "大副",
+    "心理学家"
+   ],
+   "hunter": "歌剧演员",
+   "hunter_player": "Qiu",
+   "hunter_bans": [
+    "逃脱大师",
+    "古董商",
+    "佣兵",
+    "斗牛士"
    ],
    "survivor_bans": [
     "跛脚羊"
+   ],
+   "score": "1:3",
+   "escape": 1,
+   "kill": 3,
+   "map": "湖景村"
+  },
+  {
+   "seq": 4,
+   "game": 2,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "DOU5",
+   "hunter_team": "FPX.ZQ",
+   "survivors": [
+    "守墓人",
+    "气象学家",
+    "木偶师",
+    "咒术师"
+   ],
+   "hunter": "时空之影",
+   "hunter_player": "DongX",
+   "hunter_bans": [
+    "斗牛士",
+    "幻灯师",
+    "幸运儿",
+    "古董商"
+   ],
+   "survivor_bans": [
+    "鹿头"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "湖景村"
+  },
+  {
+   "seq": 5,
+   "game": 3,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "DOU5",
+   "hunter_team": "FPX.ZQ",
+   "survivors": [
+    "古董商",
+    "病患",
+    "野人",
+    "医生"
+   ],
+   "hunter": "女王蜂",
+   "hunter_player": "DongX",
+   "hunter_bans": [
+    "斗牛士",
+    "幻灯师",
+    "佣兵",
+    "心理学家"
+   ],
+   "survivor_bans": [
+    "跛脚羊",
+    "鹿头"
    ],
    "score": "0:5",
    "escape": 0,
@@ -6579,32 +7362,33 @@
    "map": "月亮河公园"
   },
   {
-   "seq": 4,
-   "game": 2,
+   "seq": 6,
+   "game": 3,
    "side": "lower",
    "tiebreak": false,
-   "survivor_team": "GR",
-   "hunter_team": "成都Wolves",
+   "survivor_team": "FPX.ZQ",
+   "hunter_team": "DOU5",
    "survivors": [
-    "先知",
-    "默剧艺人",
-    "空军",
-    "佣兵"
-   ],
-   "hunter": "女王蜂",
-   "hunter_player": "ChoAi",
-   "hunter_bans": [
     "古董商",
-    "幻灯师",
-    "斗牛士",
-    "飞行家"
+    "病患",
+    "野人",
+    "作曲家"
+   ],
+   "hunter": "鹿头",
+   "hunter_player": "Qiu",
+   "hunter_bans": [
+    "逃脱大师",
+    "入殓师",
+    "佣兵",
+    "斗牛士"
    ],
    "survivor_bans": [
-    "跛脚羊"
+    "跛脚羊",
+    "喧嚣"
    ],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
+   "score": "0:5",
+   "escape": 0,
+   "kill": 4,
    "map": "月亮河公园"
   },
   {
@@ -6615,9 +7399,9 @@
    "survivor_team": "MRC",
    "hunter_team": "TE",
    "survivors": [
-    "气象学家",
-    "作曲家",
     "守墓人",
+    "作曲家",
+    "气象学家",
     "囚徒"
    ],
    "hunter": "牙医",
@@ -6642,9 +7426,9 @@
    "survivor_team": "TE",
    "hunter_team": "MRC",
    "survivors": [
-    "幸运儿",
-    "飞行家",
     "守墓人",
+    "飞行家",
+    "幸运儿",
     "古董商"
    ],
    "hunter": "牙医",
@@ -6669,9 +7453,9 @@
    "survivor_team": "MRC",
    "hunter_team": "TE",
    "survivors": [
-    "飞行家",
     "园丁",
     "大副",
+    "飞行家",
     "咒术师"
    ],
    "hunter": "渔女",
@@ -6698,10 +7482,10 @@
    "survivor_team": "TE",
    "hunter_team": "MRC",
    "survivors": [
-    "祭司",
+    "咒术师",
     "气象学家",
-    "哭泣小丑",
-    "咒术师"
+    "祭司",
+    "哭泣小丑"
    ],
    "hunter": "喧嚣",
    "hunter_player": "BaiLu",
@@ -6724,508 +7508,104 @@
    "game": 1,
    "side": "upper",
    "tiebreak": false,
-   "survivor_team": "DOU5",
-   "hunter_team": "FPX.ZQ",
+   "survivor_team": "ASC",
+   "hunter_team": "北京WBG",
    "survivors": [
-    "弓箭手",
-    "逃脱大师",
-    "作曲家",
-    "飞行家"
+    "气象学家",
+    "木偶师",
+    "大副",
+    "古董商"
    ],
    "hunter": "牙医",
-   "hunter_player": "Qx",
+   "hunter_player": "N1e",
    "hunter_bans": [
-    "古董商",
+    "飞行家",
     "幻灯师",
-    "祭司",
-    "野人"
+    "野人",
+    "弓箭手"
    ],
    "survivor_bans": [],
    "score": "2:2",
    "escape": 2,
    "kill": 2,
-   "map": "永眠镇"
+   "map": "不归林"
   },
   {
    "seq": 2,
    "game": 1,
    "side": "lower",
    "tiebreak": false,
-   "survivor_team": "FPX.ZQ",
-   "hunter_team": "DOU5",
+   "survivor_team": "北京WBG",
+   "hunter_team": "ASC",
    "survivors": [
-    "弓箭手",
     "飞行家",
-    "木偶师",
-    "守墓人"
+    "守墓人",
+    "作曲家",
+    "古董商"
    ],
    "hunter": "牙医",
-   "hunter_player": "Qiu",
+   "hunter_player": "Tear",
    "hunter_bans": [
-    "作曲家",
-    "古董商",
     "幻灯师",
-    "逃脱大师"
+    "野人",
+    "幸运儿",
+    "弓箭手"
    ],
    "survivor_bans": [],
    "score": "2:2",
    "escape": 2,
    "kill": 2,
-   "map": "永眠镇"
+   "map": "不归林"
   },
   {
    "seq": 3,
    "game": 2,
    "side": "upper",
    "tiebreak": false,
-   "survivor_team": "FPX.ZQ",
-   "hunter_team": "DOU5",
+   "survivor_team": "ASC",
+   "hunter_team": "北京WBG",
    "survivors": [
-    "幻灯师",
-    "气象学家",
+    "病患",
+    "飞行家",
     "心理学家",
-    "大副"
+    "逃脱大师"
    ],
    "hunter": "歌剧演员",
-   "hunter_player": "Qiu",
+   "hunter_player": "N1e",
    "hunter_bans": [
-    "佣兵",
-    "古董商",
-    "斗牛士",
-    "逃脱大师"
-   ],
-   "survivor_bans": [
-    "跛脚羊"
-   ],
-   "score": "1:3",
-   "escape": 1,
-   "kill": 3,
-   "map": "湖景村"
-  },
-  {
-   "seq": 4,
-   "game": 2,
-   "side": "lower",
-   "tiebreak": false,
-   "survivor_team": "DOU5",
-   "hunter_team": "FPX.ZQ",
-   "survivors": [
+    "弓箭手",
     "咒术师",
-    "守墓人",
-    "气象学家",
-    "木偶师"
-   ],
-   "hunter": "时空之影",
-   "hunter_player": "DongX",
-   "hunter_bans": [
-    "古董商",
-    "幸运儿",
-    "幻灯师",
-    "斗牛士"
-   ],
-   "survivor_bans": [
-    "鹿头"
-   ],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "湖景村"
-  },
-  {
-   "seq": 5,
-   "game": 3,
-   "side": "upper",
-   "tiebreak": false,
-   "survivor_team": "DOU5",
-   "hunter_team": "FPX.ZQ",
-   "survivors": [
-    "古董商",
-    "野人",
-    "病患",
-    "医生"
-   ],
-   "hunter": "女王蜂",
-   "hunter_player": "DongX",
-   "hunter_bans": [
-    "佣兵",
-    "幻灯师",
-    "心理学家",
-    "斗牛士"
-   ],
-   "survivor_bans": [
-    "跛脚羊",
-    "鹿头"
-   ],
-   "score": "0:5",
-   "escape": 0,
-   "kill": 4,
-   "map": "月亮河公园"
-  },
-  {
-   "seq": 6,
-   "game": 3,
-   "side": "lower",
-   "tiebreak": false,
-   "survivor_team": "FPX.ZQ",
-   "hunter_team": "DOU5",
-   "survivors": [
-    "古董商",
-    "病患",
-    "作曲家",
+    "斗牛士",
     "野人"
    ],
-   "hunter": "鹿头",
-   "hunter_player": "Qiu",
-   "hunter_bans": [
-    "佣兵",
-    "入殓师",
-    "斗牛士",
-    "逃脱大师"
-   ],
    "survivor_bans": [
-    "喧嚣",
     "跛脚羊"
    ],
    "score": "0:5",
    "escape": 0,
    "kill": 4,
-   "map": "月亮河公园"
-  },
-  {
-   "seq": 1,
-   "game": 1,
-   "side": "upper",
-   "tiebreak": false,
-   "survivor_team": "ACT",
-   "hunter_team": "成都GG",
-   "survivors": [
-    "古董商",
-    "园丁",
-    "逃脱大师",
-    "飞行家"
-   ],
-   "hunter": "台球手",
-   "hunter_player": "YuM",
-   "hunter_bans": [
-    "幸运儿",
-    "幻灯师",
-    "气象学家",
-    "野人"
-   ],
-   "survivor_bans": [],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "湖景村"
-  },
-  {
-   "seq": 2,
-   "game": 1,
-   "side": "lower",
-   "tiebreak": false,
-   "survivor_team": "成都GG",
-   "hunter_team": "ACT",
-   "survivors": [
-    "弓箭手",
-    "大副",
-    "默剧艺人",
-    "木偶师"
-   ],
-   "hunter": "跛脚羊",
-   "hunter_player": "zz9",
-   "hunter_bans": [
-    "幸运儿",
-    "幻灯师",
-    "气象学家",
-    "飞行家"
-   ],
-   "survivor_bans": [],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "湖景村"
-  },
-  {
-   "seq": 3,
-   "game": 2,
-   "side": "upper",
-   "tiebreak": false,
-   "survivor_team": "ACT",
-   "hunter_team": "成都GG",
-   "survivors": [
-    "弓箭手",
-    "心理学家",
-    "野人",
-    "木偶师"
-   ],
-   "hunter": "鹿头",
-   "hunter_player": "YuM",
-   "hunter_bans": [
-    "前锋",
-    "守墓人",
-    "斗牛士",
-    "气象学家"
-   ],
-   "survivor_bans": [
-    "牙医"
-   ],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "月亮河公园"
+   "map": "唐人街"
   },
   {
    "seq": 4,
    "game": 2,
    "side": "lower",
    "tiebreak": false,
-   "survivor_team": "成都GG",
-   "hunter_team": "ACT",
+   "survivor_team": "北京WBG",
+   "hunter_team": "ASC",
    "survivors": [
-    "飞行家",
-    "气象学家",
-    "斗牛士",
+    "木偶师",
+    "咒术师",
+    "幸运儿",
     "佣兵"
    ],
-   "hunter": "时空之影",
-   "hunter_player": "zz9",
-   "hunter_bans": [
-    "前锋",
-    "古董商",
-    "心理学家",
-    "空军"
-   ],
-   "survivor_bans": [
-    "牙医"
-   ],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "月亮河公园"
-  },
-  {
-   "seq": 5,
-   "game": 3,
-   "side": "upper",
-   "tiebreak": false,
-   "survivor_team": "ACT",
-   "hunter_team": "成都GG",
-   "survivors": [
-    "守墓人",
-    "咒术师",
-    "医生",
-    "气象学家"
-   ],
    "hunter": "女王蜂",
-   "hunter_player": "YuM",
-   "hunter_bans": [
-    "先知",
-    "幸运儿",
-    "幻灯师",
-    "祭司"
-   ],
-   "survivor_bans": [
-    "歌剧演员",
-    "牙医"
-   ],
-   "score": "3:1",
-   "escape": 3,
-   "kill": 1,
-   "map": "唐人街"
-  },
-  {
-   "seq": 6,
-   "game": 3,
-   "side": "lower",
-   "tiebreak": false,
-   "survivor_team": "成都GG",
-   "hunter_team": "ACT",
-   "survivors": [
-    "古董商",
-    "勘探员",
-    "守墓人",
-    "幸运儿"
-   ],
-   "hunter": "女王蜂",
-   "hunter_player": "zz9",
-   "hunter_bans": [
-    "冒险家",
-    "前锋",
-    "心理学家",
-    "祭司"
-   ],
-   "survivor_bans": [
-    "台球手",
-    "牙医"
-   ],
-   "score": "3:1",
-   "escape": 3,
-   "kill": 1,
-   "map": "唐人街"
-  },
-  {
-   "seq": 7,
-   "game": 4,
-   "side": "upper",
-   "tiebreak": true,
-   "survivor_team": "成都GG",
-   "hunter_team": "ACT",
-   "survivors": [
-    "拉拉队员",
-    "作曲家",
-    "心理学家",
-    "邮差"
-   ],
-   "hunter": "蜡像师",
-   "hunter_player": "zz9",
-   "hunter_bans": [
-    "前锋",
-    "幻灯师",
-    "祭司",
-    "逃脱大师"
-   ],
-   "survivor_bans": [
-    "台球手",
-    "牙医"
-   ],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "永眠镇"
-  },
-  {
-   "seq": 8,
-   "game": 4,
-   "side": "lower",
-   "tiebreak": true,
-   "survivor_team": "ACT",
-   "hunter_team": "成都GG",
-   "survivors": [
-    "法罗女士",
-    "作曲家",
-    "拉拉队员",
-    "幻灯师"
-   ],
-   "hunter": "歌剧演员",
-   "hunter_player": "YuM",
-   "hunter_bans": [
-    "佣兵",
-    "幸运儿",
-    "斗牛士",
-    "空军"
-   ],
-   "survivor_bans": [
-    "牙医",
-    "跛脚羊"
-   ],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "永眠镇"
-  },
-  {
-   "seq": 1,
-   "game": 1,
-   "side": "upper",
-   "tiebreak": false,
-   "survivor_team": "ASC",
-   "hunter_team": "北京WBG",
-   "survivors": [
-    "气象学家",
-    "大副",
-    "古董商",
-    "木偶师"
-   ],
-   "hunter": "牙医",
-   "hunter_player": "N1e",
-   "hunter_bans": [
-    "幻灯师",
-    "弓箭手",
-    "野人",
-    "飞行家"
-   ],
-   "survivor_bans": [],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "不归林"
-  },
-  {
-   "seq": 2,
-   "game": 1,
-   "side": "lower",
-   "tiebreak": false,
-   "survivor_team": "北京WBG",
-   "hunter_team": "ASC",
-   "survivors": [
-    "古董商",
-    "飞行家",
-    "守墓人",
-    "作曲家"
-   ],
-   "hunter": "牙医",
    "hunter_player": "Tear",
    "hunter_bans": [
-    "幸运儿",
-    "幻灯师",
     "弓箭手",
-    "野人"
-   ],
-   "survivor_bans": [],
-   "score": "2:2",
-   "escape": 2,
-   "kill": 2,
-   "map": "不归林"
-  },
-  {
-   "seq": 3,
-   "game": 2,
-   "side": "upper",
-   "tiebreak": false,
-   "survivor_team": "ASC",
-   "hunter_team": "北京WBG",
-   "survivors": [
-    "飞行家",
+    "幻灯师",
     "逃脱大师",
-    "心理学家",
-    "病患"
-   ],
-   "hunter": "歌剧演员",
-   "hunter_player": "N1e",
-   "hunter_bans": [
-    "咒术师",
-    "弓箭手",
-    "斗牛士",
-    "野人"
-   ],
-   "survivor_bans": [
-    "跛脚羊"
-   ],
-   "score": "0:5",
-   "escape": 0,
-   "kill": 4,
-   "map": "唐人街"
-  },
-  {
-   "seq": 4,
-   "game": 2,
-   "side": "lower",
-   "tiebreak": false,
-   "survivor_team": "北京WBG",
-   "hunter_team": "ASC",
-   "survivors": [
-    "幸运儿",
-    "木偶师",
-    "佣兵",
-    "咒术师"
-   ],
-   "hunter": "女王蜂",
-   "hunter_player": "Tear",
-   "hunter_bans": [
-    "大副",
-    "幻灯师",
-    "弓箭手",
-    "逃脱大师"
+    "大副"
    ],
    "survivor_bans": [
     "歌剧演员"
@@ -7243,22 +7623,22 @@
    "survivor_team": "北京WBG",
    "hunter_team": "ASC",
    "survivors": [
-    "气象学家",
-    "默剧艺人",
     "逃脱大师",
-    "邮差"
+    "默剧艺人",
+    "邮差",
+    "气象学家"
    ],
    "hunter": "记录员",
    "hunter_player": "Tear",
    "hunter_bans": [
+    "弓箭手",
     "大副",
     "幻灯师",
-    "弓箭手",
     "斗牛士"
    ],
    "survivor_bans": [
-    "台球手",
-    "跛脚羊"
+    "跛脚羊",
+    "台球手"
    ],
    "score": "0:5",
    "escape": 0,
@@ -7273,17 +7653,17 @@
    "survivor_team": "ASC",
    "hunter_team": "北京WBG",
    "survivors": [
-    "火灾调查员",
-    "佣兵",
     "弓箭手",
-    "幸运儿"
+    "佣兵",
+    "幸运儿",
+    "火灾调查员"
    ],
    "hunter": "女王蜂",
    "hunter_player": "N1e",
    "hunter_bans": [
-    "作曲家",
-    "咒术师",
     "幻灯师",
+    "咒术师",
+    "作曲家",
     "斗牛士"
    ],
    "survivor_bans": [
@@ -7303,18 +7683,18 @@
    "survivor_team": "成都Wolves",
    "hunter_team": "成都GG",
    "survivors": [
+    "弓箭手",
     "守墓人",
     "默剧艺人",
-    "弓箭手",
     "教授"
    ],
    "hunter": "牙医",
    "hunter_player": "YuM",
    "hunter_bans": [
-    "大副",
-    "幸运儿",
+    "野人",
     "幻灯师",
-    "野人"
+    "大副",
+    "幸运儿"
    ],
    "survivor_bans": [],
    "score": "1:3",
@@ -7330,18 +7710,18 @@
    "survivor_team": "成都GG",
    "hunter_team": "成都Wolves",
    "survivors": [
+    "古董商",
     "守墓人",
     "默剧艺人",
-    "古董商",
     "大副"
    ],
    "hunter": "跛脚羊",
    "hunter_player": "ChoAi",
    "hunter_bans": [
-    "幸运儿",
-    "弓箭手",
     "野人",
-    "飞行家"
+    "弓箭手",
+    "飞行家",
+    "幸运儿"
    ],
    "survivor_bans": [],
    "score": "1:3",
@@ -7357,17 +7737,17 @@
    "survivor_team": "成都Wolves",
    "hunter_team": "成都GG",
    "survivors": [
-    "佣兵",
-    "气象学家",
+    "幸运儿",
     "古董商",
-    "幸运儿"
+    "佣兵",
+    "气象学家"
    ],
    "hunter": "鹿头",
    "hunter_player": "YuM",
    "hunter_bans": [
-    "大副",
-    "幻灯师",
     "斗牛士",
+    "幻灯师",
+    "大副",
     "飞行家"
    ],
    "survivor_bans": [
@@ -7386,18 +7766,18 @@
    "survivor_team": "成都GG",
    "hunter_team": "成都Wolves",
    "survivors": [
-    "幸运儿",
     "气象学家",
     "勘探员",
-    "佣兵"
+    "佣兵",
+    "幸运儿"
    ],
    "hunter": "女王蜂",
    "hunter_player": "ChoAi",
    "hunter_bans": [
-    "咒术师",
-    "幻灯师",
     "弓箭手",
-    "斗牛士"
+    "咒术师",
+    "斗牛士",
+    "幻灯师"
    ],
    "survivor_bans": [
     "牙医"
@@ -7415,22 +7795,22 @@
    "survivor_team": "成都GG",
    "hunter_team": "成都Wolves",
    "survivors": [
-    "调酒师",
-    "小说家",
+    "逃脱大师",
     "先知",
-    "逃脱大师"
+    "小说家",
+    "调酒师"
    ],
    "hunter": "杂货商",
    "hunter_player": "ChoAi",
    "hunter_bans": [
     "前锋",
-    "幻灯师",
     "弓箭手",
+    "幻灯师",
     "飞行家"
    ],
    "survivor_bans": [
-    "歌剧演员",
-    "牙医"
+    "牙医",
+    "歌剧演员"
    ],
    "score": "2:2",
    "escape": 2,
@@ -7445,18 +7825,18 @@
    "survivor_team": "成都Wolves",
    "hunter_team": "成都GG",
    "survivors": [
-    "野人",
     "木偶师",
     "飞行家",
+    "野人",
     "机械师"
    ],
    "hunter": "时空之影",
    "hunter_player": "YuM",
    "hunter_bans": [
-    "作曲家",
     "先知",
     "咒术师",
-    "法罗女士"
+    "法罗女士",
+    "作曲家"
    ],
    "survivor_bans": [
     "台球手",
@@ -7475,17 +7855,17 @@
    "survivor_team": "MRC",
    "hunter_team": "GR",
    "survivors": [
-    "气象学家",
     "祭司",
     "大副",
-    "咒术师"
+    "咒术师",
+    "气象学家"
    ],
    "hunter": "牙医",
    "hunter_player": "Jin",
    "hunter_bans": [
+    "守墓人",
     "作曲家",
     "古董商",
-    "守墓人",
     "默剧艺人"
    ],
    "survivor_bans": [],
@@ -7502,18 +7882,18 @@
    "survivor_team": "GR",
    "hunter_team": "MRC",
    "survivors": [
+    "逃脱大师",
     "古董商",
-    "飞行家",
     "木偶师",
-    "逃脱大师"
+    "飞行家"
    ],
    "hunter": "女王蜂",
    "hunter_player": "BaiLu",
    "hunter_bans": [
-    "作曲家",
+    "幻灯师",
     "守墓人",
-    "幸运儿",
-    "幻灯师"
+    "作曲家",
+    "幸运儿"
    ],
    "survivor_bans": [],
    "score": "2:2",
@@ -7538,8 +7918,8 @@
    "hunter_player": "Jin",
    "hunter_bans": [
     "佣兵",
-    "法罗女士",
     "逃脱大师",
+    "法罗女士",
     "飞行家"
    ],
    "survivor_bans": [
@@ -7566,9 +7946,9 @@
    "hunter": "牙医",
    "hunter_player": "BaiLu",
    "hunter_bans": [
+    "弓箭手",
     "咒术师",
     "园丁",
-    "弓箭手",
     "气象学家"
    ],
    "survivor_bans": [
@@ -7587,22 +7967,22 @@
    "survivor_team": "GR",
    "hunter_team": "MRC",
    "survivors": [
-    "弓箭手",
     "气象学家",
-    "入殓师",
-    "守墓人"
+    "弓箭手",
+    "守墓人",
+    "入殓师"
    ],
    "hunter": "鹿头",
    "hunter_player": "BaiLu",
    "hunter_bans": [
-    "作曲家",
     "先知",
+    "幸运儿",
     "大副",
-    "幸运儿"
+    "作曲家"
    ],
    "survivor_bans": [
-    "台球手",
-    "跛脚羊"
+    "跛脚羊",
+    "台球手"
    ],
    "score": "2:2",
    "escape": 2,
@@ -7638,6 +8018,1322 @@
    "escape": 3,
    "kill": 1,
    "map": "湖景村"
+  },
+  {
+   "seq": 1,
+   "game": 1,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "DOU5",
+   "hunter_team": "TE",
+   "survivors": [
+    "逃脱大师",
+    "弓箭手",
+    "飞行家",
+    "法罗女士"
+   ],
+   "hunter": "歌剧演员",
+   "hunter_player": "ppei",
+   "hunter_bans": [
+    "野人",
+    "古董商",
+    "幻灯师",
+    "幸运儿"
+   ],
+   "survivor_bans": [],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "里奥的回忆"
+  },
+  {
+   "seq": 2,
+   "game": 1,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "TE",
+   "hunter_team": "DOU5",
+   "survivors": [
+    "守墓人",
+    "飞行家",
+    "古董商",
+    "机械师"
+   ],
+   "hunter": "牙医",
+   "hunter_player": "Qiu",
+   "hunter_bans": [
+    "幻灯师",
+    "野人",
+    "弓箭手",
+    "幸运儿"
+   ],
+   "survivor_bans": [],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "里奥的回忆"
+  },
+  {
+   "seq": 3,
+   "game": 2,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "TE",
+   "hunter_team": "DOU5",
+   "survivors": [
+    "大副",
+    "幻灯师",
+    "弓箭手",
+    "昆虫学者"
+   ],
+   "hunter": "女王蜂",
+   "hunter_player": "Qiu",
+   "hunter_bans": [
+    "佣兵",
+    "逃脱大师",
+    "气象学家",
+    "默剧艺人"
+   ],
+   "survivor_bans": [
+    "跛脚羊"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "不归林"
+  },
+  {
+   "seq": 4,
+   "game": 2,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "DOU5",
+   "hunter_team": "TE",
+   "survivors": [
+    "气象学家",
+    "木偶师",
+    "大副",
+    "作曲家"
+   ],
+   "hunter": "跛脚羊",
+   "hunter_player": "ppei",
+   "hunter_bans": [
+    "古董商",
+    "咒术师",
+    "守墓人",
+    "幻灯师"
+   ],
+   "survivor_bans": [
+    "牙医"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "不归林"
+  },
+  {
+   "seq": 5,
+   "game": 3,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "DOU5",
+   "hunter_team": "TE",
+   "survivors": [
+    "守墓人",
+    "幸运儿",
+    "心理学家",
+    "病患"
+   ],
+   "hunter": "台球手",
+   "hunter_player": "ppei",
+   "hunter_bans": [
+    "佣兵",
+    "幻灯师",
+    "先知",
+    "古董商"
+   ],
+   "survivor_bans": [
+    "牙医",
+    "女王蜂"
+   ],
+   "score": "1:3",
+   "escape": 1,
+   "kill": 3,
+   "map": "永眠镇"
+  },
+  {
+   "seq": 6,
+   "game": 3,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "TE",
+   "hunter_team": "DOU5",
+   "survivors": [
+    "祭司",
+    "哭泣小丑",
+    "气象学家",
+    "先知"
+   ],
+   "hunter": "台球手",
+   "hunter_player": "Qiu",
+   "hunter_bans": [
+    "逃脱大师",
+    "佣兵",
+    "斗牛士",
+    "幸运儿"
+   ],
+   "survivor_bans": [
+    "跛脚羊",
+    "蜡像师"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "永眠镇"
+  },
+  {
+   "seq": 1,
+   "game": 1,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "ASC",
+   "hunter_team": "GR",
+   "survivors": [
+    "大副",
+    "幸运儿",
+    "气象学家",
+    "弓箭手"
+   ],
+   "hunter": "跛脚羊",
+   "hunter_player": "Jin",
+   "hunter_bans": [
+    "守墓人",
+    "木偶师",
+    "飞行家",
+    "古董商"
+   ],
+   "survivor_bans": [],
+   "score": "1:3",
+   "escape": 1,
+   "kill": 3,
+   "map": "不归林"
+  },
+  {
+   "seq": 2,
+   "game": 1,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "GR",
+   "hunter_team": "ASC",
+   "survivors": [
+    "气象学家",
+    "弓箭手",
+    "逃脱大师",
+    "木偶师"
+   ],
+   "hunter": "牙医",
+   "hunter_player": "Tear",
+   "hunter_bans": [
+    "飞行家",
+    "幻灯师",
+    "守墓人",
+    "幸运儿"
+   ],
+   "survivor_bans": [],
+   "score": "0:5",
+   "escape": 0,
+   "kill": 4,
+   "map": "不归林"
+  },
+  {
+   "seq": 3,
+   "game": 2,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "ASC",
+   "hunter_team": "GR",
+   "survivors": [
+    "逃脱大师",
+    "病患",
+    "心理学家",
+    "囚徒"
+   ],
+   "hunter": "女王蜂",
+   "hunter_player": "Jin",
+   "hunter_bans": [
+    "守墓人",
+    "佣兵",
+    "古董商",
+    "作曲家"
+   ],
+   "survivor_bans": [
+    "牙医"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "里奥的回忆"
+  },
+  {
+   "seq": 4,
+   "game": 2,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "GR",
+   "hunter_team": "ASC",
+   "survivors": [
+    "古董商",
+    "佣兵",
+    "作曲家",
+    "心理学家"
+   ],
+   "hunter": "跛脚羊",
+   "hunter_player": "Tear",
+   "hunter_bans": [
+    "幻灯师",
+    "飞行家",
+    "幸运儿",
+    "默剧艺人"
+   ],
+   "survivor_bans": [
+    "女王蜂"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "里奥的回忆"
+  },
+  {
+   "seq": 5,
+   "game": 3,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "ASC",
+   "hunter_team": "GR",
+   "survivors": [
+    "佣兵",
+    "古董商",
+    "木偶师",
+    "默剧艺人"
+   ],
+   "hunter": "喧嚣",
+   "hunter_player": "Jin",
+   "hunter_bans": [
+    "守墓人",
+    "斗牛士",
+    "调酒师",
+    "飞行家"
+   ],
+   "survivor_bans": [
+    "破轮",
+    "牙医"
+   ],
+   "score": "1:3",
+   "escape": 1,
+   "kill": 3,
+   "map": "月亮河公园"
+  },
+  {
+   "seq": 6,
+   "game": 3,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "GR",
+   "hunter_team": "ASC",
+   "survivors": [
+    "默剧艺人",
+    "大副",
+    "斗牛士",
+    "病患"
+   ],
+   "hunter": "喧嚣",
+   "hunter_player": "Tear",
+   "hunter_bans": [
+    "守墓人",
+    "飞行家",
+    "幻灯师",
+    "幸运儿"
+   ],
+   "survivor_bans": [
+    "台球手",
+    "歌剧演员"
+   ],
+   "score": "0:5",
+   "escape": 0,
+   "kill": 4,
+   "map": "月亮河公园"
+  },
+  {
+   "seq": 1,
+   "game": 1,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "MRC",
+   "hunter_team": "FPX.ZQ",
+   "survivors": [
+    "祭司",
+    "守墓人",
+    "弓箭手",
+    "默剧艺人"
+   ],
+   "hunter": "牙医",
+   "hunter_player": "Qx",
+   "hunter_bans": [
+    "幻灯师",
+    "野人",
+    "飞行家",
+    "气象学家"
+   ],
+   "survivor_bans": [],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "永眠镇"
+  },
+  {
+   "seq": 2,
+   "game": 1,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "FPX.ZQ",
+   "hunter_team": "MRC",
+   "survivors": [
+    "守墓人",
+    "飞行家",
+    "古董商",
+    "祭司"
+   ],
+   "hunter": "牙医",
+   "hunter_player": "BaiLu",
+   "hunter_bans": [
+    "幻灯师",
+    "野人",
+    "弓箭手",
+    "木偶师"
+   ],
+   "survivor_bans": [],
+   "score": "3:1",
+   "escape": 3,
+   "kill": 1,
+   "map": "永眠镇"
+  },
+  {
+   "seq": 3,
+   "game": 2,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "MRC",
+   "hunter_team": "FPX.ZQ",
+   "survivors": [
+    "先知",
+    "逃脱大师",
+    "咒术师",
+    "飞行家"
+   ],
+   "hunter": "台球手",
+   "hunter_player": "DongX",
+   "hunter_bans": [
+    "幻灯师",
+    "斗牛士",
+    "作曲家",
+    "气象学家"
+   ],
+   "survivor_bans": [
+    "女王蜂"
+   ],
+   "score": "3:1",
+   "escape": 3,
+   "kill": 1,
+   "map": "里奥的回忆"
+  },
+  {
+   "seq": 4,
+   "game": 2,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "FPX.ZQ",
+   "hunter_team": "MRC",
+   "survivors": [
+    "斗牛士",
+    "木偶师",
+    "佣兵",
+    "囚徒"
+   ],
+   "hunter": "歌剧演员",
+   "hunter_player": "BaiLu",
+   "hunter_bans": [
+    "咒术师",
+    "弓箭手",
+    "逃脱大师",
+    "作曲家"
+   ],
+   "survivor_bans": [
+    "跛脚羊"
+   ],
+   "score": "3:1",
+   "escape": 3,
+   "kill": 1,
+   "map": "里奥的回忆"
+  },
+  {
+   "seq": 5,
+   "game": 3,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "FPX.ZQ",
+   "hunter_team": "MRC",
+   "survivors": [
+    "大副",
+    "幻灯师",
+    "幸运儿",
+    "教授"
+   ],
+   "hunter": "喧嚣",
+   "hunter_player": "BaiLu",
+   "hunter_bans": [
+    "弓箭手",
+    "咒术师",
+    "作曲家",
+    "空军"
+   ],
+   "survivor_bans": [
+    "跛脚羊",
+    "女王蜂"
+   ],
+   "score": "0:5",
+   "escape": 0,
+   "kill": 4,
+   "map": "不归林"
+  },
+  {
+   "seq": 6,
+   "game": 3,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "MRC",
+   "hunter_team": "FPX.ZQ",
+   "survivors": [
+    "幸运儿",
+    "调酒师",
+    "佣兵",
+    "心理学家"
+   ],
+   "hunter": "跛脚羊",
+   "hunter_player": "DongX",
+   "hunter_bans": [
+    "医生",
+    "斗牛士",
+    "木偶师",
+    "古董商"
+   ],
+   "survivor_bans": [
+    "鹿头",
+    "女王蜂"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "不归林"
+  },
+  {
+   "seq": 1,
+   "game": 1,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "ACT",
+   "hunter_team": "成都GG",
+   "survivors": [
+    "古董商",
+    "飞行家",
+    "气象学家",
+    "大副"
+   ],
+   "hunter": "牙医",
+   "hunter_player": "YuM",
+   "hunter_bans": [
+    "幻灯师",
+    "逃脱大师",
+    "野人",
+    "守墓人"
+   ],
+   "survivor_bans": [],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "月亮河公园"
+  },
+  {
+   "seq": 2,
+   "game": 1,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "成都GG",
+   "hunter_team": "ACT",
+   "survivors": [
+    "逃脱大师",
+    "弓箭手",
+    "飞行家",
+    "幸运儿"
+   ],
+   "hunter": "牙医",
+   "hunter_player": "zz9",
+   "hunter_bans": [
+    "古董商",
+    "幻灯师",
+    "木偶师",
+    "心理学家"
+   ],
+   "survivor_bans": [],
+   "score": "3:1",
+   "escape": 3,
+   "kill": 1,
+   "map": "月亮河公园"
+  },
+  {
+   "seq": 3,
+   "game": 2,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "ACT",
+   "hunter_team": "成都GG",
+   "survivors": [
+    "野人",
+    "木偶师",
+    "咒术师",
+    "冒险家"
+   ],
+   "hunter": "鹿头",
+   "hunter_player": "YuM",
+   "hunter_bans": [
+    "幻灯师",
+    "斗牛士",
+    "弓箭手",
+    "幸运儿"
+   ],
+   "survivor_bans": [
+    "台球手"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "湖景村"
+  },
+  {
+   "seq": 4,
+   "game": 2,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "成都GG",
+   "hunter_team": "ACT",
+   "survivors": [
+    "默剧艺人",
+    "佣兵",
+    "勘探员",
+    "心理学家"
+   ],
+   "hunter": "时空之影",
+   "hunter_player": "zz9",
+   "hunter_bans": [
+    "古董商",
+    "幻灯师",
+    "斗牛士",
+    "木偶师"
+   ],
+   "survivor_bans": [
+    "跛脚羊"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "湖景村"
+  },
+  {
+   "seq": 5,
+   "game": 3,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "ACT",
+   "hunter_team": "成都GG",
+   "survivors": [
+    "幻灯师",
+    "弓箭手",
+    "幸运儿",
+    "逃脱大师"
+   ],
+   "hunter": "台球手",
+   "hunter_player": "YuM",
+   "hunter_bans": [
+    "医生",
+    "先知",
+    "法罗女士",
+    "前锋"
+   ],
+   "survivor_bans": [
+    "跛脚羊",
+    "歌剧演员"
+   ],
+   "score": "3:1",
+   "escape": 3,
+   "kill": 1,
+   "map": "唐人街"
+  },
+  {
+   "seq": 6,
+   "game": 3,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "成都GG",
+   "hunter_team": "ACT",
+   "survivors": [
+    "幻灯师",
+    "大副",
+    "气象学家",
+    "邮差"
+   ],
+   "hunter": "破轮",
+   "hunter_player": "zz9",
+   "hunter_bans": [
+    "前锋",
+    "守墓人",
+    "古董商",
+    "咒术师"
+   ],
+   "survivor_bans": [
+    "跛脚羊",
+    "歌剧演员"
+   ],
+   "score": "3:1",
+   "escape": 3,
+   "kill": 1,
+   "map": "唐人街"
+  },
+  {
+   "seq": 1,
+   "game": 1,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "MRC",
+   "hunter_team": "北京WBG",
+   "survivors": [
+    "守墓人",
+    "作曲家",
+    "气象学家",
+    "弓箭手"
+   ],
+   "hunter": "牙医",
+   "hunter_player": "N1e",
+   "hunter_bans": [
+    "幻灯师",
+    "默剧艺人",
+    "飞行家",
+    "古董商"
+   ],
+   "survivor_bans": [],
+   "score": "1:3",
+   "escape": 1,
+   "kill": 3,
+   "map": "不归林"
+  },
+  {
+   "seq": 2,
+   "game": 1,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "北京WBG",
+   "hunter_team": "MRC",
+   "survivors": [
+    "飞行家",
+    "作曲家",
+    "大副",
+    "古董商"
+   ],
+   "hunter": "牙医",
+   "hunter_player": "BaiLu",
+   "hunter_bans": [
+    "幻灯师",
+    "守墓人",
+    "野人",
+    "弓箭手"
+   ],
+   "survivor_bans": [],
+   "score": "0:5",
+   "escape": 0,
+   "kill": 4,
+   "map": "不归林"
+  },
+  {
+   "seq": 3,
+   "game": 2,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "北京WBG",
+   "hunter_team": "MRC",
+   "survivors": [
+    "先知",
+    "逃脱大师",
+    "咒术师",
+    "默剧艺人"
+   ],
+   "hunter": "台球手",
+   "hunter_player": "BaiLu",
+   "hunter_bans": [
+    "祭司",
+    "幻灯师",
+    "弓箭手",
+    "幸运儿"
+   ],
+   "survivor_bans": [
+    "女王蜂"
+   ],
+   "score": "3:1",
+   "escape": 3,
+   "kill": 1,
+   "map": "永眠镇"
+  },
+  {
+   "seq": 4,
+   "game": 2,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "MRC",
+   "hunter_team": "北京WBG",
+   "survivors": [
+    "先知",
+    "逃脱大师",
+    "飞行家",
+    "囚徒"
+   ],
+   "hunter": "杂货商",
+   "hunter_player": "N1e",
+   "hunter_bans": [
+    "幻灯师",
+    "祭司",
+    "咒术师",
+    "古董商"
+   ],
+   "survivor_bans": [
+    "女王蜂"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "永眠镇"
+  },
+  {
+   "seq": 5,
+   "game": 3,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "北京WBG",
+   "hunter_team": "MRC",
+   "survivors": [
+    "佣兵",
+    "气象学家",
+    "病患",
+    "心理学家"
+   ],
+   "hunter": "歌剧演员",
+   "hunter_player": "BaiLu",
+   "hunter_bans": [
+    "弓箭手",
+    "幻灯师",
+    "斗牛士",
+    "空军"
+   ],
+   "survivor_bans": [
+    "跛脚羊",
+    "女王蜂"
+   ],
+   "score": "3:1",
+   "escape": 3,
+   "kill": 1,
+   "map": "月亮河公园"
+  },
+  {
+   "seq": 6,
+   "game": 3,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "MRC",
+   "hunter_team": "北京WBG",
+   "survivors": [
+    "幸运儿",
+    "咒术师",
+    "斗牛士",
+    "园丁"
+   ],
+   "hunter": "时空之影",
+   "hunter_player": "N1e",
+   "hunter_bans": [
+    "幻灯师",
+    "古董商",
+    "木偶师",
+    "野人"
+   ],
+   "survivor_bans": [
+    "女王蜂",
+    "歌剧演员"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "月亮河公园"
+  },
+  {
+   "seq": 1,
+   "game": 1,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "GR",
+   "hunter_team": "TE",
+   "survivors": [
+    "守墓人",
+    "飞行家",
+    "幸运儿",
+    "古董商"
+   ],
+   "hunter": "牙医",
+   "hunter_player": "ppei",
+   "hunter_bans": [
+    "幻灯师",
+    "野人",
+    "作曲家",
+    "弓箭手"
+   ],
+   "survivor_bans": [],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "湖景村"
+  },
+  {
+   "seq": 2,
+   "game": 1,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "TE",
+   "hunter_team": "GR",
+   "survivors": [
+    "飞行家",
+    "大副",
+    "弓箭手",
+    "法罗女士"
+   ],
+   "hunter": "跛脚羊",
+   "hunter_player": "Jin",
+   "hunter_bans": [
+    "守墓人",
+    "幻灯师",
+    "幸运儿",
+    "机械师"
+   ],
+   "survivor_bans": [],
+   "score": "1:3",
+   "escape": 1,
+   "kill": 3,
+   "map": "湖景村"
+  },
+  {
+   "seq": 3,
+   "game": 2,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "GR",
+   "hunter_team": "TE",
+   "survivors": [
+    "佣兵",
+    "弓箭手",
+    "木偶师",
+    "火灾调查员"
+   ],
+   "hunter": "歌剧演员",
+   "hunter_player": "ppei",
+   "hunter_bans": [
+    "幻灯师",
+    "气象学家",
+    "法罗女士",
+    "作曲家"
+   ],
+   "survivor_bans": [
+    "跛脚羊"
+   ],
+   "score": "0:5",
+   "escape": 0,
+   "kill": 4,
+   "map": "里奥的回忆"
+  },
+  {
+   "seq": 4,
+   "game": 2,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "TE",
+   "hunter_team": "GR",
+   "survivors": [
+    "佣兵",
+    "默剧艺人",
+    "病患",
+    "咒术师"
+   ],
+   "hunter": "女王蜂",
+   "hunter_player": "Jin",
+   "hunter_bans": [
+    "守墓人",
+    "囚徒",
+    "作曲家",
+    "幸运儿"
+   ],
+   "survivor_bans": [
+    "牙医"
+   ],
+   "score": "0:5",
+   "escape": 0,
+   "kill": 4,
+   "map": "里奥的回忆"
+  },
+  {
+   "seq": 5,
+   "game": 3,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "GR",
+   "hunter_team": "TE",
+   "survivors": [
+    "前锋",
+    "法罗女士",
+    "气象学家",
+    "拉拉队员"
+   ],
+   "hunter": "台球手",
+   "hunter_player": "ppei",
+   "hunter_bans": [
+    "大副",
+    "逃脱大师",
+    "先知",
+    "心理学家"
+   ],
+   "survivor_bans": [
+    "跛脚羊",
+    "女王蜂"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "红教堂"
+  },
+  {
+   "seq": 6,
+   "game": 3,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "TE",
+   "hunter_team": "GR",
+   "survivors": [
+    "前锋",
+    "幸运儿",
+    "古董商",
+    "气象学家"
+   ],
+   "hunter": "26号守卫",
+   "hunter_player": "Jin",
+   "hunter_bans": [
+    "逃脱大师",
+    "机械师",
+    "作曲家",
+    "火灾调查员"
+   ],
+   "survivor_bans": [
+    "牙医",
+    "歌剧演员"
+   ],
+   "score": "0:5",
+   "escape": 0,
+   "kill": 4,
+   "map": "红教堂"
+  },
+  {
+   "seq": 1,
+   "game": 1,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "ASC",
+   "hunter_team": "ACT",
+   "survivors": [
+    "咒术师",
+    "幸运儿",
+    "气象学家",
+    "大副"
+   ],
+   "hunter": "跛脚羊",
+   "hunter_player": "zz9",
+   "hunter_bans": [
+    "古董商",
+    "木偶师",
+    "飞行家",
+    "守墓人"
+   ],
+   "survivor_bans": [],
+   "score": "1:3",
+   "escape": 1,
+   "kill": 3,
+   "map": "湖景村"
+  },
+  {
+   "seq": 2,
+   "game": 1,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "ACT",
+   "hunter_team": "ASC",
+   "survivors": [
+    "弓箭手",
+    "野人",
+    "园丁",
+    "木偶师"
+   ],
+   "hunter": "喧嚣",
+   "hunter_player": "Tear",
+   "hunter_bans": [
+    "幻灯师",
+    "飞行家",
+    "气象学家",
+    "幸运儿"
+   ],
+   "survivor_bans": [],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "湖景村"
+  },
+  {
+   "seq": 3,
+   "game": 2,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "ASC",
+   "hunter_team": "ACT",
+   "survivors": [
+    "飞行家",
+    "守墓人",
+    "默剧艺人",
+    "作曲家"
+   ],
+   "hunter": "台球手",
+   "hunter_player": "zz9",
+   "hunter_bans": [
+    "古董商",
+    "弓箭手",
+    "幻灯师",
+    "先知"
+   ],
+   "survivor_bans": [
+    "时空之影"
+   ],
+   "score": "1:3",
+   "escape": 1,
+   "kill": 3,
+   "map": "不归林"
+  },
+  {
+   "seq": 4,
+   "game": 2,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "ACT",
+   "hunter_team": "ASC",
+   "survivors": [
+    "前锋",
+    "作曲家",
+    "心理学家",
+    "气象学家"
+   ],
+   "hunter": "女王蜂",
+   "hunter_player": "Tear",
+   "hunter_bans": [
+    "古董商",
+    "咒术师",
+    "拉拉队员",
+    "幸运儿"
+   ],
+   "survivor_bans": [
+    "牙医"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "不归林"
+  },
+  {
+   "seq": 1,
+   "game": 1,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "FPX.ZQ",
+   "hunter_team": "北京WBG",
+   "survivors": [
+    "飞行家",
+    "大副",
+    "木偶师",
+    "古董商"
+   ],
+   "hunter": "牙医",
+   "hunter_player": "N1e",
+   "hunter_bans": [
+    "逃脱大师",
+    "幻灯师",
+    "幸运儿",
+    "囚徒"
+   ],
+   "survivor_bans": [],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "圣心医院"
+  },
+  {
+   "seq": 2,
+   "game": 1,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "北京WBG",
+   "hunter_team": "FPX.ZQ",
+   "survivors": [
+    "飞行家",
+    "守墓人",
+    "机械师",
+    "古董商"
+   ],
+   "hunter": "牙医",
+   "hunter_player": "Qx",
+   "hunter_bans": [
+    "逃脱大师",
+    "幻灯师",
+    "作曲家",
+    "弓箭手"
+   ],
+   "survivor_bans": [],
+   "score": "1:3",
+   "escape": 1,
+   "kill": 3,
+   "map": "圣心医院"
+  },
+  {
+   "seq": 3,
+   "game": 2,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "FPX.ZQ",
+   "hunter_team": "北京WBG",
+   "survivors": [
+    "斗牛士",
+    "祭司",
+    "野人",
+    "空军"
+   ],
+   "hunter": "歌剧演员",
+   "hunter_player": "N1e",
+   "hunter_bans": [
+    "弓箭手",
+    "咒术师",
+    "气象学家",
+    "幸运儿"
+   ],
+   "survivor_bans": [
+    "跛脚羊"
+   ],
+   "score": "1:3",
+   "escape": 1,
+   "kill": 3,
+   "map": "唐人街"
+  },
+  {
+   "seq": 4,
+   "game": 2,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "北京WBG",
+   "hunter_team": "FPX.ZQ",
+   "survivors": [
+    "先知",
+    "大副",
+    "弓箭手",
+    "木偶师"
+   ],
+   "hunter": "歌剧演员",
+   "hunter_player": "DongX",
+   "hunter_bans": [
+    "祭司",
+    "幻灯师",
+    "斗牛士",
+    "气象学家"
+   ],
+   "survivor_bans": [
+    "女王蜂"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "唐人街"
+  },
+  {
+   "seq": 5,
+   "game": 3,
+   "side": "upper",
+   "tiebreak": false,
+   "survivor_team": "北京WBG",
+   "hunter_team": "FPX.ZQ",
+   "survivors": [
+    "佣兵",
+    "幸运儿",
+    "幻灯师",
+    "小说家"
+   ],
+   "hunter": "记录员",
+   "hunter_player": "DongX",
+   "hunter_bans": [
+    "斗牛士",
+    "咒术师",
+    "作曲家",
+    "教授"
+   ],
+   "survivor_bans": [
+    "女王蜂",
+    "跛脚羊"
+   ],
+   "score": "3:1",
+   "escape": 3,
+   "kill": 1,
+   "map": "永眠镇"
+  },
+  {
+   "seq": 6,
+   "game": 3,
+   "side": "lower",
+   "tiebreak": false,
+   "survivor_team": "FPX.ZQ",
+   "hunter_team": "北京WBG",
+   "survivors": [
+    "勘探员",
+    "佣兵",
+    "拉拉队员",
+    "医生"
+   ],
+   "hunter": "女王蜂",
+   "hunter_player": "N1e",
+   "hunter_bans": [
+    "幻灯师",
+    "咒术师",
+    "幸运儿",
+    "气象学家"
+   ],
+   "survivor_bans": [
+    "跛脚羊",
+    "台球手"
+   ],
+   "score": "2:2",
+   "escape": 2,
+   "kill": 2,
+   "map": "永眠镇"
   }
  ]
 }
