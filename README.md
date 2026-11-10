@@ -51,7 +51,7 @@ python scripts/serve.py 8766
 python3 scripts/serve.py 8766
 ```
 
-换端口就改数字；加 `--no-browser` 不自动开浏览器。然后访问 <http://localhost:8766/web/index.html>。
+换端口就改数字；加 `--no-browser` 不自动开浏览器。然后访问 <http://localhost:8766/>。
 
 数据都在仓库里，克隆下来就能用。更新用 `git pull`。
 
@@ -95,7 +95,8 @@ scripts/                  # 后端
   map_scores.py           # 单张地图的实测表，以及某一格的半局明细
   core_check.py           # 查 bp_core.json 的逻辑对不对（保存前也会自动查一遍）
   csv_import.py           # 把赛事数据页导出的 CSV 转成比赛记录
-  custom_data.py          # 读预置数据
+  custom_data.py          # 读预置数据 + 熟练度口径（调整 / 未调整）
+  roster_store.py         # 队伍 / 选手名单（没打过比赛的队和人登记在这）
   file_api.py             # 导入 / 导出文件
   build/                  # 派生数据的生成脚本
 web/                      # 九张页面 + 角色头像组件 + avatars/
@@ -104,8 +105,22 @@ data/
   hunter/                 # 监管选手的配置（每人一份）
   survivor/               # 各队的角色池（每队一份）
   reports/                # 生成的报告存在这里
+test/                     # 本机的功能测试脚本（不入库）
 ```
 
 `data/bp_core.json` 是唯一的数据源，可在页面上改（改前会自动备份）。
 `data/` 根目录下其它 JSON 都是从它算出来的，别手改；要改就改 `bp_core.json` 再重算。
 `hunter/`、`survivor/`、`reports/` 也可以写，页面上的导入导出就是读写这三个目录。
+
+## 跑测试
+
+改完代码想确认没弄坏东西，跑一遍：
+
+```bash
+python3 test/run_all.py          # 全部
+python3 test/run_all.py data     # 只跑名字里含 data 的
+```
+
+每个功能一个脚本，比如 `test_data.py` 测数据页、`test_report.py` 测报告生成。
+测试只读 `data/`，不会改动正式数据，需要写盘的都写到 `tmp/` 下。
+`test/` 目录是本机调试用的，不进仓库。

@@ -132,7 +132,19 @@ class Handler(SimpleHTTPRequestHandler):
     allow_reuse_address = False
 
     def __init__(self, *a, **kw):
-        super().__init__(*a, directory=str(ROOT), **kw)
+        # 静态文件只从 web/ 提供。项目根目录下有 data/（比赛数据）、
+        # scripts/（源码）、tmp/ 和本机配置，那些不能通过 HTTP 读出去。
+        # 页面要用它们一律走下面的 /api/ 接口。
+        super().__init__(*a, directory=str(ROOT / "web"), **kw)
+
+    def list_directory(self, path):
+        """关掉目录浏览：不返回文件清单，直接 404。
+
+        默认实现在访问 /avatars/ 这类目录时会列出全部文件，
+        等于把「有哪些角色」整份送出去，没必要。
+        """
+        self.send_error(404, "File not found")
+        return None
 
     def _json(self, code, obj):
         body = json.dumps(obj, ensure_ascii=False).encode("utf-8")
@@ -199,6 +211,13 @@ class Handler(SimpleHTTPRequestHandler):
             return self._api_files_read()
         if self.path.startswith("/api"):
             return self._json(404, {"ok": False, "error": "unknown api"})
+        # 首页：根路径直接给 index.html，免得用户手动补文件名
+        if self.path.split("?", 1)[0] in ("", "/"):
+            self.send_response(302)
+            self.send_header("Location", "/index.html")
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+            return
         return super().do_GET()
 
     # ── 文件读写（给页面的导入/导出子窗口用） ──────────────
@@ -1300,8 +1319,9 @@ class Handler(SimpleHTTPRequestHandler):
         return json.loads(raw)
 
     def log_message(self, fmt, *args):
-        # 只打 POST，静态请求太吵
-        if args and str(args[0]).startswith(("POST", "4", "5")):
+        # 只打 POST 和错误。静态请求太吵；扫目录、要头像时
+        # send_error 会走这里，那些 404 也不必刷屏。
+        if args and str(args[0]) == "POST":
             print(fmt % args, flush=True)
 
 
@@ -1335,7 +1355,7 @@ def main():
         print(f"启动失败：{e}", flush=True)
         return
     srv = ThreadingHTTPServer(("127.0.0.1", port), Handler)
-    url = f"http://localhost:{port}/web/index.html"
+    url = f"http://localhost:{port}/"
     print(f"服务已启动 {url}", flush=True)
     print(f"配置目录：{file_api.DIR_HUNTER}（监管）"
           f" / {file_api.DIR_SURVIVOR}（角色池）"
