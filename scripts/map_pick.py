@@ -16,8 +16,12 @@
 所以「某队在第 N 局选了什么图」不能直接按局次统计 —— 必须先知道
 该场他是不是主队，否则主客队的选图会混在一起。
 
-主客队记在 bp_core.json 的 meta.home_pairs 里（可在「原始数据」页改），
-下面的 HOME_PAIRS 是随项目带来的初始值，只在 core 里没有这一项时兜底。
+主客队记在 bp_core.json 的顶层 matches 里：一场一项，home 是主队、
+away 是客队，按比赛先后排列（可在「原始数据」页改）。
+
+一场比赛的主客由 matches 里的顺序决定，不再按「队名对」查表 ——
+同一对组合在一季里可能交手两次，第二循环主客互换，
+用队名对当键会把两场混成一场。
 
 地图不可重复选择，但可以重复禁用；本页只统计「选择」，不含禁图。
 """
@@ -28,55 +32,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 CORE = ROOT / "data" / "bp_core.json"
-
-# 每场的主队（第一局握有图权的队伍）。键是先排序后的两队名。
-# 赛季内同一对组合只交手一次，所以用队名对做键是唯一的。
-HOME_PAIRS = {
-    ("ACT", "ASC"): "ASC",
-    ("ACT", "DOU5"): "ACT",
-    ("ACT", "FPX.ZQ"): "FPX.ZQ",
-    ("ACT", "GR"): "GR",
-    ("ACT", "MRC"): "ACT",
-    ("ACT", "TE"): "ACT",
-    ("ACT", "北京WBG"): "北京WBG",
-    ("ACT", "成都GG"): "成都GG",
-    ("ACT", "成都Wolves"): "成都Wolves",
-    ("ASC", "DOU5"): "DOU5",
-    ("ASC", "FPX.ZQ"): "ASC",
-    ("ASC", "GR"): "ASC",
-    ("ASC", "MRC"): "ASC",
-    ("ASC", "TE"): "TE",
-    ("ASC", "北京WBG"): "北京WBG",
-    ("ASC", "成都GG"): "ASC",
-    ("ASC", "成都Wolves"): "成都Wolves",
-    ("DOU5", "FPX.ZQ"): "DOU5",
-    ("DOU5", "GR"): "GR",
-    ("DOU5", "MRC"): "DOU5",
-    ("DOU5", "TE"): "TE",
-    ("DOU5", "北京WBG"): "北京WBG",
-    ("DOU5", "成都GG"): "成都GG",
-    ("DOU5", "成都Wolves"): "DOU5",
-    ("FPX.ZQ", "GR"): "GR",
-    ("FPX.ZQ", "MRC"): "MRC",
-    ("FPX.ZQ", "TE"): "TE",
-    ("FPX.ZQ", "北京WBG"): "FPX.ZQ",
-    ("FPX.ZQ", "成都GG"): "FPX.ZQ",
-    ("FPX.ZQ", "成都Wolves"): "FPX.ZQ",
-    ("GR", "MRC"): "GR",
-    ("GR", "TE"): "TE",
-    ("GR", "北京WBG"): "北京WBG",
-    ("GR", "成都GG"): "成都GG",
-    ("GR", "成都Wolves"): "成都Wolves",
-    ("MRC", "北京WBG"): "北京WBG",
-    ("MRC", "成都GG"): "成都GG",
-    ("MRC", "成都Wolves"): "MRC",
-    ("TE", "北京WBG"): "TE",
-    ("TE", "成都GG"): "TE",
-    ("TE", "成都Wolves"): "TE",
-    ("北京WBG", "成都GG"): "成都GG",
-    ("北京WBG", "成都Wolves"): "成都Wolves",
-    ("成都GG", "成都Wolves"): "成都GG",
-}
 
 # 局次 → 图权归谁
 SLOTS = [
@@ -114,29 +69,22 @@ def _slot_of(x):
 
 
 def _load():
-    return json.loads(CORE.read_text(encoding="utf-8")).get("halves", [])
+    """读 bp_core.json，返回 (halves, matches)。
 
-
-def home_pairs() -> dict:
-    """每场的主队。键是「先排序后用 | 连接」的两队名，值是主队名。
-
-    优先用 bp_core.json 的 meta.home_pairs（页面上可改），
-    没有这一项时退回随项目带来的 HOME_PAIRS。
+    matches 一场一项 {home, away, teams}，home 是主队、away 是客队，
+    按比赛先后排列，和 _matches(halves) 切出来的段一一对应。
     """
-    try:
-        meta = json.loads(CORE.read_text(encoding="utf-8")).get("meta") or {}
-    except Exception:
-        meta = {}
-    raw = meta.get("home_pairs")
-    if isinstance(raw, dict) and raw:
-        out = {}
-        for k, v in raw.items():
-            parts = [p for p in str(k).replace("|", ",").split(",") if p]
-            if len(parts) == 2 and v:
-                out[tuple(sorted(parts))] = v
-        if out:
-            return out
-    return dict(HOME_PAIRS)
+    d = json.loads(CORE.read_text(encoding="utf-8"))
+    return d.get("halves", []), d.get("matches") or []
+
+
+def match_homes() -> list:
+    """每场的主队，按比赛先后排列。
+
+    直接取 bp_core.json 顶层 matches 的 home 字段 —— 主客是逐场记的，
+    不再按队名对查表（同一对组合一季可能交手两次，会撞）。
+    """
+    return [x.get("home") or "" for x in _load()[1]]
 
 
 def stats() -> dict:
@@ -149,20 +97,20 @@ def stats() -> dict:
         totals  {队名: {图: 次数}}
         seats   {队名: {"home": n, "away": n}}
     """
-    halves = _load()
-    pairs = home_pairs()
+    halves, matches = _load()
     teams = set()
     rows = {}
     totals = {}
     seats = {}
 
-    for m in _matches(halves):
-        pair = {m[0]["survivor_team"], m[0]["hunter_team"]}
-        key = tuple(sorted(pair))
-        home = pairs.get(key)
-        if not home:
+    for mi, m in enumerate(_matches(halves)):
+        a = m[0]["survivor_team"]
+        b = m[0]["hunter_team"]
+        # 主客按场次顺序从 matches 取，不再用队名对查表
+        home = matches[mi].get("home") if mi < len(matches) else ""
+        if home not in (a, b):
             continue
-        away = next(t for t in key if t != home)
+        away = b if home == a else a
 
         # 每局只取上半局：一局上下半局地图相同
         per_slot = {}

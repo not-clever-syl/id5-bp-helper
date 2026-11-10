@@ -133,6 +133,11 @@ tr.srow:hover td{background:rgba(255,255,255,.03)}
 .stale.on{display:block}
 .stale b{color:var(--warn,#e0a83b);margin-right:6px}
 
+.srcnote{margin:0 0 12px;color:var(--dim);font-size:12px;line-height:1.8}
+.srcnote b{color:var(--text)}
+.srcnote a{color:var(--accent,#6b8cff);text-decoration:none}
+.srcnote a:hover{text-decoration:underline}
+
 /* ── 弹窗 ────────────────────────────────────────────── */
 .mask{position:fixed;inset:0;background:rgba(8,10,14,.68);
   display:none;align-items:flex-start;justify-content:center;z-index:60;
@@ -182,6 +187,11 @@ tr.srow:hover td{background:rgba(255,255,255,.03)}
   border-radius:7px;padding:8px 11px;font-size:11.5px;color:var(--err);display:none}
 .dlg-warn.on{display:block}
 .dlg-warn ul{margin:5px 0 0;padding-left:17px}
+
+#csvMask .row{display:flex;align-items:center;gap:8px}
+#csvMask .msg{font-size:12px;line-height:1.7;display:none}
+#csvMask .msg.err{color:var(--err)}
+#csvMask .msg.ok{color:var(--ok)}
 </style>
 </head>
 <body>
@@ -191,12 +201,21 @@ tr.srow:hover td{background:rgba(255,255,255,.03)}
   <span class="sub" id="sub">半局基础表，改了直接写回并重算所有下游</span>
   <span class="spacer"></span>
   <span class="status" id="status"></span>
+  <button id="importCsv">导入 CSV</button>
   <button id="newMatch">新建比赛</button>
   <button id="undo" disabled>撤销改动</button>
   <button id="save" class="primary" disabled>保存并重算</button>
 </header>
 
 <main>
+  <p class="srcnote">
+    数据来源：比赛记录来自 <b>B站@夜莺小姐档案馆</b>（赛事数据展示页由 B站@摸鱼达人作业君 制作），
+    范围为 IVL 2026 秋季赛常规赛。比赛数据的版权归原作者，不在本项目许可证范围内（许可证只管代码）。
+    可以从数据页导出 CSV 后点右上角「导入 CSV」批量录入，导入内容先暂存在页面上，核对后再保存。
+    <a href="https://website.homeworkkun.top/%E8%B5%9B%E4%BA%8B%E6%95%B0%E6%8D%AE%E5%B1%95%E7%A4%BA/2.0/query.html?v2=1"
+       target="_blank" rel="noopener">查看原始数据页</a>
+  </p>
+
   <div class="bar">
     <input type="search" id="q" placeholder="搜索队伍 / 角色 / 选手 / 地图…">
     <label>只显示有改动的行 <input type="checkbox" id="onlyDirty"></label>
@@ -292,6 +311,33 @@ tr.srow:hover td{background:rgba(255,255,255,.03)}
   </div>
 </div>
 
+<!-- 导入 CSV -->
+<div class="mask" id="csvMask">
+  <div class="dialog" style="max-width:520px">
+    <div class="dlg-head"><h3>导入 CSV</h3>
+      <button class="x" id="csvClose" title="关闭">×</button>
+    </div>
+    <div class="dlg-body">
+      <p class="dim" style="margin:0 0 10px">
+        选择赛事数据页导出的 CSV 文件（一行一个半局）。
+        导入会把整张表换成 CSV 里的记录——现有数据不会保留。
+        导入的内容先暂存在页面上，核对后再点「保存并重算」。
+      </p>
+      <div class="row" style="margin-bottom:10px">
+        <input type="file" id="csvFile" accept=".csv,text/csv"
+          style="flex:1;min-width:0;background:var(--panel2);color:var(--text);
+          border:1px solid var(--border);border-radius:6px;padding:6px 9px;
+          font-size:12.5px">
+      </div>
+      <div class="msg" id="csvMsg" style="margin-top:10px"></div>
+    </div>
+    <div class="dlg-foot">
+      <button id="csvCancel">取消</button>
+      <button id="csvOk" class="primary">开始导入</button>
+    </div>
+  </div>
+</div>
+
 <!-- 新建一场 -->
 <div class="mask" id="mask">
   <div class="dialog" style="max-width:380px">
@@ -314,11 +360,12 @@ tr.srow:hover td{background:rgba(255,255,255,.03)}
 const $ = s => document.querySelector(s);
 const esc = Char.esc;
 
-let META = null;        // bp_core 的 meta（含 home_pairs，可编辑）
+let META = null;        // bp_core 的 meta
+let MATCHES = [];       // 每场比赛的主客：{home, away, teams}，按比赛先后
+let ORIG_MATCHES = [];  // 原始主客数组，用于判断改动 / 撤销
 let HALVES = [];        // 当前编辑中的半局
 let ORIG = [];          // 原始半局，用于比对 / 撤销
 let ORIG_BY_ID = {};    // 原始半局按 _id 索引（插入新行后行号会变）
-let ORIG_META = null;   // 原始 meta
 let SOC = [];           // 求生池
 let HUNT = [];          // 监管池
 let TEAMS = [];         // 队伍名
@@ -344,7 +391,6 @@ async function boot() {
     ]);
     if (!core.ok) throw new Error(core.error || '读取失败');
     META = core.meta || {};
-    ORIG_META = JSON.parse(JSON.stringify(META));
     HALVES = core.halves || [];
     // 给每行一个内部 id：插入新行后行号会变，靠 id 才能判断「哪一行被改过」。
     HALVES.forEach((h, i) => { h._id = i + 1; });
@@ -352,7 +398,8 @@ async function boot() {
     ORIG = JSON.parse(JSON.stringify(HALVES));
     ORIG_BY_ID = {};
     ORIG.forEach(h => { ORIG_BY_ID[h._id] = h; });
-    if (!META.home_pairs) META.home_pairs = core.home_pairs || {};
+    MATCHES = core.matches || [];
+    ORIG_MATCHES = JSON.parse(JSON.stringify(MATCHES));
     TEAMS = core.teams || [];
     MAPS = core.maps || [];
     // 角色池用后端给的图鉴全量名单（本季没出场过的角色也能选）
@@ -377,7 +424,7 @@ async function boot() {
       for (const c of h.survivor_bans) if (!HUNT.includes(c)) HUNT.push(c);
       if (h.hunter && !HUNT.includes(h.hunter)) HUNT.push(h.hunter);
     }
-    $('#sub').textContent = `共 ${HALVES.length} 个半局`;
+    updateSubtitle();
     bind();
     await checkLogic();
     render();
@@ -387,13 +434,19 @@ async function boot() {
   }
 }
 
+// 页头「共 N 个半局」：启动和导入后都要跟着数据走
+function updateSubtitle() {
+  $('#sub').textContent = `共 ${HALVES.length} 个半局`;
+}
+
 // 逻辑校验交给后端（规则跟 scripts/core_check.py 一份）
 async function checkLogic() {
   try {
     const r = await fetch('/api/core/check', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({meta: META, halves: payloadHalves()}),
+      body: JSON.stringify({meta: META, matches: MATCHES,
+                            halves: payloadHalves()}),
     });
     const d = await r.json();
     if (!d.ok) throw new Error(d.error || '校验失败');
@@ -417,6 +470,10 @@ function bind() {
   $('#save').onclick = save;
   $('#newMatch').onclick = () => openNewMatch(null);
   $('#undo').onclick = undo;
+  $('#importCsv').onclick = openCsvImport;
+  $('#csvClose').onclick = closeCsvImport;
+  $('#csvCancel').onclick = closeCsvImport;
+  $('#csvOk').onclick = doCsvImport;
   $('#nmCancel').onclick = () => $('#mask').classList.remove('on');
   $('#nmOk').onclick = async () => {
     const home = $('#nmHome').value;
@@ -449,7 +506,13 @@ function bind() {
       if (x.side === 'upper') { x.survivor_team = home; x.hunter_team = away; }
       else { x.survivor_team = away; x.hunter_team = home; }
     });
-    META.home_pairs[pairKey(home, away)] = home;
+    // 主客直接记在这一场对应的 matches 项上
+    const mi = matchIndexOfIdx(idx);
+    if (MATCHES[mi]) {
+      MATCHES[mi].home = home;
+      MATCHES[mi].away = away;
+      MATCHES[mi].teams = [home, away];
+    }
     closeRename();
     await refreshCheck();
   };
@@ -469,14 +532,36 @@ function bind() {
   });
 }
 
-// 队名对的键（排序后用 | 连接）
-function pairKey(a, b) { return [a, b].sort().join('|'); }
+// 每场的主客从 MATCHES 里按场次顺序取，不再按队名对查表
+// （同一对组合一季可能交手两次，用队名对当键会撞）
 
-function homeOf(h) {
-  const a = h.survivor_team, b = h.hunter_team;
-  const home = META.home_pairs[pairKey(a, b)];
-  if (!home) return null;
-  return home === a ? [a, b] : [b, a];
+// 按 seq 回退把 HALVES 切成一场场，返回 [[起, 止], ...]
+function splitRanges() {
+  const segs = [];
+  let s = 0;
+  for (let k = 1; k <= HALVES.length; k++) {
+    if (k === HALVES.length || HALVES[k].seq <= HALVES[k - 1].seq) {
+      segs.push([s, k - 1]);
+      s = k;
+    }
+  }
+  return segs;
+}
+
+// 半局下标 → 第几场（0 起）
+function matchIndexOfIdx(i) {
+  const segs = splitRanges();
+  return segs.findIndex(([a, b]) => i >= a && i <= b);
+}
+
+function homeOf(g) {
+  // g 是这一场的半局数组（按显示顺序）
+  const idx = HALVES.indexOf(g[0]);
+  if (idx < 0) return null;
+  const mi = matchIndexOfIdx(idx);
+  const m = MATCHES[mi];
+  if (!m || !m.home) return null;
+  return [m.home, m.away];
 }
 
 // 有没有改动：新增、删除、或某个字段被改
@@ -503,22 +588,24 @@ function stripId(h) {
 }
 
 function metaDirty() {
-  return JSON.stringify(META.home_pairs || {}) !==
-         JSON.stringify((ORIG_META && ORIG_META.home_pairs) || {});
+  return JSON.stringify(MATCHES) !== JSON.stringify(ORIG_MATCHES || []);
 }
 
 function updateStatus() {
   const n = HALVES.filter((_, i) => dirty(i)).length;
-  const md = metaDirty();
   const bad = Object.keys(BAD).length;
+  const iss = ISSUES.length;
   const chg = anyChanged();
   const st = $('#status');
+  const badTxt = iss && bad
+    ? `${iss} 处不合逻辑（涉及 ${bad} 行）`
+    : `${iss} 处不合逻辑`;
   if (STALE) {
     st.className = 'status err';
-    st.textContent = `已保存，但 ${bad} 行不合逻辑，未重算`;
-  } else if (bad) {
+    st.textContent = `已保存，但${badTxt}，未重算`;
+  } else if (iss) {
     st.className = 'status err';
-    st.textContent = `${bad} 行不合逻辑，保存后不重算`;
+    st.textContent = `${badTxt}，保存后不重算`;
   } else if (chg) {
     st.className = 'status dirty';
     st.textContent = n ? `${n} 行有未保存的改动` : '有未保存的改动';
@@ -596,7 +683,7 @@ function render() {
     shownRows += rows.length;
 
     const first = g[0].h;
-    const pair = homeOf(first);   // [主队, 客队]
+    const pair = homeOf(g.map(x => x.h));   // [主队, 客队]
     const home = pair ? pair[0] : '';
     const away = pair ? pair[1] : '';
     // 新建的场还没填队伍，主客暂时显示不出来
@@ -637,7 +724,13 @@ function render() {
     const expanded = OPEN.has(mkey);
 
     let st = '';
-    if (badRows.length) st = `<span class="warnmark">⚠ ${badRows.length} 处不合逻辑</span>`;
+    // 一处问题可能同时挂在这一场的上下两行，按问题去重再计数
+    const seenQ = new Set();
+    for (const x of badRows) {
+      for (const msg of (BAD[x.i] || [])) seenQ.add(msg);
+    }
+    const nBad = seenQ.size;
+    if (nBad) st = `<span class="warnmark">⚠ ${nBad} 处不合逻辑</span>`;
     else if (changedRows.length) st = `<span class="dim">${changedRows.length} 行已改</span>`;
     else st = '<span class="dim">—</span>';
 
@@ -710,7 +803,7 @@ function openDetail(i) {
   if (!h) return;
   EDIT_ID = h._id;
   DRAFT = stripId(h);
-  DRAFT.home = (META.home_pairs[pairKey(h.survivor_team, h.hunter_team)] || '');
+  DRAFT.home = (MATCHES[matchIndexOfIdx(i)] || {}).home || '';
   DRAFT._row = i;
 
   $('#dTitle').textContent = '半局详情';
@@ -786,7 +879,7 @@ function buildDetail() {
 
   let html = '';
   // 求生队伍只列这一场的两支（主客），监管选手只列这两支队的人
-  const pair = homeOf(h);
+  const pair = homeOf([h]);
   const matchTeams = pair ? [pair[0], pair[1]]
                           : [...new Set([h.survivor_team, h.hunter_team].filter(Boolean))];
   const p2t = window.__PLAYER_TEAMS__ || {};
@@ -854,9 +947,13 @@ async function commitDetail() {
   if (!h || h._id !== EDIT_ID) return;
 
   const d = DRAFT;
-  // 主客映射
-  if (d.home && d.survivor_team && d.hunter_team) {
-    META.home_pairs[pairKey(d.survivor_team, d.hunter_team)] = d.home;
+  // 主客记在这一场对应的 matches 项上
+  const mi = matchIndexOfIdx(row);
+  if (d.home && d.survivor_team && d.hunter_team && MATCHES[mi]) {
+    const away = d.home === d.survivor_team ? d.hunter_team : d.survivor_team;
+    MATCHES[mi].home = d.home;
+    MATCHES[mi].away = away;
+    MATCHES[mi].teams = [d.home, away];
   }
   // 半局字段
   for (const f of ['game', 'tiebreak', 'survivor_team', 'map', 'hunter',
@@ -930,6 +1027,7 @@ function deleteMatch(firstIdx) {
   const n = e - s + 1;
   if (!confirm(`删掉这一整场比赛？共 ${n} 个半局。`)) return;
   pushUndo();
+  MATCHES.splice(matchIndexOfIdx(s), 1);
   HALVES.splice(s, n);
   renumberSeq(s);
 }
@@ -963,12 +1061,14 @@ let UNDO = null;   // 上一步的整份快照
 
 function pushUndo() {
   UNDO = {halves: JSON.parse(JSON.stringify(HALVES)),
+          matches: JSON.parse(JSON.stringify(MATCHES)),
           meta: JSON.parse(JSON.stringify(META))};
 }
 
 function undo() {
   if (!UNDO) return;
   HALVES = UNDO.halves;
+  MATCHES = UNDO.matches;
   META = UNDO.meta;
   UNDO = null;
   OPEN.clear();
@@ -978,7 +1078,6 @@ function undo() {
 // 新建一整场：3 局 = 6 行。afterIdx 之后插入（-1 表示追加到末尾）
 // 上半局主队当求生方、客队当监管方，下半局互换；录具体数据时可以在半局详情里改。
 function addMatch(home, away, afterIdx) {
-  META.home_pairs[pairKey(home, away)] = home;
   const rows = [];
   for (let g = 1; g <= 3; g++) {
     rows.push({
@@ -996,6 +1095,13 @@ function addMatch(home, away, afterIdx) {
       score: '2:2', escape: 2, kill: 2, map: '',
     });
   }
+  // 插在第几场：afterIdx 指向那一场的最后一行；-1 表示追加到末尾
+  let at = MATCHES.length;
+  if (afterIdx !== undefined && afterIdx >= 0) {
+    at = matchIndexOfIdx(afterIdx) + 1;
+  }
+  MATCHES.splice(at, 0, {home, away, teams: [home, away]});
+
   if (afterIdx === undefined || afterIdx < 0) HALVES.push(...rows);
   else HALVES.splice(afterIdx + 1, 0, ...rows);
   return rows[0]._id;
@@ -1009,7 +1115,7 @@ function openRename(firstIdx) {
   RN_ID = h._id;
 
   // 这一场当前的主客
-  const pair = homeOf(h);
+  const pair = homeOf([h]);
   const curHome = pair ? pair[0] : '';
   const curAway = pair ? pair[1] : '';
 
@@ -1147,17 +1253,19 @@ function payloadHalves() {
 async function save() {
   const st = $('#status');
   await checkLogic();
-  const badCount = Object.keys(BAD).length;
+  const badRows = Object.keys(BAD).length;
+  const badCount = ISSUES.length;
   if (badCount) {
     const go = confirm(
-      `有 ${badCount} 行数据不合逻辑。\n\n` +
-      `保存会把这些内容写进 data/bp_core.json，但**不会重算**分数表` +
+      `数据里有 ${badCount} 处不合逻辑` +
+      (badRows ? `（涉及 ${badRows} 行）` : '') + `。\n\n` +
+      `保存会把这些内容写进 data/bp_core.json，但不会重算分数表` +
       `（不合逻辑的数据算出来的分数没意义）。\n\n` +
       `确定要保存吗？`);
     if (!go) {
       render();
       st.className = 'status err';
-      st.textContent = `${badCount} 行不合逻辑，已取消保存`;
+      st.textContent = `${badCount} 处不合逻辑，已取消保存`;
       return;
     }
   }
@@ -1168,14 +1276,15 @@ async function save() {
     const r = await fetch('/api/core', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({meta: META, halves: payloadHalves()}),
+      body: JSON.stringify({meta: META, matches: MATCHES,
+                            halves: payloadHalves()}),
     });
     const d = await r.json();
     if (!d.ok) throw new Error(d.error || '保存失败');
     ORIG = JSON.parse(JSON.stringify(HALVES));
     ORIG_BY_ID = {};
     ORIG.forEach(h => { ORIG_BY_ID[h._id] = h; });
-    ORIG_META = JSON.parse(JSON.stringify(META));
+    ORIG_MATCHES = JSON.parse(JSON.stringify(MATCHES));
     if (d.rebuilt) {
       STALE = false;
       st.className = 'status ok';
@@ -1185,7 +1294,7 @@ async function save() {
     } else {
       STALE = true;
       st.className = 'status err';
-      st.textContent = `已保存，但 ${d.count} 行不合逻辑，未重算`;
+      st.textContent = `已保存，但有 ${d.count} 处不合逻辑，未重算`;
     }
     render();
   } catch (e) {
@@ -1194,6 +1303,89 @@ async function save() {
   }
 }
 
+// ── 导入 CSV（只在页面上暂存，不写盘）─────────────────────
+function csvMsg(text, cls) {
+  const el = $('#csvMsg');
+  el.textContent = text || '';
+  el.className = 'msg' + (cls ? ' ' + cls : '');
+  el.style.display = text ? 'block' : 'none';
+}
+
+function openCsvImport() {
+  $('#csvMask').classList.add('on');
+  $('#csvFile').value = '';
+  csvMsg(`导入会把现有 ${HALVES.length} 个半局整表替换成 CSV 里的记录，` +
+         `导入后先暂存在页面上，核对无误再点「保存并重算」。`);
+}
+
+function closeCsvImport() {
+  $('#csvMask').classList.remove('on');
+}
+
+async function doCsvImport() {
+  const f = $('#csvFile').files[0];
+  if (!f) { csvMsg('请先选择一个 CSV 文件', 'err'); return; }
+  const ok = $('#csvOk');
+  ok.disabled = true;
+  csvMsg('正在解析……');
+  try {
+    const text = await f.text();
+    const r = await fetch('/api/core/import_csv', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({csv: text}),
+    }).then(x => x.json());
+    if (!r.ok) throw new Error(r.error || '解析失败');
+
+    // 只放到页面上：能改能核对，点「保存并重算」才真正写盘
+    const halves = r.halves || [];
+    halves.forEach((h, i) => { h._id = i + 1; });
+    HALVES = halves;
+    NEXT_ID = halves.length;
+    // 主客跟着一起换：一场一项，home 是主队、away 是客队
+    MATCHES = (r.matches || []).map(m => ({
+      home: m.home || '', away: m.away || '',
+      teams: (m.teams || [m.home, m.away]).slice(),
+    }));
+    // 导入的每一行都算「改动」，保存时会整体写回
+    ORIG = [];
+    ORIG_BY_ID = {};
+    UNDO = null;
+    if ($('#undo')) $('#undo').disabled = true;
+
+    closeCsvImport();
+    // 先校验再渲染：render() 里靠 BAD 画「⚠ N 处不合逻辑」，
+    // 反过来先 render 的话 BAD 还是上一次的旧结果，警告条不会出现。
+    updateSubtitle();
+    await checkLogic();
+    render();
+
+    STALE = false;
+    // 名单外的选手：不会自动登记，提示去「队伍选手管理」页补上归属
+    const unk = r.unknown_players || [];
+    const unkTip = unk.length
+      ? `名单里有 ${unk.length} 个选手认不出队伍（${unk.map(p => p.name).join('、')}），`
+        + `保存后会被标为不合逻辑，先到「队伍选手管理」页登记。`
+      : '';
+    const tip = `已用 CSV 替换整张表：${halves.length} 个半局`
+      + `（原表 ${r.replaced} 个）。`
+      + `还没保存，核对无误后点「保存并重算」。` + unkTip;
+    const st = $('#status');
+    if (r.count || unk.length) {
+      st.className = 'status err';
+      st.textContent = r.count
+        ? `${tip} 其中 ${r.count} 处不合逻辑，见上方提示`
+        : tip;
+    } else {
+      st.className = 'status ok';
+      st.textContent = tip;
+    }
+  } catch (e) {
+    csvMsg('导入失败：' + e.message, 'err');
+  } finally {
+    ok.disabled = false;
+  }
+}
 
 </script>
 </body>

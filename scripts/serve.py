@@ -105,24 +105,6 @@ def _list_reports() -> list:
     return out
 
 
-def _validate_core(halves, meta) -> str:
-    """校验原始数据。返回错误字符串，通过则返回空串。
-
-    具体规则在 core_check.py 里，命令行也能单独跑：
-        python scripts/core_check.py
-    """
-    import core_check
-    issues = core_check.check(halves, meta)
-    if not issues:
-        return ""
-    texts = core_check.issues_text(issues)
-    head = f"数据不合逻辑（共 {len(issues)} 处）："
-    detail = "；".join(texts[:5])
-    if len(texts) > 5:
-        detail += f" …… 还有 {len(texts) - 5} 处"
-    return head + detail
-
-
 class Handler(SimpleHTTPRequestHandler):
     # 端口探测靠 bind 试错，服务器本身也必须用同样的判定，
     # 否则探测说「可用」但实际 bind 失败，会退回到硬报错。
@@ -144,6 +126,8 @@ class Handler(SimpleHTTPRequestHandler):
             return self._api_recompute()
         if self.path == "/api/core":
             return self._api_core_write()
+        if self.path == "/api/core/import_csv":
+            return self._api_core_import_csv()
         if self.path == "/api/core/check":
             return self._api_core_check()
         if self.path == "/api/roster_edit":
@@ -574,7 +558,7 @@ class Handler(SimpleHTTPRequestHandler):
         if not isinstance(halves, list):
             return self._json(400, {"ok": False, "error": "halves 必须是数组"})
         meta = data.get("meta") or {}
-        issues = core_check.check(halves, meta)
+        issues = core_check.check(halves, meta, data.get("matches"))
         self._json(200, {
             "ok": True,
             "issues": issues,
@@ -733,16 +717,11 @@ class Handler(SimpleHTTPRequestHandler):
                                 "error": "action 必须是 add / rename / delete"})
 
     def _api_core_get(self):
-        """原始数据：meta + 全部半局 + 主客队映射，给表格页展示。"""
+        """原始数据：meta + 主客数组 + 全部半局，给表格页展示。"""
         try:
-            import map_pick
             import roster_store
             c = json.loads((ROOT / "data" / "bp_core.json").read_text(encoding="utf-8"))
             meta = c.get("meta") or {}
-            hp = meta.get("home_pairs")
-            if not isinstance(hp, dict) or not hp:
-                hp = {"|".join(sorted(k)): v
-                      for k, v in map_pick.HOME_PAIRS.items()}
             halves = c.get("halves") or []
             # 队伍 = 数据里出现过的 ∪ 登记过的（自定义名单）
             teams = sorted({h["survivor_team"] for h in halves}
@@ -751,8 +730,8 @@ class Handler(SimpleHTTPRequestHandler):
             self._json(200, {
                 "ok": True,
                 "meta": meta,
+                "matches": c.get("matches") or [],
                 "halves": halves,
-                "home_pairs": hp,
                 "teams": teams,
                 "maps": sorted({h["map"] for h in halves if h.get("map")}),
                 "pool_survivor": self._role_pool("survivor", halves),
@@ -789,6 +768,89 @@ class Handler(SimpleHTTPRequestHandler):
                     pool.append(c)
         return pool
 
+    def _api_core_import_csv(self):
+        """解析 CSV，返回可编辑的半局列表 —— **不写盘**。
+
+        导入是整表替换：返回的 halves 完全来自这份 CSV，不跟现有数据合并，
+        所以 CSV 里有什么就是什么，页面上的记录也以 CSV 为准。
+
+        请求体：{"csv": "文件内容文本"}
+        结果暂存在页面上，用户核对 / 修改后再点「保存并重算」才落盘。
+        """
+        try:
+            data = self._read_json()
+        except Exception as e:
+            return self._json(400, {"ok": False, "error": f"bad json: {e}"})
+
+        text = data.get("csv")
+        if not isinstance(text, str) or not text.strip():
+            return self._json(400, {"ok": False, "error": "缺少 csv 内容"})
+
+        try:
+            import csv_import
+            rows, head = csv_import.read_rows_from_text(text)
+            if not rows:
+                return self._json(400, {"ok": False, "error": "CSV 里没有数据行"})
+            # 登记过的新队/新选手也参与名字归一
+            try:
+                import roster_store
+                rd = roster_store.load()
+                team_extra = {t: t for t in rd.get("teams") or []}
+            except Exception:
+                team_extra = {}
+            imported, imported_matches = csv_import.to_core(rows, head, team_extra)
+        except Exception as e:
+            return self._json(400, {"ok": False,
+                                    "error": f"CSV 解析失败：{type(e).__name__}: {e}"})
+
+        if not imported:
+            return self._json(400, {"ok": False, "error": "CSV 解析后没有任何半局"})
+
+        old = json.loads((ROOT / "data" / "bp_core.json").read_text(encoding="utf-8"))
+
+        # 只检查不落盘：用户可以在页面上先看看有没有问题
+        try:
+            import core_check
+            issues = core_check.check(imported, dict(old.get("meta") or {},
+                                                     halves=len(imported)),
+                                      imported_matches)
+            bad = core_check.bad_rows(issues)
+        except Exception:
+            issues, bad = [], []
+
+        self._json(200, {
+            "ok": True,
+            "halves": imported,
+            "matches": imported_matches,
+            "imported": len(imported),
+            "replaced": len(old.get("halves") or []),
+            "unknown_players": self._unknown_players(imported),
+            "issues": issues,
+            "bad_rows": bad,
+            "count": len(issues),
+        })
+
+    @staticmethod
+    def _unknown_players(halves):
+        """导入后名单里认不出队伍的监管选手。
+
+        名单 = hunter_players.json ∪ data/roster.json。两处都没有的选手，
+        导入后会被 core_check 报「选手属于某队，但这一行监管队是另一队」。
+        这里只挑出来给页面提示，不自动登记 —— 归属要靠人去确认。
+        返回 [{"name": "选手", "team": "这一行写的监管队", "rows": 出现次数}]
+        """
+        known = Handler._player_teams()
+        out = {}
+        for h in halves:
+            name = (h.get("hunter_player") or "").strip()
+            if not name or name in known:
+                continue
+            item = out.setdefault(name, {"name": name,
+                                         "team": h.get("hunter_team") or "",
+                                         "rows": 0})
+            item["rows"] += 1
+        return sorted(out.values(), key=lambda x: (-x["rows"], x["name"]))
+
     def _api_core_write(self):
         """保存原始数据：备份 → 写回 bp_core.json →（数据合法才）重建派生数据。
 
@@ -810,6 +872,26 @@ class Handler(SimpleHTTPRequestHandler):
 
         old = json.loads((ROOT / "data" / "bp_core.json").read_text(encoding="utf-8"))
         meta = data.get("meta") or old.get("meta") or {}
+        matches = data.get("matches")
+        if matches is None:
+            matches = old.get("matches") or []
+        return self._save_core(halves, meta, matches)
+
+    def _save_core(self, halves, meta, matches=None):
+        """备份 → 写 bp_core.json → 数据合法才重建派生数据。
+
+        数据不合逻辑时照样写盘（用户可以先把半录的数据存下来），
+        但**不重建派生数据**——不合逻辑的数据算出来的分数没有意义。
+        此时下游各页面用的还是上一次重算的结果，页面上会明确警告。
+
+        matches 是顶层的主客数组（一场一项），跟 halves 一起写。
+        """
+        # 半局数一律按实际条数写，不信任传上来的 meta（页面上改完行数后
+        # META.halves 往往还是旧值，留着就会出现「说是 260、实际 310」）
+        meta = dict(meta)
+        meta["halves"] = len(halves)
+        if matches is None:
+            matches = []
 
         # 备份 → 原子写
         core_path = ROOT / "data" / "bp_core.json"
@@ -826,6 +908,7 @@ class Handler(SimpleHTTPRequestHandler):
             pass
         tmp = core_path.with_suffix(".json.tmp")
         tmp.write_text(json.dumps({"meta": meta,
+                                   "matches": matches,
                                    "halves": halves},
                                   ensure_ascii=False, indent=1),
                        encoding="utf-8")
@@ -833,7 +916,7 @@ class Handler(SimpleHTTPRequestHandler):
 
         # 数据不合逻辑 → 只存不算。派生数据保持上一次的结果。
         import core_check
-        issues = core_check.check(halves, meta)
+        issues = core_check.check(halves, meta, matches)
         if issues:
             custom_data.clear_cache()
             return self._json(200, {

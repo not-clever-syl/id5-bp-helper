@@ -75,3 +75,10 @@ Control means ownership of substantially all the assets of an entity, or the pow
 Your licenses are all the licenses granted to you for the software under these terms.
 
 Use means anything you do with the software requiring one of your licenses.
+
+## Scope of this License
+
+This license applies to the source code of this project only. It does not
+apply to the match data under `data/`, nor to the tables derived from that
+data. That data belongs to its original authors and is provided under their
+own terms; see the "数据来源" section of README.md.
