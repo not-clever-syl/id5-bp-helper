@@ -58,6 +58,27 @@ def _combos_arg(raw) -> int:
     return max(1, min(16, n))
 
 
+def _query_arg(path: str, key: str) -> str:
+    """从查询串里取一个参数（未编码/编码都认）。取不到返回空串。"""
+    if "?" not in path:
+        return ""
+    for kv in path.split("?", 1)[1].split("&"):
+        k, _, v = kv.partition("=")
+        if k == key:
+            return urllib.parse.unquote(v)
+    return ""
+
+
+def _score_mode(path: str) -> str:
+    """熟练度口径：raw = 未调整，其余一律按调整后（默认）。
+
+    数据页的「未调整熟练度 / 调整熟练度」两个视图靠它切换；
+    BP 推演、生成页不带这个参数，拿到的一直是调整后的值。
+    """
+    return custom_data.MODE_RAW if _query_arg(path, "mode") == "raw" \
+        else custom_data.MODE_ADJUSTED
+
+
 def _player_betas() -> dict:
     """每位选手的熟练度修正预览：{选手: {监管角色: adjust}}。
 
@@ -282,7 +303,8 @@ class Handler(SimpleHTTPRequestHandler):
     def _api_scores_get(self):
         self._json(200, {
             "status": custom_data.scores_status(),
-            "cells": custom_data.load_scores(),
+            "mode": _score_mode(self.path),
+            "cells": custom_data.load_scores(_score_mode(self.path)),
             "all_survivors": custom_data.all_survivors(),
             "all_hunters": custom_data.all_hunters(),
             "hunter_counts": custom_data.hunter_counts(),
@@ -363,7 +385,7 @@ class Handler(SimpleHTTPRequestHandler):
                         name = urllib.parse.unquote(kv[4:])
             if not name:
                 return self._json(400, {"ok": False, "error": "缺少 map 参数"})
-            self._json(200, {"ok": True, **map_scores.table(name)})
+            self._json(200, {"ok": True, **map_scores.table(name, _score_mode(self.path))})
         except Exception as e:
             import traceback
             traceback.print_exc()
@@ -971,6 +993,9 @@ class Handler(SimpleHTTPRequestHandler):
         d = json.loads(p.read_text(encoding="utf-8"))
         self._json(200, {
             "meta": d["meta"],
+            # 全局格子的两种口径：adjusted 含熟练度修正，raw 是原始均值
+            "global": d.get("global") or {},
+            "global_raw": d.get("global_raw") or {},
             "players": d["players"],
             "player_halves": d["player_halves"],
             "player_hunters": d["player_hunters"],

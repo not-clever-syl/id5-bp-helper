@@ -58,6 +58,8 @@ def _load_rows(core=None, adj=None):
             "player": player,
             "team": h["survivor_team"],
             "y": y_adj,
+            # 未调整熟练度的原始逃脱人数，供数据页切换视图
+            "y_raw": float(y),
             "game": h.get("game"),
         })
     return rows
@@ -71,16 +73,20 @@ def build(core=None, adj=None, tree=None) -> dict:
 
     rows = _load_rows(core, adj)
 
-    # 全局 (角色, 监管)
+    # 全局 (角色, 监管)。*_raw 是不含熟练度修正的同一组数。
     g_acc = defaultdict(list)
+    g_acc_raw = defaultdict(list)
     for r in rows:
         for s in r["chars"]:
             g_acc[(s, r["hunter"])].append(r["y"])
+            g_acc_raw[(s, r["hunter"])].append(r["y_raw"])
     glob = {k: sum(v) / len(v) for k, v in g_acc.items()}
     glob_n = {k: len(v) for k, v in g_acc.items()}
+    glob_raw = {k: sum(v) / len(v) for k, v in g_acc_raw.items()}
 
     # 选手 (选手, 角色, 监管)
     p_acc = defaultdict(list)
+    p_acc_raw = defaultdict(list)
     p_halves = defaultdict(int)
     p_used = defaultdict(set)
     for r in rows:
@@ -91,6 +97,7 @@ def build(core=None, adj=None, tree=None) -> dict:
         p_used[p].add(r["hunter"])
         for s in r["chars"]:
             p_acc[(p, s, r["hunter"])].append(r["y"])
+            p_acc_raw[(p, s, r["hunter"])].append(r["y_raw"])
 
     players = {}
     for (p, s, h), vs in p_acc.items():
@@ -102,6 +109,11 @@ def build(core=None, adj=None, tree=None) -> dict:
         else:
             w = n / (n + K_SHRINK)
             score = w * own + (1 - w) * g
+        # 原始口径：同样的收缩权重重算一遍，只是均值和全局都换成未修正的
+        vr = p_acc_raw[(p, s, h)]
+        own_raw = sum(vr) / len(vr)
+        g_raw = glob_raw.get((s, h))
+        score_raw = own_raw if g_raw is None else w * own_raw + (1 - w) * g_raw
         players.setdefault(p, {}).setdefault(s, {})[h] = {
             "own": round(own, 3),
             "n": n,
@@ -109,6 +121,9 @@ def build(core=None, adj=None, tree=None) -> dict:
             "global_n": glob_n.get((s, h)),
             "weight": round(w, 3),
             "score": round(score, 3),
+            "own_raw": round(own_raw, 3),
+            "global_raw": round(g_raw, 3) if g_raw is not None else None,
+            "score_raw": round(score_raw, 3),
         }
 
     # 只保留角色池并集内的求生：角色池外的角色没有行可挂，留着只会多出空行
@@ -160,11 +175,14 @@ def build(core=None, adj=None, tree=None) -> dict:
             "k_shrink": K_SHRINK,
             "formula": "score = w*own + (1-w)*global, w = n/(n+K)",
             "note": "own 为选手实测均值，n 为该选手该格子的样本数；"
-                    "战报只有整队逃脱数，因此一局里每个出场角色各记一次同分。",
+                    "战报只有整队逃脱数，因此一局里每个出场角色各记一次同分。"
+                    "own_raw / global_raw / score_raw 是去掉选手熟练度修正后的同一组数。",
             "halves": len(rows),
         },
         "global": {f"{s}|{h}": {"score": round(v, 3), "n": glob_n[(s, h)]}
                    for (s, h), v in glob.items()},
+        "global_raw": {f"{s}|{h}": {"score": round(v, 3), "n": glob_n[(s, h)]}
+                       for (s, h), v in glob_raw.items()},
         "players": trimmed,
         "player_halves": {p: p_halves[p] for p in trimmed},
         "player_hunters": player_hunters,

@@ -78,19 +78,26 @@ def build(core=None, adj_data=None):
         })
 
     # ---------- 全局 (s, c) ----------
+    # glob_raw 是熟练度修正之前的原始均值，供数据页「未调整熟练度」视图使用；
+    # 折算（score）仍然只用 adj_y，口径不变。
     glob = defaultdict(list)
+    glob_raw = defaultdict(list)
     for r in rows:
         for s in r["cv"]:
             glob[(s, r["bc"])].append(r["adj_y"])
+            glob_raw[(s, r["bc"])].append(r["y"])
 
     GLOBAL = {k: sum(v) / len(v) for k, v in glob.items()}
     GLOBAL_N = {k: len(v) for k, v in glob.items()}
+    GLOBAL_RAW = {k: sum(v) / len(v) for k, v in glob_raw.items()}
 
     # ---------- 队伍 (T, s, c) ----------
     own = defaultdict(list)
+    own_raw = defaultdict(list)
     for r in rows:
         for s in r["cv"]:
             own[(r["team"], s, r["bc"])].append(r["adj_y"])
+            own_raw[(r["team"], s, r["bc"])].append(r["y"])
 
     # ---------- 构建查询视图 ----------
     table = {}
@@ -104,6 +111,12 @@ def build(core=None, adj_data=None):
         else:
             w = n / (n + K_SHRINK)
             final = w * own_mean + (1 - w) * g
+        # 同一格用原始均值再收缩一次，得到「未调整熟练度」的折算值
+        vs_raw = own_raw[(t, s, c)]
+        own_raw_mean = sum(vs_raw) / len(vs_raw)
+        g_raw = GLOBAL_RAW.get((s, c))
+        final_raw = (own_raw_mean if g_raw is None
+                     else w * own_raw_mean + (1 - w) * g_raw)
         table.setdefault(t, {}).setdefault(s, {})[c] = {
             "score": round(final, 3),
             "own": round(own_mean, 3),
@@ -112,6 +125,9 @@ def build(core=None, adj_data=None):
             "global_n": GLOBAL_N.get((s, c)),
             "weight": round(w, 3),
             "counter_pick": c in counter_chars,
+            "own_raw": round(own_raw_mean, 3),
+            "global_raw": round(g_raw, 3) if g_raw is not None else None,
+            "score_raw": round(final_raw, 3),
         }
 
     # ---------- 补充：该队没打过、但全局有的组合 ----------
@@ -120,6 +136,7 @@ def build(core=None, adj_data=None):
         for s in list(table[t]):
             for (gs, gc), gv in GLOBAL.items():
                 if gs == s and gc not in table[t][s]:
+                    g_raw_v = GLOBAL_RAW.get((gs, gc))
                     table[t][s][gc] = {
                         "score": round(gv, 3),
                         "own": None,
@@ -129,6 +146,11 @@ def build(core=None, adj_data=None):
                         "weight": 0.0,
                         "counter_pick": gc in counter_chars,
                         "from_global_only": True,
+                        "own_raw": None,
+                        "global_raw": (round(g_raw_v, 3)
+                                       if g_raw_v is not None else None),
+                        "score_raw": (round(g_raw_v, 3)
+                                      if g_raw_v is not None else round(gv, 3)),
                     }
 
     out = {
@@ -139,7 +161,8 @@ def build(core=None, adj_data=None):
             "formula": "score = w*own + (1-w)*global, w = n/(n+K)",
             "main_chars": sorted(main_chars),
             "counter_pick_chars": sorted(counter_chars),
-            "note": "own_n=0 表示该队未与该监管角色交手过，score 直接取全局值",
+            "note": "own_n=0 表示该队未与该监管角色交手过，score 直接取全局值；"
+                    "own_raw / global_raw / score_raw 是去掉选手熟练度修正后的同一组数",
         },
         "scores": table,
     }

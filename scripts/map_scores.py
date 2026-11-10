@@ -16,6 +16,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 
 _HALVES = None
+_ADJ = None
 
 
 def _halves() -> list:
@@ -36,7 +37,30 @@ def _mean(vals: list) -> float:
     return round(sum(vals) / len(vals), 4) if vals else 0.0
 
 
-def table(map_name: str) -> dict:
+def _adj_map() -> dict:
+    """{选手@监管: adjust}，即每局求生得分要加上的熟练度修正。"""
+    global _ADJ
+    if _ADJ is None:
+        p = ROOT / "data" / "adjusted_scores.json"
+        try:
+            d = json.loads(p.read_text(encoding="utf-8"))
+            _ADJ = {k: (v or {}).get("adjust", 0.0)
+                    for k, v in (d.get("player_char_adjust") or {}).items()}
+        except Exception:
+            _ADJ = {}
+    return _ADJ
+
+
+def _half_y(h: dict, adj: dict, mode: str) -> float:
+    """该半局的求生得分：调整口径带上熟练度修正，原始口径直接用逃脱人数。"""
+    y = int(h.get("escape") or 0)
+    if mode == "raw":
+        return float(y)
+    key = "%s@%s" % (h.get("hunter_player") or "", h.get("hunter") or "")
+    return y + adj.get(key, 0.0)
+
+
+def table(map_name: str, mode: str = "adjusted") -> dict:
     """某张图的「求生 × 监管」实测表。
 
     行列只保留这张图上真正出场过的角色：没出场过的角色在这张图上
@@ -44,24 +68,30 @@ def table(map_name: str) -> dict:
 
     每格 score 是这些半局的平均逃生人数，n 是样本局数。样本很薄
     （不少格子只有 1 局），所以 n 必须一起给出去，让页面标出来。
+
+    mode="raw" 时不加选手熟练度修正，就是最原始的平均逃生人数；
+    默认 "adjusted" 与总榜、BP 推演口径一致。
     """
     sub = [h for h in _halves() if h.get("map") == map_name]
     if not sub:
         return {"map": map_name, "halves": 0, "survivors": [],
                 "hunters": [], "cells": {}}
 
+    adj = _adj_map()
     surv_n = {}
     hunt_n = {}
     cells = {}
+    ys = []
     for h in sub:
         hh = h.get("hunter") or ""
         if not hh:
             continue
+        y = _half_y(h, adj, mode)
+        ys.append(y)
         hunt_n[hh] = hunt_n.get(hh, 0) + 1
-        esc = int(h.get("escape") or 0)
         for c in (h.get("survivors") or []):
             surv_n[c] = surv_n.get(c, 0) + 1
-            cells.setdefault(c, {}).setdefault(hh, []).append(esc)
+            cells.setdefault(c, {}).setdefault(hh, []).append(y)
 
     out_cells = {}
     for c, row in cells.items():
@@ -76,7 +106,7 @@ def table(map_name: str) -> dict:
     return {
         "map": map_name,
         "halves": len(sub),
-        "escape": _mean([int(h.get("escape") or 0) for h in sub]),
+        "escape": _mean(ys),
         "survivors": [{"char": c, "n": n} for c, n in _order(surv_n)],
         "hunters": [{"char": h, "n": n} for h, n in _order(hunt_n)],
         "cells": out_cells,

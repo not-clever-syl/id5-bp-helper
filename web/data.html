@@ -107,6 +107,13 @@ td.na{color:#3d4353;text-align:center}
 /* 仅展示：用下拉切换「总榜 / 某位选手」，不再用卡片列表 */
 .lbl{color:var(--dim);font-size:12px}
 #pViewPick{min-width:190px}
+/* 熟练度口径切换：两个按钮拼成一段，选中的那个高亮 */
+.seg{display:inline-flex}
+.seg button{border-radius:0;margin-left:-1px;padding:5px 11px}
+.seg button:first-child{border-radius:6px 0 0 6px;margin-left:0}
+.seg button:last-child{border-radius:0 6px 6px 0}
+.seg button.on{background:#2a3f6e;border-color:var(--accent);color:#cfe0ff;
+  position:relative;z-index:1}
 .cellbox{display:inline-flex;align-items:center;gap:3px}
 .cellbox i{font-style:normal}
 .cellbox .sc{font-family:Consolas,monospace;font-weight:600}
@@ -185,6 +192,10 @@ td.v .subx{display:block;font:10px Consolas,monospace;color:#8a93a6;
         <select id="pViewPick">
           <option value="">总榜（全联盟）</option>
         </select>
+        <span class="seg" id="modeSeg">
+          <button data-mode="raw">未调整熟练度</button>
+          <button data-mode="adjusted" class="on">调整熟练度</button>
+        </span>
         <label class="lbl" id="mapLbl" style="margin-left:12px">地图</label>
         <select id="mapPick">
           <option value="">全部地图</option>
@@ -221,6 +232,8 @@ let CUR_P = null;           // 当前查看的选手
 let MAPDATA = null;         // 地图统计（/api/maps）
 let CUR_MAP = '';           // 当前筛的地图（'' = 全部）
 let MAPSCORES = null;       // 当前地图的实测表（/api/map_scores）
+// 熟练度口径：'adjusted' = 调整熟练度（默认），'raw' = 未调整熟练度
+let CUR_MODE = 'adjusted';
 
 /** 分数统一显示两位小数（1.5 → 1.50，0.9167 → 0.92） */
 function f2(v) {
@@ -254,6 +267,35 @@ function byName(a, b) {
   const x = a.toLowerCase(), y = b.toLowerCase();
   if (x !== y) return x < y ? -1 : 1;
   return a < b ? -1 : (a > b ? 1 : 0);
+}
+
+// ══════════ 熟练度口径 ══════════
+/** 当前是不是「未调整熟练度」视图 */
+function isRaw() { return CUR_MODE === 'raw'; }
+
+/** 请求某个口径的数据：raw 时带上 ?mode=raw */
+function modeQS() { return isRaw() ? '?mode=raw' : ''; }
+
+/** 从一格里取当前口径的值。
+ *  字段名约定：换算前的叫 xxx / xxx_raw，这里按口径挑一个。
+ */
+function pickMode(v, key) {
+  if (!v) return null;
+  const k = isRaw() ? key + '_raw' : key;
+  const x = v[k];
+  return (x === undefined) ? (v[key] === undefined ? null : v[key]) : x;
+}
+
+/** 切换口径：重新拉两种口径各自的数据源，再重画。 */
+async function setMode(mode) {
+  if (mode === CUR_MODE) return;
+  CUR_MODE = mode;
+  [...document.querySelectorAll('#modeSeg button')].forEach(b => {
+    b.classList.toggle('on', b.dataset.mode === mode);
+  });
+  await loadScores();          // 总榜整表换数据源（cells）
+  await reloadMap();           // 地图表换口径
+  showView(CUR_P || '');
 }
 
 /* ── 铺满屏幕：宽度铺满、纵向可滚动，任何情况下都不横向溢出 ──
@@ -311,11 +353,10 @@ async function api(url, opts) {
 
 // ══════════ 总榜（仅展示） ══════════
 async function loadScores() {
-  const d = await api('/api/scores');
+  const d = await api('/api/scores' + modeQS());
   SCORES = d;
   HUNTERS.length = 0;
   HUNTERS.push(...(d.all_hunters || []));
-  showView(CUR_P || '');
 }
 
 /** 表头：头像 + 角色名 + 出场次数
@@ -413,7 +454,7 @@ function updateScoreStat() {
 }
 
 // ══════════ 选手榜（仅展示） ══════════
-async function loadPlayers() {
+async function loadPlayers(render = true) {
   try {
     PS = await api('/api/player_scores');
   } catch (e) {
@@ -429,13 +470,20 @@ async function loadPlayers() {
       return `<option value="${p}">${team ? team + ' · ' : ''}${p}</option>`;
     }).join('');
   sel.onchange = () => showView(sel.value);
-  if (CUR_P) showView(CUR_P);
+  if (render) showView(CUR_P || '');
 }
 
 /** 地图下拉只在总榜视图里显示：选手视图筛地图没有意义（列本来就只是他用过的监管） */
 function toggleMapPick(show) {
   $('#mapLbl').style.display = show ? '' : 'none';
   $('#mapPick').style.display = show ? '' : 'none';
+}
+
+/** 熟练度口径的说明，拼在图例末尾 */
+function modeNote() {
+  return isRaw()
+    ? ` <b style="color:var(--warn)">未调整熟练度</b>：直接用原始逃脱人数算，不加选手熟练度修正。`
+    : ` <b style="color:var(--ok)">调整熟练度</b>：已带上选手熟练度修正（BP 推演用的就是这套）。`;
 }
 
 /** 渲染当前视图。p 为空表示总榜，否则是某位选手。全部只读。 */
@@ -447,7 +495,8 @@ function showView(p) {
   if (!p) {
     // ── 总榜：全联盟全局值，列是全部监管 ──
     $('#pTitle').innerHTML =
-      `总榜（全联盟）${CUR_MAP ? ' · ' + Char.esc(CUR_MAP) : ''} <span class="badge ${SCORES.status === 'custom' ? 'custom' : 'base'}">${SCORES.status === 'custom' ? '自定义' : '默认'}</span>`;
+      `总榜（全联盟）${CUR_MAP ? ' · ' + Char.esc(CUR_MAP) : ''} ` +
+      `<span class="badge ${isRaw() ? 'base' : 'custom'}">${isRaw() ? '未调整熟练度' : '调整熟练度'}</span>`;
     $('#pSub').textContent = CUR_MAP && MAPSCORES
       ? `${(MAPSCORES.survivors || []).length} 个求生 × ${(MAPSCORES.hunters || []).length} 个监管（仅这张图出场过的）`
       : `${(SCORES.all_survivors || []).length} 个求生 × ${HUNTERS.length} 个监管`;
@@ -456,9 +505,10 @@ function showView(p) {
          行与列都只留这张图出场过的角色，每格是该图上这些半局的平均逃生人数
          （0~4，2.00 为居中值），下方灰色小字是样本局数。
          红＝求生方难打，绿＝好打。<b>点任意一格</b>能看到组成它的全部半局。`
+        + modeNote()
       : `每个求生角色面对每个监管的局均逃脱（0~4，2.00 为居中值）。
          红＝求生方难打，绿＝好打。要看某位选手的表现，在上方下拉里选他。
-         <b>点任意一格</b>能看到组成它的全部半局。`;
+         <b>点任意一格</b>能看到组成它的全部半局。` + modeNote();
     renderScores();
     return;
   }
@@ -475,7 +525,7 @@ function showView(p) {
     `每格三行：<b>实测</b>（这位选手打的局均逃脱，下标为样本数）·
      <b>全局</b>（全联盟同格）· <b style="color:var(--ok)">折算</b>
      = w×实测 + (1-w)×全局，w = n/(n+${PS.meta.k_shrink})。
-     <b>点任意一格</b>能看到组成它的全部半局。`;
+     <b>点任意一格</b>能看到组成它的全部半局。` + modeNote();
   const head = '<thead><tr><th>求生 \\ 监管</th>' +
     hs.map(h => `<th class="hhead">${Char.chip(h, {size: 42})}</th>`).join('') +
     '</tr></thead>';
@@ -485,11 +535,14 @@ function showView(p) {
       if (!v) {
         return `<td class="na click" data-s="${Char.esc(c)}" data-h="${Char.esc(h)}">—</td>`;
       }
+      const own = pickMode(v, 'own');
+      const glob = pickMode(v, 'global');
+      const score = pickMode(v, 'score');
       return `<td class="click" data-s="${Char.esc(c)}" data-h="${Char.esc(h)}" `
-        + `style="background:${scoreBg(v.score)}"><div class="cellbox">
-        <i class="gap">${f2(v.own)}<sub style="font-size:9px">${v.n}</sub></i>
-        <i class="gap">/ ${f2(v.global)}</i>
-        <i class="sc" style="color:${scoreColor(v.score)}">${f2(v.score)}</i></div></td>`;
+        + `style="background:${scoreBg(score)}"><div class="cellbox">
+        <i class="gap">${f2(own)}<sub style="font-size:9px">${v.n}</sub></i>
+        <i class="gap">/ ${f2(glob)}</i>
+        <i class="sc" style="color:${scoreColor(score)}">${f2(score)}</i></div></td>`;
     }).join('');
     return `<tr><th>${Char.chip(c, {size: 25})}</th>${tds}</tr>`;
   }).join('');
@@ -517,19 +570,23 @@ async function loadMaps() {
   };
 }
 
-/** 换地图后要重新拉该图的实测表，再重渲染。 */
+/** 换地图后要重新拉该图的实测表。 */
 async function reloadView() {
-  MAPSCORES = null;
-  if (CUR_MAP) {
-    try {
-      MAPSCORES = await api('/api/map_scores?map=' + encodeURIComponent(CUR_MAP));
-    } catch (e) {
-      MAPSCORES = null;
-      $('#pLegend').textContent = '该地图数据加载失败：' + e.message;
-      return;
-    }
-  }
+  await reloadMap();
   showView(CUR_P || '');
+}
+
+/** 只拉地图数据、不重画（切换口径时用，之后由调用方统一重画）。 */
+async function reloadMap() {
+  MAPSCORES = null;
+  if (!CUR_MAP) return;
+  try {
+    MAPSCORES = await api('/api/map_scores?map=' + encodeURIComponent(CUR_MAP)
+      + (isRaw() ? '&mode=raw' : ''));
+  } catch (e) {
+    MAPSCORES = null;
+    $('#pLegend').textContent = '该地图数据加载失败：' + e.message;
+  }
 }
 
 // ══════════ 半局明细弹窗（点格子看组成这一格的局） ══════════
@@ -625,11 +682,17 @@ document.addEventListener('keydown', e => {
 });
 
 // ══════════ 启动 ══════════
+// 熟练度口径切换按钮
+[...document.querySelectorAll('#modeSeg button')].forEach(b => {
+  b.onclick = () => setMode(b.dataset.mode);
+});
+
 (async () => {
   try {
-    await loadScores();     // 会直接渲染总榜视图
-    await loadPlayers();    // 填充下拉，并再按默认总榜渲染一次
+    await loadScores();     // 总榜数据（当前口径）
+    await loadPlayers(false); // 填充下拉，不抢先渲染
     await loadMaps();       // 地图下拉
+    showView(CUR_P || '');  // 等三份数据都到位再画一次
   } catch (e) {
     document.body.insertAdjacentHTML('beforeend',
       `<div style="padding:20px;color:var(--err)">加载失败：${e.message}

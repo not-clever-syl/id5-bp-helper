@@ -4,6 +4,13 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 
+# ── 熟练度口径 ────────────────────────────────────────────
+# adjusted  折算值里含「选手熟练度修正」——BP 推演、生成页用的就是这一套
+# raw        退回修正之前的原始均值
+# 页面上「未调整熟练度 / 调整熟练度」两种视图就是靠它区分的。
+MODE_ADJUSTED = "adjusted"
+MODE_RAW = "raw"
+
 _TREE = None
 _QUERY = None
 _DS = None
@@ -71,15 +78,20 @@ def base_roster() -> dict:
     return out
 
 
-def base_cells() -> dict:
+def base_cells(mode: str = MODE_ADJUSTED) -> dict:
     """原始分数表，按「角色 → 监管 → {score, n}」整理。
 
     原表是 team → char → hunter，但各队的 global 值相同，
     所以取第一个出现的那份作为基准，避免同一格出现四个副本。
 
+    mode=MODE_ADJUSTED 取 global —— 已含选手熟练度修正；
+    mode=MODE_RAW      取 global_raw —— 修正之前的原始均值。
+    两种口径的样本数相同（同一条半局，只是加不加 adjust）。
+
     只保留榜上要显示的行与列（角色池并集 × 选手用过的监管），
     否则大表里会出现整行整列的空格。
     """
+    fld = "global_raw" if mode == MODE_RAW else "global"
     keep_c = set(all_survivors())
     keep_h = set(all_hunters())
     cells = {}
@@ -91,8 +103,14 @@ def base_cells() -> dict:
             for h, v in hunters.items():
                 if h not in keep_h:
                     continue
+                sc = v.get(fld, v.get("global"))
+                if sc is None:
+                    # 没有本队实测、直接取全局值的格子只有 global 一份
+                    sc = v.get("score") if mode == MODE_RAW else None
+                if sc is None:
+                    continue
                 row[h] = {
-                    "score": v.get("global", v.get("score")),
+                    "score": sc,
                     "n": v.get("global_n", 0) or 0,
                 }
             if row:
@@ -164,18 +182,15 @@ def load_roster() -> dict:
     return {t: [c for c in cs if c in keep] for t, cs in base_roster().items()}
 
 
-def load_scores() -> dict:
+def load_scores(mode: str = MODE_ADJUSTED) -> dict:
     """当前生效的分数表 {角色: {监管: {score, n}}}。
+
+    mode 决定含不含选手熟练度修正，语义同 base_cells()。
 
     只保留图鉴内的角色（角色和监管都要在池子里），
     保证页面只按当前范围显示。
     """
-    keep_c = set(all_survivors())
-    keep_h = set(all_hunters())
-    return {
-        c: {h: v for h, v in hs.items() if h in keep_h}
-        for c, hs in base_cells().items() if c in keep_c
-    }
+    return base_cells(mode)
 
 
 def roster_status() -> str:
