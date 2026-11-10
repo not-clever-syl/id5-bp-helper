@@ -11,62 +11,32 @@ ROOT = Path(__file__).resolve().parent.parent
 MODE_ADJUSTED = "adjusted"
 MODE_RAW = "raw"
 
-_TREE = None
-_QUERY = None
-_DS = None
-
 
 def _tree(tree=None):
-    global _TREE
+    """bp_tree.json 的内容。每次调用都重新读盘，不留缓存。
+
+    tree 参数留给调用方传入已加载的版本，避免一次流程里重复读盘。
+    """
     if tree is not None:
         return tree
-    if _TREE is None:
-        p = ROOT / "data" / "bp_tree.json"
-        _TREE = json.loads(p.read_text(encoding="utf-8"))
-    return _TREE
+    p = ROOT / "data" / "bp_tree.json"
+    return json.loads(p.read_text(encoding="utf-8"))
 
 
 def _dataset():
-    global _DS
-    if _DS is None:
-        p = ROOT / "data" / "bp_core.json"
-        _DS = json.loads(p.read_text(encoding="utf-8"))
-    return _DS
+    """bp_core.json 的内容。每次调用都重新读盘，不留缓存。"""
+    p = ROOT / "data" / "bp_core.json"
+    return json.loads(p.read_text(encoding="utf-8"))
+
+
+def _query():
+    """bp_query.json 的内容。每次调用都重新读盘，不留缓存。"""
+    p = ROOT / "data" / "bp_query.json"
+    return json.loads(p.read_text(encoding="utf-8"))
 
 
 def _halves():
     return _dataset()["halves"]
-
-
-def _survivor_counts() -> dict:
-    """每个求生角色的本季出场次数。
-
-    战报只记整队逃脱数，一局里每个出场求生各记一次，所以这里就是
-    「该角色本季被选出场的次数」。
-    """
-    from collections import Counter
-    return dict(Counter(c for h in _halves()
-                        for c in (h.get("survivors") or [])))
-
-
-def _query():
-    global _QUERY
-    if _QUERY is None:
-        p = ROOT / "data" / "bp_query.json"
-        _QUERY = json.loads(p.read_text(encoding="utf-8"))
-    return _QUERY
-
-
-def clear_cache() -> None:
-    """原始数据被页面改过以后调用，让下次读取重新落到磁盘。
-
-    bp_core 是这三份表的共同来源；页面把它写回之后，如果还留着
-    这里的缓存，分数表、角色池会继续拿改之前的那份。
-    """
-    global _TREE, _QUERY, _DS
-    _TREE = None
-    _QUERY = None
-    _DS = None
 
 
 # ── 基础查询（只读）──────────────────────────────────────
@@ -92,8 +62,12 @@ def base_cells(mode: str = MODE_ADJUSTED) -> dict:
     否则大表里会出现整行整列的空格。
     """
     fld = "global_raw" if mode == MODE_RAW else "global"
-    keep_c = set(all_survivors())
-    keep_h = set(all_hunters())
+    # 一次调用里只读一遍 bp_tree.json / bp_core.json，往下传递，
+    # 避免每个辅助函数各读一次
+    t = _tree()
+    halves = _halves()
+    keep_c = set(all_survivors(t, halves))
+    keep_h = set(all_hunters(t, halves))
     cells = {}
     for chars in _query()["scores"].values():
         for ch, hunters in chars.items():
@@ -122,7 +96,7 @@ def all_teams() -> list:
     return list(_tree()["teams"].keys())
 
 
-def all_survivors(tree=None) -> list:
+def all_survivors(tree=None, halves=None) -> list:
     """榜上要显示的求生角色：各队角色池的并集。
 
     图鉴里 53 个求生，有 10 个从没进过任何战队的角色池（击球手、小女孩、
@@ -131,7 +105,7 @@ def all_survivors(tree=None) -> list:
     排序用战报里的真实出场次数：教练最常遇到的求生必须排在最前，
     否则找「佣兵」要扫很久。
     """
-    cnt = _survivor_counts()
+    cnt = survivor_counts(halves)
     t = _tree(tree)
     union = set()
     for v in t["teams"].values():
@@ -141,13 +115,13 @@ def all_survivors(tree=None) -> list:
                   key=lambda c: (-cnt.get(c, 0), order.get(c, 10 ** 6)))
 
 
-def all_hunters(tree=None) -> list:
+def all_hunters(tree=None, halves=None) -> list:
     """榜上要显示的监管角色：选手实际用过的那些，按本季出场次数降序。
 
     图鉴里 36 个监管，19 个本季无人使用，分数全是空值。
     只保留出现在选手分布 dist 里的角色。
     """
-    cnt = hunter_counts()
+    cnt = hunter_counts(halves)
     t = _tree(tree)
     used = set()
     for info in t["players"].values():
@@ -158,15 +132,24 @@ def all_hunters(tree=None) -> list:
                   key=lambda c: (-cnt[c], order.get(c, 10 ** 6)))
 
 
-def hunter_counts() -> dict:
-    """每个监管的本季出场次数，供页面标注。"""
+def hunter_counts(halves=None) -> dict:
+    """每个监管的本季出场次数，供页面标注。
+
+    halves 传入时直接用，避免一次流程里重复读 bp_core.json。
+    """
     from collections import Counter
-    return dict(Counter(h["hunter"] for h in _halves()))
+    hs = halves if halves is not None else _halves()
+    return dict(Counter(h["hunter"] for h in hs))
 
 
-def survivor_counts() -> dict:
-    """每个求生角色的本季出场次数。"""
-    return _survivor_counts()
+def survivor_counts(halves=None) -> dict:
+    """每个求生角色的本季出场次数。
+
+    halves 传入时直接用，避免一次流程里重复读 bp_core.json。
+    """
+    from collections import Counter
+    hs = halves if halves is not None else _halves()
+    return dict(Counter(c for h in hs for c in (h.get("survivors") or [])))
 
 
 # ── 页面读取入口（只读）────────────────────────────────────

@@ -125,7 +125,7 @@ def candidate_bans(eng, team, player, n_hunters=4, bantop=5, top=8,
 
     候选池：本队角色池出场率 top10 的两两组合（C(10,2)=45 对）
             ∪ 指纹里出现过的对（该选手的候选监管历史上 ban 过的）。
-    监管指纹与热门度都是赛季全量统计（ban_intel.stats()，进程内缓存）。
+    监管指纹与热门度都是赛季全量统计（ban_intel.stats()，每次读盘）。
 
     返回 [{"bans": [a, b], "weight": w, "hunters": [...], "rank": i}]。
     """

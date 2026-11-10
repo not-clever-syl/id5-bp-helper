@@ -17,7 +17,8 @@
        只做行为统计提示（报告的对位情报卡），不进分数表 ——
        回测（up4）证实把互斥信号加进分数预测 MAE 不降（−0.0009，噪声级）。
 
-本模块只读 bp_core.json，与引擎解耦；统计进程内缓存。
+本模块只读 bp_core.json，与引擎解耦；每次调用都重新读盘，不留缓存，
+页面保存数据后立刻生效。
 """
 import json
 import math
@@ -26,11 +27,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 
-_cache = None
-
 
 def stats():
-    """全局 ban / 出场统计。首次调用加载 bp_core.json，之后走缓存。
+    """全局 ban / 出场统计。每次调用都重新读 bp_core.json，不留缓存。
 
     返回 dict：
         halves_n      半局总数
@@ -44,9 +43,6 @@ def stats():
         pair_ban      {(求生, 监管): 被ban次数}
         pair_esc      {(求生, 监管): [escape, ...]}
     """
-    global _cache
-    if _cache is not None:
-        return _cache
     core = json.loads((ROOT / "data" / "bp_core.json").read_text(encoding="utf-8"))
     halves = core.get("halves") or []
     S = {
@@ -76,7 +72,6 @@ def stats():
             S["play"][c] += 1
             S["pair_play"][(c, hh)] += 1
             S["pair_esc"][(c, hh)].append(h.get("escape"))
-    _cache = S
     return S
 
 

@@ -707,7 +707,6 @@ class Handler(SimpleHTTPRequestHandler):
                     "ok": False,
                     "error": f"名字已改，但重算失败：{type(e).__name__}: {e}",
                     "backup": "data/bp_core.json.bak"})
-            custom_data.clear_cache()
             return self._json(200, {"ok": True, "roster": d,
                                     "renamed": f"{old} → {new}"})
 
@@ -940,7 +939,6 @@ class Handler(SimpleHTTPRequestHandler):
         import core_check
         issues = core_check.check(halves, meta, matches)
         if issues:
-            custom_data.clear_cache()
             return self._json(200, {
                 "ok": True,
                 "halves": len(halves),
@@ -967,7 +965,6 @@ class Handler(SimpleHTTPRequestHandler):
                 "error": f"已写回 bp_core，但重建派生数据失败：{type(e).__name__}: {e}",
                 "backup": "data/bp_core.json.bak"})
 
-        custom_data.clear_cache()
         self._json(200, {"ok": True, "halves": len(halves),
                          "valid": True,
                          "rebuilt": True,

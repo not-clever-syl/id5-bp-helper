@@ -58,10 +58,7 @@ def rebuild(only: list | None = None) -> dict:
     if unknown:
         raise ValueError(f"未知步骤：{sorted(unknown)}")
 
-    # bp_core 可能刚被页面改过，清掉缓存保证下面读到的都是最新数据
-    import custom_data
-    custom_data.clear_cache()
-
+    # 各模块每次调用都直接读盘，这里不需要再清任何缓存
     core = json.loads((ROOT / "data" / "bp_core.json").read_text(encoding="utf-8"))
     timing = {}
 

@@ -6,7 +6,8 @@
      更贴近「在这张图上这套组合到底打成什么样」。
   2. 点开任意一格，列出组成这一格的全部半局。
 
-只读 bp_core.json，算完即返，不落盘、不留缓存。
+只读 bp_core.json 与 adjusted_scores.json，算完即返，不落盘、不留缓存：
+每次调用都重新读盘，页面保存数据后立刻生效。
 """
 from __future__ import annotations
 
@@ -15,16 +16,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 
-_HALVES = None
-_ADJ = None
-
 
 def _halves() -> list:
-    global _HALVES
-    if _HALVES is None:
-        p = ROOT / "data" / "bp_core.json"
-        _HALVES = json.loads(p.read_text(encoding="utf-8")).get("halves", [])
-    return _HALVES
+    p = ROOT / "data" / "bp_core.json"
+    return json.loads(p.read_text(encoding="utf-8")).get("halves", [])
 
 
 def _game_no(h: dict) -> int:
@@ -39,16 +34,13 @@ def _mean(vals: list) -> float:
 
 def _adj_map() -> dict:
     """{选手@监管: adjust}，即每局求生得分要加上的熟练度修正。"""
-    global _ADJ
-    if _ADJ is None:
-        p = ROOT / "data" / "adjusted_scores.json"
-        try:
-            d = json.loads(p.read_text(encoding="utf-8"))
-            _ADJ = {k: (v or {}).get("adjust", 0.0)
-                    for k, v in (d.get("player_char_adjust") or {}).items()}
-        except Exception:
-            _ADJ = {}
-    return _ADJ
+    p = ROOT / "data" / "adjusted_scores.json"
+    try:
+        d = json.loads(p.read_text(encoding="utf-8"))
+        return {k: (v or {}).get("adjust", 0.0)
+                for k, v in (d.get("player_char_adjust") or {}).items()}
+    except Exception:
+        return {}
 
 
 def _half_y(h: dict, adj: dict, mode: str) -> float:
