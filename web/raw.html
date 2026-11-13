@@ -4,73 +4,29 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>原始数据 · IVL 2026 秋</title>
+<link rel="stylesheet" href="theme.css">
 <link rel="stylesheet" href="char.css">
 <style>
-:root{
-  --bg:#12141a;--panel:#191c24;--panel2:#21252f;--border:#2c313d;
-  --text:#dfe5f0;--dim:#8a93a6;--accent:#6b8cff;
-  --ok:#6dc4a0;--err:#e0837b;--warn:#d8b25f;
-}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);
-  font:13px/1.6 -apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
-header{padding:14px 20px;border-bottom:1px solid var(--border);
-  background:var(--panel);display:flex;align-items:center;gap:18px;flex-wrap:wrap;
-  position:sticky;top:0;z-index:20}
-header h1{margin:0;font-size:15px;font-weight:600}
-header .sub{color:var(--dim);font-size:12px}
-a.home{color:var(--dim);text-decoration:none;font-size:12.5px;
-  padding:4px 10px;border-radius:6px;border:1px solid var(--border);flex:none}
-a.home:hover{color:var(--text);border-color:var(--accent)}
-header .spacer{flex:1}
 main{padding:16px 20px 80px}
-
 .bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
 .bar input[type=search]{background:var(--panel2);color:var(--text);
   border:1px solid var(--border);border-radius:6px;padding:6px 10px;
   font-size:12.5px;min-width:220px}
 .bar label{color:var(--dim);font-size:12px}
-button{background:var(--panel2);color:var(--text);border:1px solid var(--border);
-  border-radius:6px;padding:6px 14px;font-size:12.5px;cursor:pointer}
-button:hover{border-color:var(--accent)}
-button.primary{background:rgba(107,140,255,.18);border-color:var(--accent);
-  color:#cfe0ff;font-weight:600}
-button:disabled{opacity:.4;cursor:not-allowed}
+button.primary{background:var(--accent-soft);border-color:var(--accent);
+  color:var(--accent-hi);font-weight:600}
 button.primary:disabled{background:var(--panel2);border-color:var(--border);color:var(--dim)}
 button.small{padding:3px 9px;font-size:11.5px}
 button.lnk{background:none;border:none;color:var(--accent);padding:1px 6px;
   font-size:11.5px;cursor:pointer}
 button.lnk:hover{text-decoration:underline;border:none}
-
 .status{font-size:12px;padding:3px 0}
 .status.dirty{color:var(--warn)}
 .status.ok{color:var(--ok)}
 .status.err{color:var(--err)}
-
-.tablewrap{border:1px solid var(--border);border-radius:8px;overflow:auto;
-  max-height:calc(100vh - 190px)}
-
-/* 自定义滚动条：默认的 Windows 滚动条又宽又灰，跟深色面板很违和 */
-.tablewrap::-webkit-scrollbar{width:10px;height:10px}
-.tablewrap::-webkit-scrollbar-track{background:transparent}
-.tablewrap::-webkit-scrollbar-thumb{background:#39404f;border-radius:6px;
-  border:2px solid var(--panel);background-clip:padding-box}
-.tablewrap::-webkit-scrollbar-thumb:hover{background:#4b5468;background-clip:padding-box}
-.tablewrap::-webkit-scrollbar-corner{background:transparent}
-body::-webkit-scrollbar{width:11px;height:11px}
-body::-webkit-scrollbar-track{background:var(--bg)}
-body::-webkit-scrollbar-thumb{background:#333a48;border-radius:6px;
-  border:3px solid var(--bg);background-clip:padding-box}
-body::-webkit-scrollbar-thumb:hover{background:#454e60;background-clip:padding-box}
-body::-webkit-scrollbar-corner{background:var(--bg)}
-*{scrollbar-width:thin;scrollbar-color:#39404f transparent}
-table{border-collapse:separate;border-spacing:0;width:100%;font-size:12px}
 th,td{padding:6px 8px;border-bottom:1px solid var(--border);
   border-right:1px solid var(--border);text-align:left;vertical-align:top}
 th:last-child,td:last-child{border-right:none}
-thead th{background:var(--panel2);color:var(--dim);font-weight:600;font-size:11px;
-  position:sticky;top:0;z-index:10}
-tbody tr:hover td{background:rgba(255,255,255,.025)}
 tbody tr.changed td{background:rgba(216,178,95,.08)}
 td.game{text-align:center;color:var(--dim);font-family:Consolas,monospace}
 td.tb{color:var(--warn);font-weight:600}
@@ -97,48 +53,43 @@ td.click:hover .chev{color:var(--accent)}
 tr.warnrow td{background:rgba(224,131,123,.16)}
 tr.warnrow:hover td{background:rgba(224,131,123,.24)}
 tr.warnrow td.opcol{background:transparent}
-tr.mrow td{background:rgba(107,140,255,.05);font-weight:500}
-tr.mrow:hover td{background:rgba(107,140,255,.12)}
+/* 月份分组行：只加粗和一道分隔线，不整行上色（整行上色会让全表发蓝） */
+tr.mrow td{font-weight:500}
+tr.mrow:hover td{background:rgba(255,255,255,.03)}
 tr.mrow td.mrow-t{cursor:pointer}
 .tw{display:inline-block;width:12px;color:var(--dim);font-size:10px}
 tr.srow td{font-size:11.5px;color:var(--dim);background:rgba(0,0,0,.14)}
 tr.srow td.s-cell{padding:0}
 tr.srow:hover td{background:rgba(255,255,255,.03)}
-/* 展开区里的嵌套表：按之前半局明细的格式 */
 table.sub{font-size:11.5px;table-layout:auto}
 table.sub thead th{position:static;background:rgba(255,255,255,.03);
   font-size:10.5px;padding:4px 7px;border-bottom:1px solid var(--border)}
 table.sub tbody td{padding:4px 7px;vertical-align:middle}
 table.sub tbody tr:hover td{background:rgba(255,255,255,.03)}
 table.sub td.edit{cursor:pointer}
-table.sub td.edit:hover{background:rgba(107,140,255,.10)}
+table.sub td.edit:hover{background:var(--accent-soft)}
 table.sub .chips{display:inline-flex}
 table.sub .char-avatar{width:18px;height:18px}
 .s-foot{display:flex;align-items:center;gap:12px;padding:5px 9px;
   border-top:1px solid var(--border)}
 tr.srow td.s-open:hover{text-decoration:underline}
-tr.srow:hover td{background:rgba(255,255,255,.03)}
-.dim{color:var(--dim);font-weight:400;font-size:11.5px}
 .warnmark{color:var(--err);font-weight:700}
-.warnbox{border:1px solid var(--err);background:rgba(224,131,123,.08);
+.warnbox{border:1px solid var(--err);background:var(--danger-soft);
   border-radius:8px;padding:9px 13px;margin-bottom:12px;font-size:12px;
   color:var(--err);display:none;max-height:150px;overflow:auto}
 .warnbox.on{display:block}
 .warnbox b{color:var(--err)}
 .warnbox ul{margin:6px 0 0;padding-left:18px}
-.warnbox li{margin:2px 0;color:#f0b5b0}
+.warnbox li{margin:2px 0;color:var(--danger)}
 .stale{border:1px solid var(--warn,#e0a83b);background:rgba(224,168,59,.10);
   border-radius:8px;padding:9px 13px;margin-bottom:12px;font-size:12px;
   color:var(--warn,#e0a83b);display:none}
 .stale.on{display:block}
 .stale b{color:var(--warn,#e0a83b);margin-right:6px}
-
 .srcnote{margin:0 0 12px;color:var(--dim);font-size:12px;line-height:1.8}
 .srcnote b{color:var(--text)}
-.srcnote a{color:var(--accent,#6b8cff);text-decoration:none}
+.srcnote a{color:var(--accent,var(--accent));text-decoration:none}
 .srcnote a:hover{text-decoration:underline}
-
-/* ── 弹窗 ────────────────────────────────────────────── */
 .mask{position:fixed;inset:0;background:rgba(8,10,14,.68);
   display:none;align-items:flex-start;justify-content:center;z-index:60;
   padding:40px 16px;overflow:auto}
@@ -157,7 +108,6 @@ tr.srow:hover td{background:rgba(255,255,255,.03)}
 .dlg-foot{padding:12px 20px;border-top:1px solid var(--border);
   display:flex;gap:8px;justify-content:flex-end;align-items:center}
 .dlg-foot .tip{margin-right:auto;color:var(--dim);font-size:11.5px}
-
 .fgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px 18px}
 .field{display:flex;flex-direction:column;gap:4px}
 .field.full{grid-column:1 / -1}
@@ -167,7 +117,6 @@ tr.srow:hover td{background:rgba(255,255,255,.03)}
   font-size:12.5px;width:100%}
 .field input:focus,.field select:focus{outline:none;border-color:var(--accent)}
 .field .hint{color:var(--dim);font-size:11px}
-
 .picker{display:flex;flex-wrap:wrap;gap:5px;align-items:center;
   background:var(--panel2);border:1px solid var(--border);
   border-radius:6px;padding:6px;min-height:34px}
@@ -182,12 +131,10 @@ tr.srow:hover td{background:rgba(255,255,255,.03)}
 .picker select{background:var(--panel);color:var(--dim);border:1px dashed var(--border);
   border-radius:5px;font-size:11.5px;padding:3px 5px;max-width:130px}
 .picker select:hover{color:var(--text);border-color:var(--accent)}
-
-.dlg-warn{margin-top:14px;border:1px solid var(--err);background:rgba(224,131,123,.08);
+.dlg-warn{margin-top:14px;border:1px solid var(--err);background:var(--danger-soft);
   border-radius:7px;padding:8px 11px;font-size:11.5px;color:var(--err);display:none}
 .dlg-warn.on{display:block}
 .dlg-warn ul{margin:5px 0 0;padding-left:17px}
-
 #csvMask .row{display:flex;align-items:center;gap:8px}
 #csvMask .msg{font-size:12px;line-height:1.7;display:none}
 #csvMask .msg.err{color:var(--err)}

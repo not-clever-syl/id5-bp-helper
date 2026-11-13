@@ -4,115 +4,55 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>数据 · IVL 2026 秋</title>
+<link rel="stylesheet" href="theme.css">
 <link rel="stylesheet" href="char.css">
 <style>
-:root{
-  --bg:#12141a;--panel:#191c24;--panel2:#21252f;--border:#2c313d;
-  --text:#dfe5f0;--dim:#8a93a6;--accent:#6b8cff;
-  --ok:#6dc4a0;--err:#e0837b;--warn:#d8b25f;
-  --low:#d4645c;--mid:#d8b25f;--high:#6dc4a0;
-  --solid:#9db2ff;--hard:#c98b4b;--midd:#b39ddb;--soft:#7ec8e3;
-}
-*{box-sizing:border-box}
-/* 铺满屏幕宽度；高度由内容自然撑开，只允许纵向滚动，绝不横向溢出 */
-html{height:100%}
-body{margin:0;min-height:100%;background:var(--bg);color:var(--text);
-  overflow-x:hidden;
-  display:flex;flex-direction:column;
-  font:13px/1.6 -apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
-header{padding:10px 20px;border-bottom:1px solid var(--border);
-  background:var(--panel);flex:none;
-  display:flex;align-items:center;gap:18px;flex-wrap:wrap}
-header h1{margin:0;font-size:15px;font-weight:600}
-/* 「← 首页」统一固定在页首最左，作为所有页面的唯一回退入口 */
-a.home{color:var(--dim);text-decoration:none;font-size:12.5px;
-  padding:4px 10px;border-radius:6px;border:1px solid var(--border);flex:none}
-a.home:hover{color:var(--text);border-color:var(--accent)}
 main{flex:1;width:100%;margin:0 auto;padding:12px 18px 16px;
   display:flex;flex-direction:column}
-.card{background:var(--panel);border:1px solid var(--border);border-radius:10px;
-  padding:12px 16px;margin-bottom:12px;
-  display:flex;flex-direction:column;min-width:0}
-.card h2{margin:0 0 3px;font-size:13.5px;font-weight:600;flex:none;
-  display:flex;align-items:center;gap:10px}
-.card .sub{color:var(--dim);font-size:11.5px;margin-bottom:8px;flex:none}
-.badge{font-size:11px;padding:1px 8px;border-radius:10px;font-weight:500}
-.badge.base{background:rgba(138,147,166,.2);color:#a9b2c3}
-.badge.custom{background:rgba(109,196,160,.18);color:var(--ok)}
+.badge.base{background:rgba(138,147,166,.2);color:var(--text-2)}
+.badge.custom{background:var(--good-soft);color:var(--ok)}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px;
   flex:none}
-button{background:var(--panel2);color:var(--text);border:1px solid var(--border);
-  border-radius:6px;padding:5px 12px;font-size:12.5px;cursor:pointer}
-button:hover{border-color:var(--accent)}
-button.primary{background:#2a3f6e;border-color:var(--accent);color:#cfe0ff}
-button.danger:hover{border-color:#d4645c;color:#e79b94}
-button:disabled{opacity:.45;cursor:not-allowed}
+button.primary{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-hi)}
+button.danger:hover{border-color:var(--danger);color:var(--danger)}
 input[type=file]{display:none}
-select,input[type=search]{background:var(--panel2);color:var(--text);
-  border:1px solid var(--border);border-radius:6px;padding:5px 9px;font-size:12.5px}
 .msg{font-size:12px;margin-left:6px}
-.msg.ok{color:var(--ok)} .msg.err{color:var(--err)} .msg.warn{color:var(--warn)}
+.msg.ok{color:var(--good)} .msg.err{color:var(--danger)} .msg.warn{color:var(--warn)}
 .hint{color:var(--dim);font-size:11.5px;line-height:1.7}
-code{background:var(--panel2);padding:1px 5px;border-radius:4px;
-  font:11px Consolas,monospace}
-
-/* ── 视图切换用的 pane ── */
 .pane{display:none}
 .pane.on{display:block}
-
-/* ── 分数表 ── */
-/* 宽度铺满容器、绝不横向溢出：列宽由 fitTable() 按容器宽度分配。
-   纵向由页面整体滚动，表格本身不再单独出滚动条。 */
-.tablewrap{width:100%;border:1px solid var(--border);border-radius:8px;
-  overflow-x:hidden}
-table{border-collapse:separate;border-spacing:0;width:100%;max-width:100%;
-  table-layout:fixed;font-size:12px}
 thead th.hhead{position:relative;padding-top:2px}
 thead th.hhead .hcnt{display:block;font:11px Consolas,monospace;
-  color:#8a93a6;line-height:1.15}
+  color:var(--dim);line-height:1.15}
 th,td{padding:0 3px;border-bottom:1px solid var(--border);white-space:nowrap;
   overflow:hidden;text-overflow:ellipsis}
-thead th{background:var(--panel2);font-weight:600;color:var(--dim);font-size:10.5px;
-  height:84px}
-/* 表头：头像在上、角色名在下，出场次数再往下。
-   竖排列比横排更省宽度——列窄时不用把头像整个藏掉。 */
 thead th.hhead .char-chip{flex-direction:column;gap:2px;font-size:10.5px;
   justify-content:center;align-items:center;height:auto;overflow:visible}
-/* 名字允许折行：4 个汉字的角色名在窄列里折成两行，
-   总比截成「跛脚」「歌唱」这种半截名好 */
 thead th.hhead .char-chip .char-name{display:block;line-height:1.12;
   max-width:100%;white-space:normal;word-break:break-all;text-align:center}
 thead th.hhead .char-avatar{width:40px;height:40px}
-/* 列极窄时仍然竖排，只把头像缩小，不整个藏掉 */
 table.tight thead th.hhead .char-avatar{width:26px;height:26px}
 table.tight thead th.hhead .char-chip{font-size:9.5px}
 table.tight thead th.hhead .char-name{line-height:1.1}
 tbody th{background:var(--panel2);text-align:left;font-weight:500;
   padding-left:6px}
-/* 求生行首的出场次数，与表头监管的次数样式保持一致 */
 tbody th.shead .hcnt{float:right;padding-right:5px;font:11px Consolas,monospace;
-  color:#8a93a6}
+  color:var(--dim)}
 tbody th .char-chip{font-size:11px}
-/* 首列角色名优先完整显示，宁可挤一点其他列 */
 tbody th .char-name{overflow:visible}
 tbody th .char-avatar{width:25px;height:25px}
 td.v{text-align:right;font-family:Consolas,monospace}
 td.v .sc{font-family:Consolas,monospace;font-weight:600}
-td.na{color:#3d4353;text-align:center}
-.num{text-align:right;font-family:Consolas,monospace}
+td.na{color:var(--faint);text-align:center}
 .stat{color:var(--dim);font-size:12px}
 .stat b{color:var(--text)}
-
-/* ── 选手榜 ── */
-/* 仅展示：用下拉切换「总榜 / 某位选手」，不再用卡片列表 */
 .lbl{color:var(--dim);font-size:12px}
 #pViewPick{min-width:190px}
-/* 熟练度口径切换：两个按钮拼成一段，选中的那个高亮 */
 .seg{display:inline-flex}
 .seg button{border-radius:0;margin-left:-1px;padding:5px 11px}
 .seg button:first-child{border-radius:6px 0 0 6px;margin-left:0}
 .seg button:last-child{border-radius:0 6px 6px 0}
-.seg button.on{background:#2a3f6e;border-color:var(--accent);color:#cfe0ff;
+.seg button.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-hi);
   position:relative;z-index:1}
 .cellbox{display:inline-flex;align-items:center;gap:3px}
 .cellbox i{font-style:normal}
@@ -123,14 +63,10 @@ td .sc{font-family:Consolas,monospace}
 .legend{font-size:11px;color:var(--dim);line-height:1.6;margin-bottom:6px;
   flex:none}
 .legend b{color:var(--text)}
-
-/* ── 可点开的格子 ── */
 td.click{cursor:pointer}
 td.click:hover{outline:1px solid var(--accent);outline-offset:-1px}
-td.v .subx{display:block;font:10px Consolas,monospace;color:#8a93a6;
+td.v .subx{display:block;font:10px Consolas,monospace;color:var(--dim);
   line-height:1;margin-top:-1px}
-
-/* ── 半局明细弹窗 ── */
 #dtMask{position:fixed;inset:0;background:rgba(0,0,0,.62);z-index:50;
   display:none;align-items:center;justify-content:center;padding:12px}
 #dtMask.on{display:flex}
@@ -151,21 +87,19 @@ td.v .subx{display:block;font:10px Consolas,monospace;color:#8a93a6;
 #dtTable thead th{position:sticky;top:0;z-index:2;background:var(--panel2);
   text-align:left;font-weight:500;color:var(--dim);font-size:11px;
   padding:7px 7px;border-bottom:1px solid var(--border);white-space:nowrap}
-#dtTable tbody td{padding:6px 7px;border-bottom:1px solid rgba(255,255,255,.05);
+#dtTable tbody td{padding:6px 7px;border-bottom:1px solid var(--border-soft);
   vertical-align:middle}
 #dtTable tbody tr:hover td{background:rgba(255,255,255,.03)}
 #dtTable tbody tr:last-child td{border-bottom:none}
 #dtTable td.mono{font-family:Consolas,monospace;white-space:nowrap}
 #dtTable td.map{color:var(--text);white-space:nowrap}
 #dtTable td.team{white-space:nowrap}
-/* 角色列允许换行：一局最多 4 个求生 + 2 个 ban，一行放不下就折成两行，
-   否则表格会被撑到比弹窗还宽，右边的结果和局次被挤出视野。 */
 #dtTable .chiprow{display:flex;gap:3px 5px;flex-wrap:wrap;max-width:210px}
 #dtTable .chiprow .char-chip{gap:3px;font-size:11px;white-space:nowrap}
 #dtTable .chiprow .char-avatar{width:19px;height:19px}
 #dtTable .bans .chiprow{max-width:150px}
 #dtTable .bans .char-chip{opacity:.66}
-#dtTable td.none{color:#3d4353}
+#dtTable td.none{color:var(--faint)}
 #dtTable .res{font-family:Consolas,monospace;font-size:12.5px}
 #dtTable .res b{font-size:13.5px}
 #dtTable .res .sep{color:var(--dim);margin:0 6px}
@@ -243,23 +177,23 @@ function f2(v) {
 
 /** 分数染色：2.00 是居中值。越低说明求生方越难打（红），越高越舒服（绿）。 */
 function scoreColor(s) {
-  if (s == null || !isFinite(s)) return 'var(--dim)';
+  if (s == null || !isFinite(s)) return 'var(--faint)';
   const v = Number(s);
-  // 分段插值：0 → 深红，2.0 → 中性，4+ → 深绿
-  if (v <= 1.0) return '#e0605a';
-  if (v <= 1.6) return '#e08a6a';
-  if (v <= 2.0) return '#cfa14f';
-  if (v <= 2.5) return '#9dbf6a';
-  return '#5fbf8f';
+  // 分段取色：1.0 以下红、1.6 偏红、2.0 中性、2.5 偏绿、以上绿
+  if (v <= 1.0) return 'var(--danger)';
+  if (v <= 1.6) return 'var(--warn)';
+  if (v <= 2.0) return 'var(--text-2)';
+  if (v <= 2.5) return 'var(--good)';
+  return 'var(--good)';
 }
 function scoreBg(s) {
   if (s == null || !isFinite(s)) return 'transparent';
   const v = Math.max(0, Math.min(4, Number(s)));
   // 以 2.0 为中心：低分偏红、高分偏绿，透明度随偏离程度增强
   const d = (v - 2.0) / 2.0;                       // -1 ~ +1
-  const a = Math.min(0.55, Math.abs(d) * 0.60 + 0.05);
-  return d < 0 ? `rgba(212,100,92,${a.toFixed(3)})`
-               : `rgba(109,196,160,${a.toFixed(3)})`;
+  const a = Math.min(0.34, Math.abs(d) * 0.40 + 0.03);
+  return d < 0 ? `rgba(217,112,104,${a.toFixed(3)})`
+               : `rgba(87,184,148,${a.toFixed(3)})`;
 }
 
 /** 名称字典序：忽略大小写比较，大小写只在小写后仍相同时才用来分先后 */
