@@ -167,6 +167,8 @@ class Handler(SimpleHTTPRequestHandler):
             return self._api_roster_edit()
         if self.path == "/api/generate":
             return self._api_generate()
+        if self.path == "/api/combo_search":
+            return self._api_combo_search()
         if self.path.startswith("/api/files/list"):
             return self._api_files_list()
         if self.path.startswith("/api/files/read"):
@@ -177,6 +179,8 @@ class Handler(SimpleHTTPRequestHandler):
 
     def do_GET(self):
         # 只拦 /api/ 开头的，其余交给静态文件服务
+        if self.path.startswith("/api/expect/ref"):
+            return self._api_expect_ref()
         if self.path.startswith("/api/roster_edit"):
             return self._api_roster_edit()
         if self.path.startswith("/api/roster"):
@@ -310,6 +314,24 @@ class Handler(SimpleHTTPRequestHandler):
             self._json(400, {"ok": False, "error": str(e)})
 
     # ── 基准数据（只读）────────────────────────────────────
+    def _api_expect_ref(self):
+        """阵容期望分页需要的角色职能与选手数据。
+
+        页面只拿得到 web/ 下的静态文件，读不到 data/，
+        所以由这里把 web_bp.json 里用到的那两段转出去。
+        """
+        try:
+            d = json.loads((ROOT / "data" / "web_bp.json")
+                           .read_text(encoding="utf-8"))
+        except FileNotFoundError:
+            return self._json(404, {"ok": False, "error": "缺少 web_bp.json"})
+        except Exception as e:
+            return self._json(500, {"ok": False, "error": str(e)})
+        self._json(200, {
+            "roles": d.get("roles") or {},
+            "players": d.get("players") or {},
+        })
+
     def _api_roster_get(self):
         self._json(200, {
             "status": custom_data.roster_status(),
@@ -1192,6 +1214,26 @@ class Handler(SimpleHTTPRequestHandler):
         pool = data.get("pool")
         if pool is not None and not isinstance(pool, list):
             return self._json(400, {"ok": False, "error": "pool 必须是数组"})
+        # 第 4 步自定义的「对手前两个 ban 位」：[["求生甲","求生乙"], ...]
+        focus_raw = data.get("focus_bans") or []
+        if not isinstance(focus_raw, list):
+            return self._json(400, {"ok": False, "error": "focus_bans 必须是数组"})
+        focus_bans = []
+        for pair in focus_raw:
+            if not isinstance(pair, list) or len(pair) != 2:
+                return self._json(400, {"ok": False,
+                                        "error": "focus_bans 里每一项必须是两个角色名的数组"})
+            a, b = str(pair[0]).strip(), str(pair[1]).strip()
+            if not a or not b:
+                return self._json(400, {"ok": False,
+                                        "error": "自定义 ban 组合里有空角色名"})
+            if a == b:
+                return self._json(400, {"ok": False,
+                                        "error": f"自定义 ban 组合 {a} 重复了同一个角色"})
+            focus_bans.append([a, b])
+        if len(focus_bans) > 16:
+            return self._json(400, {"ok": False,
+                                    "error": "自定义 ban 组合最多 16 组"})
         try:
             from bp_search_engine import Engine
             from bp_combo_report import compute as bp_compute
@@ -1236,7 +1278,8 @@ class Handler(SimpleHTTPRequestHandler):
                              our_pool=pool,
                              scores_source=data.get("scores_source"),
                              roster_source=data.get("roster_source"),
-                             map_name=map_name or None)
+                             map_name=map_name or None,
+                             focus_bans=focus_bans)
         except Exception as e:
             import traceback
             traceback.print_exc()
@@ -1260,7 +1303,83 @@ class Handler(SimpleHTTPRequestHandler):
         self._json(200, {"ok": True, "meta": res["meta"],
                          "combos": len(res.get("combos") or []),
                          "branches": len(res.get("branches") or []),
-                         "saved": path})
+                         "saved": path,
+                         "report": res})
+
+    def _api_combo_search(self):
+        """报告页的「搜一个 ban 组合」：算出这一组，塞进报告并存回原文件。
+
+        report：报告文件的路径（data/reports/ 下的）。传了就把结果写回去，
+        关掉页面再从 data/reports/ 打开，搜出来的这组还在。
+        覆盖写只改这一份报告，不动任何配置和预制数据。
+        """
+        try:
+            data = self._read_json()
+        except Exception as e:
+            return self._json(400, {"ok": False, "error": f"bad json: {e}"})
+        bans = data.get("bans") or []
+        if not isinstance(bans, list) or len(bans) != 2:
+            return self._json(400, {"ok": False, "error": "bans 必须是两个求生者"})
+        try:
+            from bp_search_engine import Engine
+            from bp_combo_report import search_combo, insert_combo
+            # 报告文件：必须是 data/reports/ 下的一份，路径由服务端拼
+            report = str(data.get("report") or "").strip()
+            if report:
+                if "/" in report or "\\" in report or not report.endswith(".json"):
+                    return self._json(400, {"ok": False, "error": "报告文件名不合法"})
+                rel = f"{file_api.DIR_REPORTS}/{report}"
+                try:
+                    old = json.loads((file_api.ROOT / rel).read_text(encoding="utf-8"))
+                except Exception:
+                    return self._json(404, {"ok": False,
+                                            "error": f"data/reports/ 里没有 {report}"})
+                if not isinstance(old, dict) or not old.get("meta"):
+                    return self._json(400, {"ok": False, "error": "这份报告结构不认识"})
+            else:
+                old = None
+            # 有报告文件就以报告自己记的局次、地图、全局禁选为准 ——
+            # 页面上的这些值可能被改过，跟这份报告已经不是一回事了。
+            if old is not None:
+                meta = old["meta"]
+                team, player = meta.get("team"), meta.get("player")
+                game = int(meta.get("game") or 1)
+                map_name = meta.get("map") or ""
+                gb_s = meta.get("global_ban_surv") or []
+                gb_h = meta.get("global_ban_hunt") or []
+            else:
+                team, player = data.get("team"), data.get("player")
+                game = int(data.get("game") or 1)
+                map_name = data.get("map") or ""
+                gb_s = data.get("global_ban_surv") or []
+                gb_h = data.get("global_ban_hunt") or []
+            if not team or not player:
+                return self._json(400, {"ok": False, "error": "缺少战队或监管选手"})
+            eng = Engine()
+            if map_name and map_name not in eng.maps():
+                return self._json(400, {"ok": False,
+                                        "error": f"未知地图 {map_name}"})
+            row, err = search_combo(eng, team, player, game, bans,
+                                    gone_surv=gb_s, gone_hunt=gb_h,
+                                    map_name=map_name or None)
+            if err:
+                return self._json(400, {"ok": False, "error": err})
+            if old is None:
+                return self._json(200, {"ok": True, "combo": row, "saved": None})
+
+            idx = insert_combo(old, row)
+            old["meta"]["updated_at"] = time.strftime("%Y-%m-%d %H:%M")
+            # 报告不是配置：文件名里的数字不是版本号，这里直接覆盖这一份
+            # （write_json 的「版本 1 不许覆盖」只针对随项目的配置）
+            (file_api.ROOT / rel).write_text(
+                json.dumps(old, ensure_ascii=False, indent=1), encoding="utf-8")
+            return self._json(200, {"ok": True, "combo": old["combos"][idx],
+                                    "index": idx, "saved": rel,
+                                    "report": old})
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            return self._json(500, {"ok": False, "error": f"{type(e).__name__}: {e}"})
 
     def _api_recompute(self):
         """「重新搜索」按钮：用当前自定义数据新建引擎并重算。

@@ -4,79 +4,70 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BP 教练报告</title>
+<link rel="stylesheet" href="theme.css">
 <link rel="stylesheet" href="char.css">
 <style>
-:root{
-  --bg:#14161c;--panel:#1b1e26;--panel2:#21252f;--border:#2e3340;
-  --text:#dfe5f0;--dim:#8b94a8;--accent:#6b8cff;--warn:#e0a35a;
-  --danger:#d4645c;--good:#4fa88a;--ban:#8a5a9e;
-}
-*{box-sizing:border-box}
-html{height:100%}
-body{margin:0;min-height:100%;background:var(--bg);color:var(--text);
-  overflow-x:hidden;
-  font:13.5px/1.7 -apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
-header{padding:14px 26px;border-bottom:1px solid var(--border);
-  background:var(--panel);position:sticky;top:0;z-index:20;
-  display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-header .hd{min-width:0}
-header h1{margin:0;font-size:16px;font-weight:600}
-header .sub{color:var(--dim);font-size:12px;margin-top:2px}
-/* 「← 首页」统一固定在页首最左，作为所有页面的唯一回退入口 */
-a.home{color:var(--dim);text-decoration:none;font-weight:400;font-size:12.5px;
-  flex:none;padding:4px 10px;border-radius:6px;border:1px solid var(--border)}
-a.home:hover{color:var(--text);border-color:var(--accent)}
 main{width:100%;margin:0 auto;padding:16px 26px 90px}
 .sel{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
 .sel label{color:var(--dim);font-size:12px}
-select{background:var(--panel2);color:var(--text);border:1px solid var(--border);
-  border-radius:7px;padding:7px 11px;font-size:12.5px;min-width:150px;
-  max-width:100%}
-select:hover{border-color:var(--accent)}
-button{background:var(--panel2);color:var(--text);border:1px solid var(--border);
-  border-radius:7px;padding:6px 12px;font-size:12.5px;cursor:pointer}
-button:hover{border-color:var(--accent)}
-button.primary{background:#2a3f6e;border-color:var(--accent);color:#cfe0ff}
+button.primary{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-hi)}
 .io{font-size:11.5px;color:var(--dim);margin-left:4px}
 .io.ok{color:var(--good)} .io.err{color:var(--danger)}
-a.genlink{color:#cfe0ff;text-decoration:none;font-size:12.5px;
-  border:1px solid var(--accent);background:#2a3f6e;border-radius:7px;padding:6px 12px}
-a.genlink:hover{background:#33518c}
-.card{background:var(--panel);border:1px solid var(--border);border-radius:12px;
-  padding:14px 18px;margin-bottom:14px;min-width:0}
-.card h2{margin:0 0 4px;font-size:14.5px;font-weight:600;
-  display:flex;align-items:center;gap:9px}
+a.genlink{color:var(--accent-hi);text-decoration:none;font-size:12.5px;
+  border:1px solid var(--accent);background:var(--accent-soft);border-radius:7px;padding:6px 12px}
+a.genlink:hover{background:var(--accent-line)}
 .card h2 .num{width:24px;height:24px;border-radius:50%;background:var(--accent);
   color:#fff;display:flex;align-items:center;justify-content:center;
   font-size:12.5px;font-weight:600;flex:none}
 .card .lead{color:var(--dim);font-size:12px;margin:0 0 10px 33px}
-.verdict{background:var(--panel2);border-left:3px solid var(--accent);
-  border-radius:0 8px 8px 0;padding:10px 14px;margin:10px 0 0;font-size:12.5px}
 .verdict.warn{border-left-color:var(--warn)}
 .verdict.good{border-left-color:var(--good)}
 .verdict.bad{border-left-color:var(--danger)}
-.verdict b{color:#fff}
-.tablewrap{width:100%;overflow-x:hidden}
-table{border-collapse:collapse;width:100%;table-layout:fixed;font-size:12.5px}
-th,td{text-align:left;padding:5px 8px;border-bottom:1px solid rgba(255,255,255,.055);
+/* 第 ① 段：自己搜一组 ban */
+.searchbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;
+  border:1px dashed var(--border);border-radius:8px;padding:9px 12px;margin-bottom:12px;
+  background:var(--surface)}
+.searchbar .lb{color:var(--dim);font-size:12px;flex:none}
+.searchbar .plus{color:var(--dim);font-size:12px}
+/* 带头像的选择框：原生 select 放不了图片，自己画一个 */
+.pkr{position:relative;flex:0 0 210px}
+.pkr-btn{width:100%;display:flex;align-items:center;gap:6px;cursor:pointer;
+  background:var(--surface-2);border:1px solid var(--border-strong);border-radius:7px;
+  color:var(--text);font-size:12px;padding:4px 8px;min-height:32px;text-align:left}
+.pkr-btn:hover:not(:disabled){border-color:var(--accent)}
+.pkr-btn:disabled{opacity:.45;cursor:not-allowed}
+.pkr-btn .ph{color:var(--faint)}
+.pkr-btn > span:not(.ar){flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pkr-btn .ar{color:var(--dim);font-size:10px;flex:none}
+.pkr.open .pkr-btn{border-color:var(--accent)}
+.pkr-pop{position:absolute;z-index:40;top:calc(100% + 4px);left:0;width:250px;
+  max-height:300px;overflow-y:auto;padding:4px;
+  background:var(--surface-2);border:1px solid var(--border-strong);border-radius:8px;
+  box-shadow:0 12px 30px rgba(0,0,0,.55)}
+.pkr-item{display:flex;align-items:center;gap:7px;padding:4px 6px;border-radius:5px;
+  font-size:12px;cursor:pointer;color:var(--text-2)}
+.pkr-item > span:not(.cnt){flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;
+  white-space:nowrap}
+.pkr-item .cnt{color:var(--faint);font-size:11px;flex:none}
+.pkr-item:hover{background:var(--surface-3);color:var(--text)}
+.pkr-item.on{background:var(--accent-soft);color:var(--accent-hi)}
+.pkr-item.off{opacity:.35;cursor:not-allowed}
+.pkr-item.off:hover{background:transparent;color:var(--text-2)}
+.searchbar .msg{font-size:11.5px}
+.searchbar .msg.warn{color:var(--warn)}
+.searchbar .msg.err{color:var(--danger)}
+th,td{text-align:left;padding:5px 8px;border-bottom:1px solid var(--border-soft);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 th{color:var(--dim);font-weight:500;font-size:11px}
-/* 窄屏时表格内容会被截断，鼠标悬停看全 */
 td[title]{cursor:help}
-tr:last-child td{border-bottom:none}
-tr.hl td{background:rgba(107,140,255,.10)}
+tr.hl td{background:var(--accent-soft)}
 tr.hl td:first-child{box-shadow:inset 3px 0 0 var(--accent)}
 tr.click{cursor:pointer}
 tr.click:hover td{background:rgba(255,255,255,.035)}
-.num{text-align:right;font-variant-numeric:tabular-nums;
-  font-family:Consolas,monospace}
-.dim{color:var(--dim)}
 .good{color:var(--good)}.warn{color:var(--warn)}.danger{color:var(--danger)}
-.pill{display:inline-block;font-size:10.5px;padding:1px 7px;border-radius:8px;
-  background:var(--panel2);border:1px solid var(--border);margin-right:4px}
-.pill.ban{border-color:var(--ban);color:#c9a0dd}
-.pill.pick{border-color:var(--accent);color:#cfe0ff}
-.pill.only{border-color:var(--good);color:#9fd8c4}
+.pill.ban{border-color:var(--ban);color:var(--ban)}
+.pill.pick{border-color:var(--accent);color:var(--accent-hi)}
+.pill.only{border-color:var(--good);color:var(--good)}
 .flow{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
 .step{background:var(--panel2);border:1px solid var(--border);border-radius:8px;
   padding:6px 10px;font-size:12px}
@@ -85,29 +76,24 @@ tr.click:hover td{background:rgba(255,255,255,.035)}
 .step.pick{border-color:#35507e}
 .lineup{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
 .meta{color:var(--dim);font-size:11.5px;margin-top:6px}
-/* 「本次生成用的设置」：左右两栏的键值表 */
 .two{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:4px 22px}
 .two .kv{display:flex;gap:12px;align-items:flex-start;padding:4px 0;
-  border-bottom:1px solid rgba(255,255,255,.04)}
+  border-bottom:1px solid var(--border-soft)}
 .two .kv .k{color:var(--dim);font-size:12px;flex:none;width:96px}
 .two .kv .v{font-size:12px;min-width:0;word-break:break-word}
 .two .kv .v code{background:var(--panel2);padding:1px 5px;border-radius:4px;
   font:11px Consolas,monospace}
-.empty{color:var(--dim);padding:40px 0;text-align:center}
 footer{color:var(--dim);font-size:11px;margin:0 auto;
   padding:0 26px 50px;line-height:1.9}
 footer b{color:var(--text)}
-/* 监管集合的组合按钮 */
 .sets{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
 .sets button{background:var(--panel2);color:var(--dim);border:1px solid var(--border);
   border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer;
   display:inline-flex;align-items:center;gap:5px}
 .sets button:hover{border-color:var(--accent);color:var(--text)}
-.sets button.on{background:#2a3f6e;border-color:var(--accent);color:#cfe0ff}
+.sets button.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-hi)}
 .sets button .cnt{font:10px Consolas,monospace;color:var(--dim)}
-/* 监管倾向排名：紧凑列表；块内单列，宽屏时左右两块并排 */
 .rank{margin-top:6px;display:flex;flex-direction:column;gap:0}
-/* ① 段的两块排名：左=地图倾向，右=这组 ban 的指向排名 */
 .rankcols{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));
   gap:22px 34px;margin-top:16px;align-items:start}
 .rankcols .rank{display:grid;grid-template-columns:1fr}
@@ -115,7 +101,7 @@ footer b{color:var(--text)}
 .rank .rk{display:flex;align-items:center;gap:8px;padding:5px 8px;
   border-radius:6px;border-left:2px solid transparent;line-height:1.6}
 .rank .rk:hover{background:rgba(255,255,255,.03)}
-.rank .rk.top{border-left-color:var(--accent);background:rgba(107,140,255,.10)}
+.rank .rk.top{border-left-color:var(--accent);background:var(--accent-soft)}
 .rank .rk .i{flex:none;width:16px;color:var(--dim);
   font:11px Consolas,monospace;text-align:right}
 .rank .rk.top .i{color:var(--accent);font-weight:600}
@@ -125,16 +111,14 @@ footer b{color:var(--text)}
 .rank .rk .bar{flex:1;min-width:48px;height:8px;border-radius:4px;
   background:var(--panel2);overflow:hidden}
 .rank .rk .bar i{display:block;height:100%;border-radius:4px;
-  background:linear-gradient(90deg,#3c5aa8,#6b8cff)}
-.rank .rk.top .bar i{background:linear-gradient(90deg,#4a6fd0,#8ea8ff)}
+  background:linear-gradient(90deg,#3c5aa8,var(--accent))}
+.rank .rk.top .bar i{background:linear-gradient(90deg,#4a6fd0,var(--accent-hi))}
 .rank .rk .pct{flex:none;width:40px;text-align:right;
   font:12px Consolas,monospace}
 .rank .rk .val{flex:none;width:42px;text-align:right;color:var(--dim);
   font:11px Consolas,monospace}
-/* ① 段里的地图区块：块标题与说明 */
 .rankcols .col > .meta{margin:0 0 6px;line-height:1.6}
 .rankcols .col > .meta b{color:var(--text)}
-/* ── ⑤ 博弈树：节点卡片 + 连线（根在上，一层一行，向下分叉） ── */
 .tbar{color:var(--dim);font-size:12px;margin:2px 0 10px;
   display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .tbar.warn{color:var(--warn)}
@@ -142,48 +126,37 @@ button.mini{background:transparent;border:1px solid var(--border);color:var(--di
   border-radius:6px;padding:2px 9px;font-size:11.5px;cursor:pointer}
 button.mini:hover{border-color:var(--accent);color:var(--text)}
 .treewrap{position:relative;overflow:hidden;height:560px;
-  background:#171a21;border:1px solid var(--border);border-radius:10px;
+  background:var(--surface-2);border:1px solid var(--border);border-radius:10px;
   cursor:grab;touch-action:none;
   /* 画布是拿来拖的：按住拖动时不能顺带选中节点里的文字，
      否则一拖就变成一抹蓝色选区，还盖住连线 */
   user-select:none;-webkit-user-select:none;
-  background-image:radial-gradient(circle,rgba(255,255,255,.055) 1px,transparent 1px);
+  background-image:radial-gradient(circle,var(--border-soft) 1px,transparent 1px);
   background-size:22px 22px}
 .treewrap.grabbing{cursor:grabbing}
-/* 世界层：整棵树画在这里，整体平移 + 缩放。
-   这里故意不写 will-change:transform：一旦常驻合成层，浏览器会沿用
-   缩小那一刻的位图，再放大时文字只是把旧位图拉大，笔画发虚。
-   节点数量很少，交给浏览器每次按当前比例重新绘制更清晰。 */
 .tcanvas{position:absolute;left:0;top:0;transform-origin:0 0}
 .trowhead{position:absolute;left:6px;transform:translateY(-50%);
   color:var(--dim);font-size:10px;line-height:1.25;max-width:180px;
   white-space:normal;overflow:hidden;pointer-events:none;opacity:.9}
 .trowhead b{color:var(--text);font-weight:500}
-/* ⑩ 监管选人：分数是「若真掏这个监管」的阵容分，不是总评，标一下免得误会 */
-.trowhead i{display:block;font-style:normal;font-size:9px;color:#8a93a6;margin-top:1px}
-/* 阶段标签列：固定在框内左侧，不随缩放平移跑 */
+.trowhead i{display:block;font-style:normal;font-size:9px;color:var(--dim);margin-top:1px}
 .trows{position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;
   pointer-events:none;z-index:2}
 .tedges{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
-/* 画布右上角的放缩按钮 */
 .tzoom{position:absolute;right:10px;top:10px;display:flex;gap:4px;z-index:5}
 .tzoom button{width:26px;height:26px;border-radius:6px;cursor:pointer;
   background:rgba(23,26,33,.88);border:1px solid var(--border);color:var(--dim);
   font:13px/1 Consolas,monospace;display:flex;align-items:center;justify-content:center}
 .tzoom button:hover{border-color:var(--accent);color:var(--text)}
 .tzoom button.wide{width:auto;padding:0 8px;font-size:11px}
-/* ── 树节点 ──
-   位置由 JS 按列/行算好后写进 style 的 left/top（世界坐标）。
-   方块定死尺寸，内容多了只缩内容，不撑破卡片。 */
 .tnode{position:absolute;display:flex;flex-direction:column;
   align-items:center;justify-content:center;gap:2px;
   padding:4px;border-radius:8px;background:var(--panel2);
   border:1px solid var(--border);font-size:12px;line-height:1.15;
   cursor:pointer;overflow:hidden;text-align:center;box-sizing:border-box;
   transition:border-color .12s,background .12s}
-/* 展开过的方块淡一点，收起过的不加，看颜色就知道哪块下面还有内容 */
-.tnode.open{box-shadow:0 0 0 2px rgba(107,140,255,.18)}
-.tnode:hover{border-color:var(--accent);background:#252a36}
+.tnode.open{box-shadow:0 0 0 2px var(--accent-soft)}
+.tnode:hover{border-color:var(--accent);background:var(--surface-3)}
 .tnode .ic{display:flex;align-items:center;justify-content:center}
 .tnode .nm{flex:none;max-width:100%;overflow:hidden;white-space:nowrap;
   text-overflow:ellipsis;font-weight:600;font-size:11.5px;line-height:1.25}
@@ -197,28 +170,23 @@ button.mini:hover{border-color:var(--accent);color:var(--text)}
 .tnode.main .tg{color:var(--accent)}
 .tnode.ban{border-left:3px solid var(--ban)}
 .tnode.pick{border-left:3px solid var(--accent)}
-.tnode.main{border-color:var(--accent);background:#2a3f6e;color:#cfe0ff}
-.tnode.main:hover{background:#33518c}
-
-/* 根节点：③ 两手定下的起点，深蓝渐变，明显区别于下面的节点 */
+.tnode.main{border-color:var(--accent);background:var(--accent-soft);color:var(--accent-hi)}
+.tnode.main:hover{background:var(--accent-line)}
 .tnode.root{line-height:1.3;cursor:default;gap:5px;
   background:linear-gradient(180deg,#2f4a86,#24365f);
-  border:1px solid #6b8cff;color:#e6eeff;
+  border:1px solid var(--accent);color:#e6eeff;
   box-shadow:0 0 0 1px rgba(107,140,255,.25),0 4px 14px rgba(0,0,0,.35)}
-.tnode.root:hover{background:linear-gradient(180deg,#35528f,#26395f);border-color:#8ea8ff}
-/* 「③ 已定」小标签：告诉教练这张卡是起点 */
+.tnode.root:hover{background:linear-gradient(180deg,#35528f,#26395f);border-color:var(--accent-hi)}
 .tnode.root .nm{font-weight:400;font-size:11.5px;letter-spacing:.5px;
-  color:#a9c0ff;background:rgba(107,140,255,.18);border-radius:4px;
+  color:#a9c0ff;background:var(--accent-soft);border-radius:4px;
   padding:1px 6px;overflow:visible;text-overflow:clip}
 .tnode.root .vv{font-size:12px;font-weight:600;color:#fff;white-space:normal;
   line-height:1.4;max-width:100%}
-
-/* 「再看一个」：本层还有备选的入口，虚线小方块 */
 .tnode.more{font-size:10.5px;line-height:1.3;padding:6px;
-  background:rgba(107,140,255,.05);border-style:dashed;
+  background:var(--accent-soft);border-style:dashed;
   border-color:#3b4458;color:var(--dim);cursor:pointer}
 .tnode.more:hover{border-color:var(--accent);color:var(--text);
-  background:rgba(107,140,255,.12)}
+  background:var(--accent-soft)}
 .tnode.more .nm{font-weight:400;font-size:11.5px;line-height:1.35;white-space:normal}
 .tend{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px;
   padding:8px 12px;border-radius:8px;background:var(--panel2);
@@ -265,6 +233,7 @@ button.mini:hover{border-color:var(--accent);color:var(--text)}
 <script src="filemodal.js"></script>
 <script>
 const $ = s => document.querySelector(s);
+const $$ = (s, root) => Array.from((root || document).querySelectorAll(s));
 let REP = null;        // 当前报告
 let SOLID_CHARS = [];  // 救人位名单（从后端取，老报告里没有这个字段）
 
@@ -288,6 +257,18 @@ function loadSolid() {
       .catch(() => {});
   }
   return solidPromise;
+}
+
+/** 第 ① 段搜索用的角色表只在第一次搜索时取一次。 */
+let survCountsPromise = null;
+function loadSurvCounts() {
+  if (!survCountsPromise) {
+    survCountsPromise = fetch('/api/generate/meta')
+      .then(r => r.ok ? r.json() : null)
+      .then(j => { SURV_COUNTS = (j && j.survivor_counts) || {}; })
+      .catch(() => { SURV_COUNTS = {}; });
+  }
+  return survCountsPromise;
 }
 
 /** 报告页进来就显示最新的一份；也可以用 ?file=<文件名> 指定某一份。
@@ -332,6 +313,7 @@ async function boot() {
     const rep = Array.isArray(d) ? d[0] : (d && d.meta ? d : (d.reports || [])[0]);
     if (!rep) throw new Error('文件里没有报告');
     await loadSolid();   // 先拿到救人位名单，再渲染，免得「最终阵容」短暂显示错的个数
+    REP_FILE = file;     // 搜出来的组合要写回这一份
     showReport(rep);
     setIo(autoPicked ? `已自动打开最新一份：${file}` : '已打开刚生成的报告', 'ok');
   } catch (e) {
@@ -353,7 +335,7 @@ $('#impBtn').onclick = () => {
     title: '导入报告',
     dir: 'data/reports',
     table: true,
-    onPick: obj => {
+    onPick: (obj, file) => {
       // 兼容三种输入：单份报告、报告数组、旧的索引结构
       const incoming = Array.isArray(obj) ? obj
         : Array.isArray(obj.reports) ? obj.reports
@@ -375,6 +357,9 @@ $('#impBtn').onclick = () => {
           + '页面现在按「对手 ban 组合」渲染，请重新生成', 'err');
         return;
       }
+      // 只有 data/reports/ 下的报告才写回磁盘；别处的文件搜出来只在本页有效
+      const p = (file && file.path) || '';
+      REP_FILE = p.indexOf('data/reports/') === 0 ? p.slice('data/reports/'.length) : '';
       showReport(incoming[0]);
       setIo(incoming.length > 1
         ? `已导入 ${incoming.length} 份，显示其中一份`
@@ -385,10 +370,16 @@ $('#impBtn').onclick = () => {
 
 function showReport(rep) {
   REP = rep;
+  // 搜索下拉要按出场次数排序，角色表没到手就先取一次再画
+  if (!SURV_COUNTS) {
+    loadSurvCounts().then(() => render());
+  }
   const m = REP.meta;
   $('#sub').innerHTML =
     `${esc(m.season)} · ${esc(m.team)}（求生） vs ${esc(m.player)}（监管） · 第 ${m.game} 局 · `
-    + `生成于 ${esc(m.generated_at)} · 我方 ban 名额 ${m.ban_quota ?? 0}`;
+    + `生成于 ${esc(m.generated_at)}`
+    + (m.updated_at ? ` · 最后修改于 ${esc(m.updated_at)}` : '')
+    + ` · 我方 ban 名额 ${m.ban_quota ?? 0}`;
   render();
 }
 
@@ -433,6 +424,149 @@ function render() {
 
 /** 当前选中的 ban 组合下标 */
 let COMBO = 0;
+/** 当前报告对应的文件名（搜出来的组合要写回这一份） */
+let REP_FILE = '';
+/** 第 ① 段「自己搜两个 ban 位」的输入：两个求生者，第二格在第一个选好后才可选 */
+let SEARCH = { a: '', b: '', busy: false, msg: '', cls: '', open: '', list: [] };
+/** 全联盟求生者的本季出场次数（搜索下拉按它排序，取一次就够） */
+let SURV_COUNTS = null;
+
+/** 第 ① 段：自己搜两个 ban 位。
+ *  可选项 = 全联盟出现过的求生者 − 这份报告里已被用掉的。
+ *  顺序按本季出场次数从多到少，常被 ban 的排前面。 */
+function searchBarHtml(m) {
+  const counts = SURV_COUNTS || {};
+  const gone = new Set([...(m.global_ban_surv || []), ...(m.global_ban_hunt || [])]);
+  // 优先用全联盟角色表（含从没上过场的），拿不到就退回这份报告的角色池
+  const base = Object.keys(counts).length ? Object.keys(counts) : (m.our_pool || []);
+  SEARCH.list = base.filter(c => !gone.has(c))
+    .sort((a, b) => (counts[b] || 0) - (counts[a] || 0) || (a < b ? -1 : a > b ? 1 : 0));
+  const canSearch = !!(SEARCH.a && SEARCH.b && SEARCH.a !== SEARCH.b && !SEARCH.busy);
+  return `<div class="searchbar">
+    <label class="lb">自己搜一组</label>
+    ${pickerHtml('a')}
+    <span class="plus">+</span>
+    ${pickerHtml('b')}
+    <button class="btn primary" id="srhGo" type="button"${canSearch ? '' : ' disabled'}>${
+      SEARCH.busy ? '搜索中…' : '搜索并加入报告'}</button>
+    <span class="msg ${SEARCH.cls}" id="srhMsg">${esc(SEARCH.msg)}</span>
+  </div>`;
+}
+
+/** 一个带头像的选择框。原生 select 显示不了图片，所以自己画：
+ *  按钮上显示当前选中角色的头像，点开是一列带头像的候选。 */
+function pickerHtml(which) {
+  const cur = which === 'a' ? SEARCH.a : SEARCH.b;
+  // 第二格在第一格选好之前整列锁住；两格不能选同一个角色
+  const locked = which === 'b' && !SEARCH.a;
+  const title = which === 'a' ? '对手先 ban 的求生者' : '对手再 ban 的求生者';
+  const open = SEARCH.open === which;
+  return `<div class="pkr${locked ? ' locked' : ''}${open ? ' open' : ''}" data-w="${which}">
+    <button class="pkr-btn" type="button" title="${title}"${locked ? ' disabled' : ''}>
+      ${cur ? Char.icon(cur, 20) + `<span>${esc(cur)}</span>`
+            : '<span class="ph">选择求生者</span>'}
+      <span class="ar">▾</span>
+    </button>
+    ${open ? `<div class="pkr-pop">${pickerListHtml(which)}</div>` : ''}
+  </div>`;
+}
+
+/** 选择框里的候选列表（点开才渲染）。 */
+function pickerListHtml(which) {
+  const counts = SURV_COUNTS || {};
+  const other = which === 'a' ? SEARCH.b : SEARCH.a;
+  const cur = which === 'a' ? SEARCH.a : SEARCH.b;
+  return SEARCH.list.map(c => {
+    const off = c === other;   // 另一个格子已经选了它
+    return `<div class="pkr-item${c === cur ? ' on' : ''}${off ? ' off' : ''}"
+      data-c="${esc(c)}" title="${esc(c)}（本季出场 ${counts[c] || 0} 次）">
+      ${Char.icon(c, 20)}<span>${esc(c)}</span>
+      <span class="cnt">${counts[c] || 0}</span></div>`;
+  }).join('');
+}
+
+/** 绑定第 ① 段的搜索控件。每次重绘都要重绑（DOM 整个换掉了）。
+ *  重绘会把 DOM 换掉，所以点开候选后由 document 上的点击监听负责收起。 */
+function wireSearch() {
+  const go = $('#srhGo');
+  if (!go) return;
+  $$('.pkr').forEach(box => {
+    const which = box.dataset.w;
+    box.querySelector('.pkr-btn').onclick = () => {
+      SEARCH.open = SEARCH.open === which ? '' : which;
+      renderNew();
+    };
+    $$('.pkr-pop .pkr-item', box).forEach(item => {
+      item.onclick = () => {
+        const c = item.dataset.c;
+        if (item.classList.contains('off')) return;
+        SEARCH[which] = c;
+        // 换掉这一格后，另一格跟它撞了就得清空
+        if (which === 'a' && SEARCH.b === c) SEARCH.b = '';
+        if (which === 'b' && SEARCH.a === c) SEARCH.a = '';
+        SEARCH.open = '';
+        SEARCH.msg = ''; SEARCH.cls = '';
+        renderNew();
+      };
+    });
+  });
+  go.onclick = () => doSearch();
+}
+
+/** 点在选择框外面就收起候选。只挂一次。 */
+let pkOutsideBound = false;
+function bindPickerOutside() {
+  if (pkOutsideBound) return;
+  pkOutsideBound = true;
+  document.addEventListener('mousedown', ev => {
+    if (!SEARCH.open) return;
+    if (ev.target.closest && ev.target.closest('.pkr')) return;
+    SEARCH.open = '';
+    if (REP && (REP.combos || []).length) renderNew();
+  });
+}
+
+/** 搜索一组 ban：后端算完会把结果写进这份报告，然后整页按新报告重绘。 */
+async function doSearch() {
+  if (SEARCH.busy || !SEARCH.a || !SEARCH.b) return;
+  SEARCH.busy = true; SEARCH.msg = '正在推演这组 ban…'; SEARCH.cls = 'warn';
+  renderNew();
+  try {
+    const r = await fetch('/api/combo_search', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      // 局次、地图、全局禁选都以报告自己记的为准，这里只给文件名和两个 ban 位
+      body: JSON.stringify({ report: REP_FILE, bans: [SEARCH.a, SEARCH.b] }),
+    });
+    const j = await r.json();
+    if (!j.ok) throw new Error(j.error || ('HTTP ' + r.status));
+    SEARCH.busy = false;
+    SEARCH.msg = ''; SEARCH.cls = '';
+    if (j.report) {
+      REP = j.report;          // 后端把整份更新后的报告带回来了
+      COMBO = j.index || 0;    // 直接跳到刚搜出来的那一组
+      resetComboView();
+      setIo(j.saved ? `已加入报告并保存：${SEARCH.a} + ${SEARCH.b}`
+                    : `已加入：${SEARCH.a} + ${SEARCH.b}（没有关联报告文件，只在本页有效）`, 'ok');
+      showReport(REP);
+    } else {
+      REP.combos = [...(REP.combos || []), j.combo];
+      COMBO = REP.combos.length - 1;
+      resetComboView();
+      render();
+    }
+  } catch (e) {
+    SEARCH.busy = false;
+    SEARCH.msg = '搜索失败：' + e.message; SEARCH.cls = 'err';
+    renderNew();
+  }
+}
+
+/** 换组合时重置博弈树的交互状态和视野。 */
+function resetComboView() {
+  TREE = { open: {}, more: {}, openMore: {}, cache: {}, reg: [], touched: false,
+           auto: [], tried: {}, heads: {}, rows: [], world: null, topCols: 3 };
+  VIEW = {k: 1, x: 0, y: 0, fitted: false};
+}
 
 function renderNew() {
   const m = REP.meta;
@@ -444,18 +578,22 @@ function renderNew() {
   if (COMBO >= combos.length) COMBO = 0;
   const C = combos[COMBO];
 
-  // ── ① 对手前两个 ban 位：下拉切换 ──
+  // ── ① 对手前两个 ban 位：下拉切换 + 自己搜一个组合 ──
   const optHtml = combos.map((c, i) =>
-    `<option value="${i}"${i === COMBO ? ' selected' : ''}>${esc(c.label)}`
+    `<option value="${i}"${i === COMBO ? ' selected' : ''}>`
+    + `${c.custom ? '★ 搜索 · ' : ''}${esc(c.label)}`
     + `（可能 ${f2(c.weight)}）</option>`).join('');
   const c1 = card(1, '对手前两个 ban 位',
     `对手已经 ban 了哪两个求生，决定了后面所有推演。`
-    + `换成别的组合，下面的监管倾向和 ②③④ 会整体跟着变。`,
+    + `换成别的组合，下面的监管倾向和 ②③④ 会整体跟着变。`
+    + `现场看到别的两个，就在下面搜出来，结果会存进这份报告。`,
     `<div class="row" style="margin-bottom:10px">
        <label class="lb">对手的 ban</label>
        <select id="comboSel" style="min-width:280px">${optHtml}</select>
      </div>
+     ${searchBarHtml(m)}
      <div class="verdict"><b>当前选择：${bansHtml(C.bans)}</b>
+       ${C.custom ? '<span class="tag" style="margin-left:6px">自己搜索的</span>' : ''}
        <span class="dim">（这组 ban 的可能性 ${f2(C.weight)}）</span></div>
      ${C.intent_note ? `<div class="meta" style="margin-top:8px">${esc(C.intent_note)}</div>` : ''}
      <div class="rankcols">
@@ -529,11 +667,11 @@ function renderNew() {
   const sel = $('#comboSel');
   if (sel) sel.onchange = () => {
     COMBO = +sel.value;
-    TREE = { open: {}, more: {}, openMore: {}, cache: {}, reg: [], touched: false,
-             auto: [], tried: {}, heads: {}, rows: [], world: null, topCols: 3 };  // 换组合就重置树的交互状态
-    VIEW = {k: 1, x: 0, y: 0, fitted: false};   // 视野也回到「适配」
+    resetComboView();   // 换组合就重置树的交互状态，视野回到「适配」
     renderNew();
   };
+  wireSearch();
+  bindPickerOutside();
   wireTree();
 }
 
@@ -1283,6 +1421,8 @@ function mapIntentBlock(C, m) {
           : '<span class="dim">未指定（按全联盟口径）</span>')}
         ${kv('我方 ban 名额', `${m.ban_quota ?? 0} 个（第 1 局 0、第 2 局 1、第 3 局起 2）`)}
         ${kv('可选 ban 组合', `${m.combo_count ?? '—'} 组（第 ① 段可切换）`)}
+        ${kv('时间', `生成于 ${esc(m.generated_at)}` + (m.updated_at
+          ? ` · 最后修改于 ${esc(m.updated_at)}` : ''))}
         ${kv('监管数据', src)}
         ${kv('求生角色池', `${rosterSrc} · ${esc(m.team)} 共 ${pool.length} 个`)}
       </div>
